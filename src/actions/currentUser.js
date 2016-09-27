@@ -50,10 +50,8 @@ export const requestUser = (userId, clientOptions) => {
 	return dispatch => {
 		dispatch(startRequestUser());
 
-		const client = new matrixClient(clientOptions);
-
 		return new Promise((resolve, reject) => {
-			client.getProfileInfo(userId, (err, data) => {
+			matrixClient.callApi('getProfileInfo', userId, (err, data) => {
 				if (err) {
 					dispatch(failedRequestUser(err));
 					return reject(err);

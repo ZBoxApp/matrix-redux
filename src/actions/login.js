@@ -55,10 +55,8 @@ export const makeLogin = (user, password, options) => {
 	return dispatch => {
 		dispatch(startLogin());
 
-		const client = new matrixClient(options);
-
 		return new Promise((resolve, reject) => {
-			client.login(user, password, (err, data) => {
+			matrixClient.login(user, password, options, (err, data) => {
 				if (err) {
 					dispatch(failedLogin(err));
 					return reject(err);

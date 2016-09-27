@@ -12,8 +12,9 @@ const testUserId = "@test:zboxapp.dev";
 const testUserDisplayName = "test";
 const testUserName = "test";
 const testUserPassword = "123456";
+const baseUrl = 'https://192.168.0.104:8448';
 const clientOptions = {
-  baseUrl: 'https://192.168.0.104:8448'
+  baseUrl: baseUrl
 };
 
 describe('login test', () => {
@@ -37,7 +38,7 @@ describe('login test', () => {
       const store = createStore({ currentUser: null, login: null });
       store.dispatch(makeLogin(testUserName, testUserPassword, clientOptions)).then((data) => {
         let state = store.getState();
-        store.dispatch(requestUser(testUserId, state.currentUser)).then((data) => {
+        store.dispatch(requestUser(testUserId)).then((data) => {
           state = store.getState();
           expect(state.currentUser.profile.displayName).to.equal(testUserDisplayName);
           done();
