@@ -11,7 +11,6 @@ import login from './login';
 import error from './error';
 import rooms from './rooms';
 import currentUser from './currentUser';
-import profile from './profile';
 // uncommented this to use it
 //import {intlReducer as intl} from "react-intl-redux";
 
@@ -21,8 +20,7 @@ const rootReducer = combineReducers({
     login,
     error,
     rooms,
-    currentUser,
-    profile
+    currentUser
 });
 
 export default rootReducer;

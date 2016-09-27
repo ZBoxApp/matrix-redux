@@ -13,7 +13,9 @@ const initialState = {
 	homeServer: null,
 	userId: null,
 	refreshToken: null,
-	deviceId: null
+	deviceId: null,
+	baseUrl: null,
+
 };
 
 const currentUser = function(state = initialState, action){

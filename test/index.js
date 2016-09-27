@@ -13,7 +13,7 @@ const testUserDisplayName = "test";
 const testUserName = "test";
 const testUserPassword = "123456";
 const clientOptions = {
-  baseUrl: 'https://192.168.0.103:8448'
+  baseUrl: 'https://192.168.0.104:8448'
 };
 
 describe('login test', () => {
@@ -36,10 +36,9 @@ describe('login test', () => {
     it('on REQUEST_USER action', (done) => {
       const store = createStore({ currentUser: null, login: null });
       store.dispatch(makeLogin(testUserName, testUserPassword, clientOptions)).then((data) => {
-        clientOptions.accessToken = data.access_token;
-        clientOptions.userId = testUserId;
-        store.dispatch(requestUser(testUserId, clientOptions)).then((data) => {
-          const state = store.getState();
+        let state = store.getState();
+        store.dispatch(requestUser(testUserId, state.currentUser)).then((data) => {
+          state = store.getState();
           expect(state.currentUser.profile.displayName).to.equal(testUserDisplayName);
           done();
         }).catch((err) => {

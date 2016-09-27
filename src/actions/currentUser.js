@@ -10,11 +10,11 @@ export const START_REQUEST_USER = 'START_REQUEST_USER';
 export const FAILED_REQUEST_USER = 'FAILED_REQUEST_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 
-const successRequestUser = (user) => {
+const successRequestUser = (profile) => {
 	return {
 		type: SUCCESS_REQUEST_USER,
 		payload: {
-			profile: user
+			profile
 		}
 	};
 };
