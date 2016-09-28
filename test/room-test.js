@@ -1,43 +1,34 @@
-import {makeLogin} from '../src/actions/login';
-import {requestUser} from '../src/actions/currentUser';
-import {removeTestRoom} from './helper';
-import {getPublicRooms, leaveRoom, createRoom} from '../src/actions/rooms';
-import chai from 'chai';
+"use strict";
+
+import {expect, userFixture, sdk, logTestUser, removeTestRoom} from './helper';
 import createStore from '../src/store/store';
-import MatrixClient from '../src/utils/client';
-import {fetchRequest} from '../src/utils/utils';
+import {SyncActions} from '../src/actions/sync';
 
-const expect = chai.expect;
+import {getPublicRooms, leaveRoom, createRoom} from '../src/actions/rooms';
+let store = {};
 
-const homeServerName = "zboxapp.dev";
-const testUserId = "@test:zboxapp.dev";
-const testUserDisplayName = "test";
-const testUserName = "test";
-const testUserPassword = "123456";
-const baseUrl = 'https://192.168.0.104:8448';
-const clientOptions = {
-    baseUrl: baseUrl
-};
+describe('Room Actions Tests', () => {
 
-describe('room test', () => {
+  beforeEach((done) =>{
+    logTestUser((e,d) => {
+      if (e) return console.error(e);
+      store = d;
+      done();
+    });
+  });
 
     it('on request public rooms action', (done) => {
-        const store = createStore();
-
         store.dispatch(getPublicRooms()).then((rooms) => {
             done();
             const state = store.getState();
             expect(state.rooms.rooms).to.not.empty;
-            //console.log(state.rooms.rooms);
         }).catch((err) => {
-            console.log(err);
+            console.log("on request public rooms action -- ", err);
             done();
         });
     });
 
     it('on create room action', (done) => {
-        const store = createStore();
-
         store.dispatch(createRoom({
             room_alias_name: `real_poof_pre_2${new Date().getTime()}`,
             visibility: 'public',
@@ -45,18 +36,16 @@ describe('room test', () => {
         })).then((room) => {
             const state = store.getState();
             expect(state.rooms.rooms).to.not.empty;
-            //console.log(state.rooms.rooms);
             removeTestRoom(room.room_id);
             done();
         }).catch((err) => {
-            console.log(err);
+            console.log('on create room action ----', err);
+            expect(err).to.not.exists;
             done();
         });
     });
 
     it('on leave room action', (done) => {
-        const store = createStore({});
-
         store.dispatch(leaveRoom('!hGVbivIrTvQuQPfbvq:zboxapp.dev')).then((suc) => {
             done();
         }).catch((err) => {
@@ -66,4 +55,3 @@ describe('room test', () => {
         });
     });
 });
-

@@ -28,13 +28,15 @@ const clientOptions = {
   baseUrl: userFixture.baseUrl
 };
 
-export const logTestUser = () => {
+export const logTestUser = (callback) => {
   const testUserName = userFixture.testUserName;
   const testUserPassword = userFixture.testUserPassword;
   store.dispatch(makeLogin(testUserName, testUserPassword, clientOptions)).then((data) => {
-    store.getState();
-    return store;
+    callback(null, store);
+  }).catch((e) => {
+    callback(e);
   });
+  // MatrixClient.login(testUserName, testUserPassword, clientOptions, callback);
 }
 
 export const removeTestRoom = (roomId) => {

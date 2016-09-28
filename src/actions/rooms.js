@@ -5,6 +5,14 @@
 import {setError} from './error';
 import MatrixClient from '../utils/client';
 
+import {actionCreator, createDefaultConstants, createDefaultActions} from '../utils/utils';
+import {CONSTANTS} from '../utils/constants';
+
+export const RoomActionConstants = createDefaultConstants('room');
+export const RoomActions = createDefaultActions('room');
+
+
+
 export const START_REQUEST_ROOM = 'START_REQUEST_ROOM';
 export const FAILED_REQUEST_ROOM = 'FAILED_REQUEST_ROOM';
 export const CREATE_ROOM_SUCCESS = 'CREATE_ROOM_SUCCESS';
