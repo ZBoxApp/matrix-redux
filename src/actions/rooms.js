@@ -3,11 +3,15 @@
 **/
 
 import {setError} from './error';
+import MatrixClient from '../utils/client';
 
 export const START_REQUEST_ROOM = 'START_REQUEST_ROOM';
 export const FAILED_REQUEST_ROOM = 'FAILED_REQUEST_ROOM';
-export const ROOM_CREATED = 'ROOM_CREATED';
+export const CREATE_ROOM_SUCCESS = 'CREATE_ROOM_SUCCESS';
+export const REMOVE_ROOM_SUCCESS = 'REMOVE_ROOM_SUCCESS';
+
 export const SET_ROOM = 'SET_ROOM';
+export const SET_MULTIPLE_ROOM = 'SET_MULTIPLE_ROOM';
 export const REMOVE_ROOM = 'REMOVE_ROOM';
 export const UPDATE_ROOM = 'UPDATE_ROOM';
 
@@ -29,6 +33,15 @@ const failedRequestRoom = () => {
 	};
 };
 
+const requestRemoveRoomSucess = () => {
+	return {
+		type: REMOVE_ROOM_SUCCESS,
+		payload: {
+			isLoading: false
+		}
+	};
+};
+
 const updateRoom = (id, room) => {
 	return {
 		type: UPDATE_ROOM,
@@ -42,42 +55,100 @@ const updateRoom = (id, room) => {
 const setRoom = (room) => {
 	return {
 		type: SET_ROOM,
+		payload: room
+	};
+};
+
+const setRooms = (rooms) => {
+	return {
+		type: SET_MULTIPLE_ROOM,
 		payload: {
-			room
+			rooms
 		}
 	};
 };
 
 const roomCreated = () => {
 	return {
-		type: ROOM_CREATED,
+		type: CREATE_ROOM_SUCCESS,
 		payload: {
 			isLoading: false
 		}
 	};
 };
 
-const removeRoom = (id) => {
+const removeRoom = (room_id) => {
 	return {
 		type: REMOVE_ROOM,
 		payload: {
-			id
+			room_id
 		}
 	};
 };
 
-const createRoom = (data) => {
+export const leaveRoom = (room_id) => {
 	return dispatch => {
 		dispatch(startRequestRoom());
 
-		// make request here to create room
+		return new Promise((resolve, reject) => {
+			MatrixClient.callApi('leave', room_id, (err, removed) => {
+				if(err) {
+					dispatch(failedRequestRoom());
+					dispatch(setError(err));
 
-		// if ok
-		// dispatch(setRoom());
-		// dispatch(roomCreated());
+					return reject(err);
+				}
 
-		// if fail
-		// dispatch(failedRequestRoom());
-		// dispatch(setError(error));
+				dispatch(requestRemoveRoomSucess());
+				dispatch(removeRoom(room_id));
+				resolve(removed);
+			});
+		});
+	};
+};
+
+export const getPublicRooms = () => {
+	return dispatch => {
+		dispatch(startRequestRoom());
+
+		return new Promise((resolve, reject) => {
+			MatrixClient.callApi('publicRooms', (err, rooms) => {
+				if (err) {
+					dispatch(failedRequestRoom());
+					dispatch(setError(err));
+					return reject(err);
+				}
+
+				dispatch(setRooms(rooms));
+				resolve(rooms);
+			});
+		});
+	};
+};
+
+export const createRoom = (attributes) => {
+	return dispatch => {
+		dispatch(startRequestRoom());
+
+		return new Promise((resolve, reject) => {
+			MatrixClient.callApi('createRoom', attributes, (err, room) => {
+				if (err) {
+					dispatch(failedRequestRoom());
+					dispatch(setError(err));
+					return reject(err);
+				}
+
+				const {room_id} = room;
+
+				const data = {
+					id: room_id,
+					room: attributes
+				};
+
+				dispatch(roomCreated());
+				dispatch(setRoom(data));
+				resolve(data);
+			});
+		});
 	};
 };

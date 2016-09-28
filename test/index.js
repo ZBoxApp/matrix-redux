@@ -1,5 +1,6 @@
 import {makeLogin} from '../src/actions/login';
 import {requestUserProfile} from '../src/actions/currentUser';
+import {getPublicRoom, createRoom} from '../src/actions/rooms';
 import chai from 'chai';
 import createStore from '../src/store/store';
 import MatrixClient from '../src/utils/client';
@@ -48,5 +49,4 @@ describe('login test', () => {
         });
       });
     });
-
 });

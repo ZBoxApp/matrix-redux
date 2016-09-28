@@ -5,7 +5,7 @@
 export const SET_ERROR = 'SET_ERROR';
 export const REMOVE_ERROR = 'REMOVE_ERROR';
 
-const setError = (error) => {
+export const setError = (error) => {
 	return {
 		type: SET_ERROR,
 		payload: {
@@ -14,7 +14,7 @@ const setError = (error) => {
 	};
 };
 
-const removeError = (id) => {
+export const removeError = (id) => {
 	return {
 		type: REMOVE_ERROR,
 		payload: {
