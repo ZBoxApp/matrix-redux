@@ -1,5 +1,5 @@
 import {makeLogin} from '../src/actions/login';
-import {requestUser} from '../src/actions/currentUser';
+import {requestUserProfile} from '../src/actions/currentUser';
 import chai from 'chai';
 import createStore from '../src/store/store';
 import MatrixClient from '../src/utils/client';
@@ -38,7 +38,7 @@ describe('login test', () => {
       const store = createStore({ currentUser: null, login: null });
       store.dispatch(makeLogin(testUserName, testUserPassword, clientOptions)).then((data) => {
         let state = store.getState();
-        store.dispatch(requestUser(testUserId)).then((data) => {
+        store.dispatch(requestUserProfile(testUserId)).then((data) => {
           state = store.getState();
           expect(state.currentUser.profile.displayName).to.equal(testUserDisplayName);
           done();

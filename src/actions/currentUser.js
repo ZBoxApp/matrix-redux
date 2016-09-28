@@ -1,62 +1,25 @@
 /**
-* ACTIONS FOR ROOMS
+* ACTIONS FOR CURRENTUSER
 **/
 
 import {setError} from './error';
 import matrixClient from '../utils/client';
+import {actionCreator, createDefaultConstants, createDefaultActions} from '../utils/utils';
 
-export const SUCCESS_REQUEST_USER = 'SUCCESS_REQUEST_USER';
-export const START_REQUEST_USER = 'START_REQUEST_USER';
-export const FAILED_REQUEST_USER = 'FAILED_REQUEST_USER';
-export const UPDATE_USER = 'UPDATE_USER';
+export const CurrentUserActionConstants = createDefaultConstants('user');
+export const CurrentUserActions = createDefaultActions('user');
 
-const successRequestUser = (profile) => {
-	return {
-		type: SUCCESS_REQUEST_USER,
-		payload: {
-			profile
-		}
-	};
-};
-
-const updateUser = (user) => {
-	return {
-		type: UPDATE_USER,
-		payload: {
-			user
-		}
-	};
-};
-
-const startRequestUser = () => {
-	return {
-		type: START_REQUEST_USER,
-		payload: {
-			isLoading: true
-		}
-	};
-};
-
-const failedRequestUser = () => {
-	return {
-		type: FAILED_REQUEST_USER,
-		payload: {
-			isLoading: false
-		}
-	};
-};
-
-export const requestUser = (userId, clientOptions) => {
+export const requestUserProfile = (userId) => {
 	return dispatch => {
-		dispatch(startRequestUser());
-
+		dispatch(CurrentUserActions.startedRequestUser());
+		
 		return new Promise((resolve, reject) => {
 			matrixClient.callApi('getProfileInfo', userId, (err, data) => {
 				if (err) {
-					dispatch(failedRequestUser(err));
+					dispatch(CurrentUserActions.failedRequestUser({error: err}));
 					return reject(err);
 				}
-				dispatch(successRequestUser(data));
+				dispatch(CurrentUserActions.successRequestUser({profile: data}));
 				resolve(data);
 			});
 		});

@@ -1,10 +1,4 @@
-import {
-	START_REQUEST_USER,
-	FAILED_REQUEST_USER,
-	SUCCESS_REQUEST_USER,
-	UPDATE_USER
-} from '../actions/currentUser';
-
+import {CurrentUserActionConstants} from '../actions/currentUser';
 import {LOGOUT, SUCCESS_LOGIN} from '../actions/login';
 
 const initialState = {
@@ -21,8 +15,8 @@ const initialState = {
 const currentUser = function(state = initialState, action){
 	let newState = null;
 	switch(action.type){
-		case START_REQUEST_USER:
-		case FAILED_REQUEST_USER:
+		case CurrentUserActionConstants.STARTED_REQUEST_USER:
+		case CurrentUserActionConstants.FAILED_REQUEST_USER:
 			newState = {...state, ['isLoading']: action.payload.isLoading};
 			return newState;
 			break;
@@ -30,7 +24,7 @@ const currentUser = function(state = initialState, action){
 			newState = {...state, ...action.payload};
 			return newState;
 			break;
-		case SUCCESS_REQUEST_USER:
+		case CurrentUserActionConstants.SUCCESS_REQUEST_USER:
 			const profile = {
 				displayName: action.payload.profile.displayname,
 				avatarUrl: action.payload.profile.avatarurl
@@ -38,7 +32,7 @@ const currentUser = function(state = initialState, action){
 			newState = {...state, profile};
 			return newState;
 			break;
-		case UPDATE_USER:
+		case CurrentUserActionConstants.UPDATED_REQUEST_USER:
 			return state;
 			break;
 		case LOGOUT:
