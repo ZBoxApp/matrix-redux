@@ -14,7 +14,5 @@ const enhancer = compose(
 );
 
 export default function createAppStore(preloadedState) {
-    const store = createStore(rootReducer, preloadedState, enhancer);
-
-    return store;
+    return createStore(rootReducer, preloadedState, enhancer);
 }

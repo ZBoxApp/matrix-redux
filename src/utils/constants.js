@@ -1,5 +1,5 @@
 "use strict";
 
 export const CONSTANTS = {
-  defaultStatus: ['success', 'started', 'failed', 'updated', 'finished']
-}
+    defaultStatus: ['success', 'started', 'failed', 'updated', 'finished']
+};
