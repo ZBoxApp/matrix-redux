@@ -12,6 +12,18 @@ export const sdk = MatrixClient;
 const store = createStore({ currentUser: null, login: null });
 
 
+/**
+ * Just a function to clean some values of the
+ * client object
+ *
+ */
+export const clearMatrixClient = function() {
+  MatrixClient.client._http.opts = {};
+  MatrixClient.client.credentials = {};
+  MatrixClient.deviceId = null;
+  MatrixClient.baseUrl = null;
+}
+
 export const endTest = function(err) {
   if (!err) return true;
   console.log('1. loginWithPassword', err);

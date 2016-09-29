@@ -1,6 +1,6 @@
 "use strict";
 
-import {expect, userFixture, endTest, sdk, logTestUser} from './helper';
+import {expect, clearMatrixClient, userFixture, endTest, sdk, logTestUser} from './helper';
 import createStore from '../src/store/store';
 import {LoginActions} from '../src/actions/login';
 import MatrixClient from '../src/utils/client';
@@ -14,18 +14,6 @@ const testUserPassword = userFixture.testUserPassword;
 const clientOptions = userFixture.clientOptions;
 const homeServerName = userFixture.homeServerName;
 
-/**
- * Just a function to clean some values of the
- * client object
- *
- */
-const clientMatrixClient = function() {
-  MatrixClient.client._http.opts = {};
-  MatrixClient.client.credentials = {};
-  MatrixClient.deviceId = null;
-  MatrixClient.baseUrl = null;
-}
-
 describe('Login Action Creators Tests', () => {
 
   beforeEach(() =>{
@@ -38,7 +26,7 @@ describe('Login Action Creators Tests', () => {
       state = store.getState();
       const matrixClientData = state.login.matrixClientData;
       matrixClientData.optsForCreateClient = { baseUrl: matrixClientData.baseUrl };
-      clientMatrixClient();
+      clearMatrixClient();
       MatrixClient.restoreSession(matrixClientData);
       expect(MatrixClient.client).to.not.be.undefined;
       expect(MatrixClient.client.baseUrl).to.equal(clientOptions.baseUrl);
@@ -61,7 +49,7 @@ describe('Login Action Creators Tests', () => {
       state = store.getState();
       const matrixClientData = state.login.matrixClientData;
       matrixClientData.optsForCreateClient = { baseUrl: matrixClientData.baseUrl };
-      clientMatrixClient();
+      clearMatrixClient();
       MatrixClient.restoreSession(matrixClientData);
       MatrixClient.callApi('getProfileInfo', testUserId, function(err, profile){
         expect(err).to.be.null;

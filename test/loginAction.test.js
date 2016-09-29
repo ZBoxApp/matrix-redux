@@ -1,6 +1,6 @@
 "use strict";
 
-import {expect, userFixture, endTest, sdk, logTestUser} from './helper';
+import {expect, clearMatrixClient, userFixture, endTest, sdk, logTestUser} from './helper';
 import createStore from '../src/store/store';
 import {LoginActions} from '../src/actions/login';
 import MatrixClient from '../src/utils/client';
@@ -77,5 +77,22 @@ describe('Login Action Creators Tests', () => {
     }).catch(function(err){
       endTest(err);
     });
+  });
+
+  it('5. restoreSession should update currentUser and login reducers', function(endTest) {
+    store.dispatch(LoginActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then(() => {
+      state = store.getState();
+      const matrixClientData = state.login.matrixClientData;
+      matrixClientData.optsForCreateClient = { baseUrl: matrixClientData.baseUrl };
+      clearMatrixClient();
+      store.dispatch(LoginActions.restoreSession(matrixClientData));
+      state = store.getState();
+      expect(state.login.matrixClientData).to.not.be.undefined;
+      expect(state.currentUser.accessToken).to.not.be.undefined;
+      expect(state.currentUser.isLogged).to.be.true;
+      expect(state.login.isLogged).to.be.true;
+      expect(MatrixClient.client._http.opts.accessToken).to.equal(matrixClientData._http.opts.accessToken);
+      endTest();
+    }).catch((err) => { endTest(err) });
   });
 });

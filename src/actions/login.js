@@ -69,7 +69,6 @@ LoginActions.loginWithPassword = (userName, userPassword, opts) => {
  */
 LoginActions.loginWithToken = (token, opts) => {
 	return dispatch => {
-
 		dispatch(LoginActions.startedRequestLogin());
 
 		return new Promise((resolve, reject) => {
@@ -82,6 +81,19 @@ LoginActions.loginWithToken = (token, opts) => {
 				resolve(data);
 			});
 		});
+	};
+};
+
+LoginActions.restoreSession = (opts) => {
+	return dispatch => {
+		dispatch(LoginActions.startedRequestLogin());
+		MatrixClient.restoreSession(opts);
+		const data = opts._http.opts;
+		data.baseUrl = opts.baseUrl;
+		data.isLogged = true;
+		data.credentials = {userId: data.userId};
+		dispatch(LoginActions.successRequestLogin(data));
+		dispatch(LoginActions.finishedRequestLogin());
 	};
 };
 
