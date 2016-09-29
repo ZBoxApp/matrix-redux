@@ -2,37 +2,27 @@
 * ACTIONS FOR LOGIN
 **/
 
-import {setUser} from './currentUser';
-import matrixClient from '../utils/client';
+import {setError} from './error';
+import MatrixClient from '../utils/client';
+import {actionCreator, createDefaultConstants, createDefaultActions} from '../utils/utils';
+import {CONSTANTS} from '../utils/constants';
 
-export const START_LOGIN = 'START_LOGIN';
-export const FAILED_LOGIN = 'FAILED_LOGIN';
-export const SUCCESS_LOGIN = 'SUCCESS_LOGIN';
+export const LoginActionConstants = createDefaultConstants('login');
+export const LoginActions = createDefaultActions('login');
 
-export const LOGOUT = 'LOGOUT';
+/**
+ * Extra Constants Definitions
+ */
 
-const startLogin = () => {
-	return {
-		type: START_LOGIN,
-		payload: {
-			isLoading: true
-		}
-	};
-};
+LoginActionConstants.LOGOUT = "LOGOUT";
 
-const failedLogin = (err) => {
-	return {
-		type: FAILED_LOGIN,
-		payload: {
-			isLoading: false,
-			error: err
-		}
-	};
-};
+/**
+ * Extra Functions Definitions
+ */
 
 const succesLogin = (userData) => {
 	return {
-		type: SUCCESS_LOGIN,
+		type: LoginActionConstants.SUCCESS_REQUEST_LOGIN,
 		payload: {
 			isLoading: false,
 			isLogged: true,
@@ -45,24 +35,62 @@ const succesLogin = (userData) => {
 	};
 };
 
-const loggout = () => {
-	return {
-		type: LOGOUT
+
+
+/**
+ * Used for login the user wih a password
+ * @param {String} userName - Matrix User Name
+ * @param {String} userPassword - Matrix User Password
+ * @param {Object} opts - Options to initialize Matrix Client
+ */
+LoginActions.loginWithPassword = (userName, userPassword, opts) => {
+	return dispatch => {
+
+		dispatch(LoginActions.startedRequestLogin());
+
+		return new Promise((resolve, reject) => {
+			MatrixClient.loginWithPassword(userName, userPassword, opts, (err, data) => {
+				if (err) {
+					dispatch(LoginActions.failedRequestLogin());
+					dispatch(LoginActions.finishedRequestLogin())
+					dispatch(setError({ key: 'login.loginWithPassword', error: err }));
+					return reject(err);
+				}
+				data.baseUrl = opts.baseUrl;
+				data.isLogged = true;
+				data.credentials = {userId: data.userId};
+				dispatch(LoginActions.successRequestLogin(data));
+				dispatch(LoginActions.finishedRequestLogin());
+				resolve(data);
+			});
+		});
 	};
 };
 
-export const makeLogin = (user, password, options) => {
+/**
+ * Used for login the user wih a password
+ * @param {String} userName - Matrix User Name
+ * @param {String} userPassword - Matrix User Password
+ * @param {Object} opts - Options to initialize Matrix Client
+ */
+LoginActions.loginWithToken = (token, opts) => {
 	return dispatch => {
-		dispatch(startLogin());
+
+		dispatch(LoginActions.startedRequestLogin());
 
 		return new Promise((resolve, reject) => {
-			matrixClient.login(user, password, options, (err, data) => {
+			MatrixClient.loginWithToken(token, opts, (err, data) => {
 				if (err) {
-					dispatch(failedLogin(err));
+					dispatch(LoginActions.failedRequestLogin());
+					dispatch(LoginActions.finishedRequestLogin())
+					dispatch(setError({ key: 'login.loginWithPassword', error: err }));
 					return reject(err);
 				}
-				data.baseUrl = options.baseUrl;
-				dispatch(succesLogin(data));
+				data.baseUrl = opts.baseUrl;
+				data.isLogged = true;
+				data.credentials = {userId: data.userId};
+				dispatch(LoginActions.successRequestLogin(data));
+				dispatch(LoginActions.finishedRequestLogin());
 				resolve(data);
 			});
 		});

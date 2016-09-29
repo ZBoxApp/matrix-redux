@@ -4,12 +4,18 @@ const initialState = {
 	error: {}
 };
 
+/**
+ * The error is of the type:
+ * {key: 'ActionCreatorType.ActionCreatorName', error: 'The Error'}
+ * ex: {key: 'login.loginWithPassword', error: 'Bad Password' }
+ */
 const Errors = function(state = initialState, action){
 	let newState = null;
 	switch(action.type){
 		case SET_ERROR:
+			const newError = {[action.payload.key]: action.payload.error}
 			newState = {...state.error, [action.payload.key]: action.payload.error}
-			return state;
+			return newState;
 			break;
 
 		case REMOVE_ERROR:

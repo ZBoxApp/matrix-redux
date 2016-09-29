@@ -1,0 +1,28 @@
+{
+  "ecmaVersion": 6,
+  "libs": [
+    "chai"
+  ],
+  "loadEagerly": [
+    "./src/**/*.js",
+    "./node_modules/matrix-js-sdk/lib/*.js",
+    "./node_modules/matrix-js-sdk/lib/**/.js"
+  ],
+  "plugins": {
+    "doc_comment": {
+      "fullDocs": true,
+      "strong": false
+    },
+    "node": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "modules": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "es_modules": {}
+  }
+}

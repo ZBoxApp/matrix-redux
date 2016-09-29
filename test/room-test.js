@@ -2,7 +2,7 @@
 
 import {expect, userFixture, sdk, logTestUser, removeTestRoom} from './helper';
 import createStore from '../src/store/store';
-import {SyncActions} from '../src/actions/sync';
+import {RoomActions} from '../src/actions/rooms';
 
 import {getPublicRooms, leaveRoom, createRoom} from '../src/actions/rooms';
 let store = {};

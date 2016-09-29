@@ -1,4 +1,4 @@
-import {START_LOGIN, FAILED_LOGIN, SUCCESS_LOGIN, LOGOUT} from '../actions/login';
+import {LoginActionConstants} from '../actions/login';
 
 const initialState = {
 	isLoading: false,
@@ -8,22 +8,22 @@ const initialState = {
 const Login = function(state = initialState, action){
 	let newState = null;
 	switch(action.type){
-		case START_LOGIN:
+		case LoginActionConstants.STARTED_REQUEST_LOGIN:
 			newState = {...state, ['isLoading']: action.payload.isLoading};
 			return newState;
 			break;
 
-		case FAILED_LOGIN:
+		case LoginActionConstants.FAILED_REQUEST_LOGIN:
 			newState = {...state, ['isLoading']: action.payload.isLoading};
 			return newState;
 			break;
 
-		case SUCCESS_LOGIN:
+		case LoginActionConstants.SUCCESS_REQUEST_LOGIN:
 			newState = {...state, ['isLogged']: action.payload.isLogged};
 			return newState;
 			break;
 
-		case LOGOUT:
+		case LoginActionConstants.LOGOUT:
 			return initialState;
 			break;
 

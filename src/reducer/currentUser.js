@@ -1,5 +1,5 @@
 import {CurrentUserActionConstants} from '../actions/currentUser';
-import {LOGOUT, SUCCESS_LOGIN} from '../actions/login';
+import {LoginActions, LoginActionConstants} from '../actions/login';
 
 const initialState = {
 	isLoading: false,
@@ -9,7 +9,7 @@ const initialState = {
 	refreshToken: null,
 	deviceId: null,
 	baseUrl: null,
-
+	credentials: null
 };
 
 const currentUser = function(state = initialState, action){
@@ -20,7 +20,7 @@ const currentUser = function(state = initialState, action){
 			newState = {...state, ['isLoading']: action.payload.isLoading};
 			return newState;
 			break;
-		case SUCCESS_LOGIN:
+		case LoginActionConstants.SUCCESS_REQUEST_LOGIN:
 			newState = {...state, ...action.payload};
 			return newState;
 			break;
@@ -35,7 +35,7 @@ const currentUser = function(state = initialState, action){
 		case CurrentUserActionConstants.UPDATED_REQUEST_USER:
 			return state;
 			break;
-		case LOGOUT:
+		case LoginActionConstants.LOGOUT:
 			return initialState;
 			break;
 		default:
