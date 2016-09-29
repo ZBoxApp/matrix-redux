@@ -78,6 +78,4 @@ describe('Login Action Creators Tests', () => {
       endTest(err);
     });
   });
-
-
 });

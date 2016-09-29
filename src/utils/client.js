@@ -64,6 +64,32 @@ export default class MatrixClient {
      });
    }
 
+   /**
+    * Method to restore the Matrix Client with credentials
+    * stored offline, like `localStorage` or `DB`.
+    * @param {Object} opts  - Options to restore the client
+    * @param {Object} opts.optsForCreateClient - Object with data for `matrixSDK.createClient`
+    * @param {String} opts.optsForCreateClient.baseUrl - The URL of Matrix Home Server
+    * @param {Function} [opts.optsForCreateClient.request] - Function used to make the request
+    * @param {String} opts.baseUrl - The URL of Matrix Home Server
+    * @param {String} opts.deviceId - The Device Id returned for Home Server for this Device
+    * @param {Object} opts.credentials
+    * @param {String} opts.credentials.userId - The Full Matrix userId
+    * @param {Object} opts._http
+    * @param {Object} opts._http.opts
+    * @param {String} opts._http.opts.userId
+    * @param {String} opts._http.opts.refreshToken
+    * @param {String} opts._http.opts.accessToken
+    * @param {String} opts._http.opts.deviceId
+    * @param {String} opts._http.opts.homeServer
+    * @return nothing, but updates the `MatrixClient.client` Object
+    **/
+   static restoreSession(opts) {
+     this.createClient(opts.optsForCreateClient);
+     delete opts.optsForCreateClient;
+     _.merge(this.client, opts);
+   }
+
     /**
      * High level helper method to call initialSync, emit the resulting events,
      * and then start polling the eventStream for new events. To listen for these

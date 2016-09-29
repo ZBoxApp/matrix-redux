@@ -3,7 +3,7 @@
 **/
 
 import {setError} from './error';
-import matrixClient from '../utils/client';
+import MatrixClient from '../utils/client';
 import {actionCreator, createDefaultConstants, createDefaultActions} from '../utils/utils';
 
 export const CurrentUserActionConstants = createDefaultConstants('user');
@@ -12,9 +12,9 @@ export const CurrentUserActions = createDefaultActions('user');
 export const requestUserProfile = (userId) => {
 	return dispatch => {
 		dispatch(CurrentUserActions.startedRequestUser());
-		
+
 		return new Promise((resolve, reject) => {
-			matrixClient.callApi('getProfileInfo', userId, (err, data) => {
+			MatrixClient.callApi('getProfileInfo', userId, (err, data) => {
 				if (err) {
 					dispatch(CurrentUserActions.failedRequestUser({error: err}));
 					return reject(err);
