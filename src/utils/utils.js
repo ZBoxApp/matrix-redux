@@ -1,7 +1,7 @@
 "use strict";
 
-import isomorphicFetch from 'isomorphic-fetch';
-import {CONSTANTS} from './constants';
+import isomorphicFetch from "isomorphic-fetch";
+import {CONSTANTS} from "./constants";
 
 /**
  * If fetch is not defined, as in Node and old Browsers,
@@ -22,7 +22,7 @@ export const fetchRequest = (options, callback) => {
     options.body = JSON.stringify(options.body);
 
     fetch(uri, options)
-        .then(function(response) {
+        .then(function (response) {
             if (response.status >= 400) {
                 var error = new Error("Bad response from server");
                 return callback(error);
@@ -30,11 +30,11 @@ export const fetchRequest = (options, callback) => {
             return response.json();
 
         })
-        .then(function(response) {
+        .then(function (response) {
             callback(null, response, response);
         }).catch((error) => {
-            callback(error);
-        });
+        callback(error);
+    });
 };
 
 /**
@@ -44,16 +44,16 @@ export const fetchRequest = (options, callback) => {
  * @return {Function}          The Action Creator Function
  */
 const actionCreator = (actionName, status) => {
-  const type = [status, 'request', actionName].join('_').toUpperCase();
-	const action = (payload) => {
-    payload = payload || {};
-    payload.isLoading = isLoading(status);
-		return {
-      type: type,
-      payload: payload
-    }
-	};
-  return action;
+    const type = [status, 'request', actionName].join('_').toUpperCase();
+    const action = (payload) => {
+        payload = payload || {};
+        payload.isLoading = isLoading(status);
+        return {
+            type: type,
+            payload: payload
+        }
+    };
+    return action;
 };
 
 /**
@@ -62,13 +62,13 @@ const actionCreator = (actionName, status) => {
  * @return {Object}            Object with all the Action Creator Functions
  */
 export const createDefaultActions = (actionName) => {
-  const result = {};
-  CONSTANTS.defaultStatus.forEach((status) => {
-    const method = actionCreator(actionName, status);
-    const methodName = status + 'Request' + actionName.charAt(0).toUpperCase() + actionName.slice(1);
-    result[methodName] = method;
-  });
-  return result;
+    const result = {};
+    CONSTANTS.defaultStatus.forEach((status) => {
+        const method = actionCreator(actionName, status);
+        const methodName = status + 'Request' + actionName.charAt(0).toUpperCase() + actionName.slice(1);
+        result[methodName] = method;
+    });
+    return result;
 };
 
 /**
@@ -77,13 +77,13 @@ export const createDefaultActions = (actionName) => {
  * @return {Object}            Object with all the Constants
  */
 export const createDefaultConstants = (actionName) => {
-  const result = {};
-  CONSTANTS.defaultStatus.forEach((status) => {
-    const constName = [status, 'request', actionName].join('_').toUpperCase();
-    result[constName] = constName;
-  });
-  return result;
-}
+    const result = {};
+    CONSTANTS.defaultStatus.forEach((status) => {
+        const constName = [status, 'request', actionName].join('_').toUpperCase();
+        result[constName] = constName;
+    });
+    return result;
+};
 
 /**
  * Return if the state should be marked as loading
@@ -91,5 +91,5 @@ export const createDefaultConstants = (actionName) => {
  * @return {Boolean}        If should be loading or not
  */
 const isLoading = (status) => {
-  return (status === 'started');
-}
+    return (status === 'started');
+};

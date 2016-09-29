@@ -1,21 +1,18 @@
 "use strict";
 
-import {expect, userFixture, sdk, logTestUser, removeTestRoom} from './helper';
-import createStore from '../src/store/store';
-import {RoomActions} from '../src/actions/rooms';
-
-import {getPublicRooms, leaveRoom, createRoom} from '../src/actions/rooms';
+import {expect, logTestUser, removeTestRoom} from "./helper";
+import {getPublicRooms, leaveRoom, createRoom} from "../src/actions/rooms";
 let store = {};
 
 describe('Room Actions Tests', () => {
 
-  beforeEach((done) =>{
-    logTestUser((e,d) => {
-      if (e) return console.error(e);
-      store = d;
-      done();
+    beforeEach((done) => {
+        logTestUser((e, d) => {
+            if (e) return console.error(e);
+            store = d;
+            done();
+        });
     });
-  });
 
     it('on request public rooms action', (done) => {
         store.dispatch(getPublicRooms()).then((rooms) => {
