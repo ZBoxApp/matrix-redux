@@ -6,18 +6,16 @@
 "use strict";
 
 import {combineReducers} from "redux";
-import login from "./login";
 import error from "./error";
 import rooms from "./rooms";
-import currentUser from "./currentUser";
+import user from "./user";
 import sync from "./sync";
 
 const rootReducer = combineReducers({
     sync,
-    login,
     error,
     rooms,
-    currentUser
+    user
 });
 
 export default rootReducer;

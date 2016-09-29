@@ -2,13 +2,13 @@
 
 import chai from "chai";
 import MatrixClient from "../src/utils/client";
-import {LoginActions} from "../src/actions/login";
+import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
 import createStore from "../src/store/store";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
-const store = createStore({currentUser: null, login: null});
+const store = createStore({user: null, login: null});
 
 
 /**
@@ -52,7 +52,7 @@ const clientOptions = {
 export const logTestUser = (callback) => {
     const testUserName = userFixture.testUserName;
     const testUserPassword = userFixture.testUserPassword;
-    store.dispatch(LoginActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then((data) => {
+    store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then((data) => {
         callback(null, store);
     }).catch((e) => {
         callback(e);
