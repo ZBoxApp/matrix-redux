@@ -2,7 +2,8 @@ import {LoginActionConstants} from '../actions/login';
 
 const initialState = {
 	isLoading: false,
-	isLogged: false
+	isLogged: false,
+	matrixClientData: {}
 };
 
 const Login = function(state = initialState, action){
@@ -19,7 +20,25 @@ const Login = function(state = initialState, action){
 			break;
 
 		case LoginActionConstants.SUCCESS_REQUEST_LOGIN:
-			newState = {...state, ['isLogged']: action.payload.isLogged};
+			const matrixClientData = {
+				'_http': {
+						'opts': {
+						userId: action.payload.userId,
+			      refreshToken: action.payload.refreshToken,
+			      accessToken: action.payload.accessToken,
+			      deviceId: action.payload.deviceId,
+			      homeServer: action.payload.homeServer
+					}
+				},
+				'credentials': { 'userId': action.payload.userId },
+				'deviceId': action.payload.deviceId,
+				'baseUrl': action.payload.baseUrl
+			};
+			newState = {...state,
+				matrixClientData: matrixClientData,
+				isLogged: action.payload.isLogged,
+				isLoading: false
+			};
 			return newState;
 			break;
 

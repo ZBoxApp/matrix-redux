@@ -59,5 +59,25 @@ describe('Login Action Creators Tests', () => {
     });
   });
 
+  it('4. LoginReducer must have the Auth Data for MatrixClient Constructor', function(endTest) {
+    store.dispatch(LoginActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then((loginData) => {
+      state = store.getState();
+      expect(state.login.isLogged).to.be.true;
+      expect(state.login.isLoading).to.be.false;
+      expect(state.login.matrixClientData).to.not.be.undefined;
+      expect(state.login.matrixClientData.baseUrl).to.equal(clientOptions.baseUrl);
+      expect(state.login.matrixClientData.deviceId).to.not.be.undefined;
+      expect(state.login.matrixClientData.credentials.userId).to.equal(testUserId);
+      expect(state.login.matrixClientData._http.opts.userId).to.equal(testUserId);
+      expect(state.login.matrixClientData._http.opts.refreshToken).to.not.be.undefined;
+      expect(state.login.matrixClientData._http.opts.accessToken).to.not.be.undefined;
+      expect(state.login.matrixClientData._http.opts.deviceId).to.not.be.undefined;
+      expect(state.login.matrixClientData._http.opts.homeServer).to.equal(homeServerName);
+      endTest();
+    }).catch(function(err){
+      endTest(err);
+    });
+  });
+
 
 });
