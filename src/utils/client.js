@@ -54,6 +54,16 @@ export default class MatrixClient {
      });
    }
 
+   static loginWithToken(token, opts, callback) {
+     this.createClient(opts);
+     this.client.loginWithToken(token, (err, data) => {
+       if (err) return callback(err);
+       this._updateMatrixClient(data);
+       const formatedData = _.mapKeys(data, function (v, k) {return _.camelCase(k);});
+       callback(null, formatedData);
+     });
+   }
+
     /**
      * High level helper method to call initialSync, emit the resulting events,
      * and then start polling the eventStream for new events. To listen for these
@@ -92,6 +102,7 @@ export default class MatrixClient {
     	this.client._http.opts.refreshToken = loginResult.refresh_token;
       this.client._http.opts.accessToken = loginResult.access_token;
     	this.client._http.opts.deviceId = loginResult.device_id;
+      this.client._http.opts.homeServer = loginResult.home_server;
       this.client.credentials.userId = loginResult.user_id;
       this.client.deviceId = loginResult.device_id;
     }

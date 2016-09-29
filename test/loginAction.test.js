@@ -1,9 +1,9 @@
 "use strict";
 
-import {expect, userFixture, endTest, sdk, logTestUser} from '../helper';
-import createStore from '../../src/store/store';
-import {LoginActions} from '../../src/actions/login';
-import MatrixClient from '../../src/utils/client';
+import {expect, userFixture, endTest, sdk, logTestUser} from './helper';
+import createStore from '../src/store/store';
+import {LoginActions} from '../src/actions/login';
+import MatrixClient from '../src/utils/client';
 
 let store = {};
 let state;
@@ -59,5 +59,5 @@ describe('Login Action Creators Tests', () => {
     });
   });
 
-  
+
 });

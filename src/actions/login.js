@@ -51,16 +51,10 @@ LoginActions.loginWithPassword = (userName, userPassword, opts) => {
 		return new Promise((resolve, reject) => {
 			MatrixClient.loginWithPassword(userName, userPassword, opts, (err, data) => {
 				if (err) {
-					dispatch(LoginActions.failedRequestLogin());
-					dispatch(LoginActions.finishedRequestLogin())
-					dispatch(setError({ key: 'login.loginWithPassword', error: err }));
+					rejectDispatchers(dispatch, 'login.loginWithPassword', err);
 					return reject(err);
 				}
-				data.baseUrl = opts.baseUrl;
-				data.isLogged = true;
-				data.credentials = {userId: data.userId};
-				dispatch(LoginActions.successRequestLogin(data));
-				dispatch(LoginActions.finishedRequestLogin());
+				resolveDispatchers(dispatch, opts, data);
 				resolve(data);
 			});
 		});
@@ -81,18 +75,26 @@ LoginActions.loginWithToken = (token, opts) => {
 		return new Promise((resolve, reject) => {
 			MatrixClient.loginWithToken(token, opts, (err, data) => {
 				if (err) {
-					dispatch(LoginActions.failedRequestLogin());
-					dispatch(LoginActions.finishedRequestLogin())
-					dispatch(setError({ key: 'login.loginWithPassword', error: err }));
+					rejectDispatchers(dispatch, 'login.loginWithToken', err);
 					return reject(err);
 				}
-				data.baseUrl = opts.baseUrl;
-				data.isLogged = true;
-				data.credentials = {userId: data.userId};
-				dispatch(LoginActions.successRequestLogin(data));
-				dispatch(LoginActions.finishedRequestLogin());
+				resolveDispatchers(dispatch, opts, data);
 				resolve(data);
 			});
 		});
 	};
 };
+
+const rejectDispatchers = (dispatch, key, error) => {
+	dispatch(LoginActions.failedRequestLogin());
+	dispatch(LoginActions.finishedRequestLogin());
+	dispatch(setError({ key: key, error: error }));
+}
+
+const resolveDispatchers = (dispatch, opts, data) => {
+	data.baseUrl = opts.baseUrl;
+	data.isLogged = true;
+	data.credentials = {userId: data.userId};
+	dispatch(LoginActions.successRequestLogin(data));
+	dispatch(LoginActions.finishedRequestLogin());
+}

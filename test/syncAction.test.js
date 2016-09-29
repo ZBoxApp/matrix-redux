@@ -6,8 +6,9 @@ import {startSync, getSyncState, SyncActions} from '../src/actions/sync';
 import MatrixClient from '../src/utils/client';
 
 let store = {};
+let reduxState = {};
 
-describe('Sync Actions', function(){
+describe('Sync Actions', function() {
   beforeEach((done) =>{
     logTestUser((e,d) => {
       if (e) return console.error(e);
@@ -16,12 +17,17 @@ describe('Sync Actions', function(){
     });
   });
 
-  it('SYNC_EVENTS without filter', (done) => {
-
-    store.dispatch(startSync()).then((sync) => {
-      MatrixClient.client.on("sync", function(e){
-        console.log("EVENTO", e);
-        console.log(MatrixClient.client);
+  it('SYNC_EVENTS At Start', function(done) {
+    this.timeout(7000);
+    const opts = {pollTimeout: 5000};
+    store.dispatch(startSync(opts)).then(function(sync) {
+      MatrixClient.client.on("sync", function(state, prevState, data) {
+        if (state === 'PREPARED') {
+          MatrixClient.client.stopClient();
+          reduxState = store.getState();
+          expect(Object.keys(reduxState.rooms.rooms).length).to.be.above(1);
+          done();
+        }
       })
     }).catch((err) => {
       console.log(err);
