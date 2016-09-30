@@ -48,7 +48,7 @@ $ npm i --save lodash matrix-js-sdk redux redux-thunk
 ### First time
 
 1. [Login the user](#login), your platform must have a valid [fetch function](#fetch-function)
-2. [Start the client](#matrix-client), this runs the **Initial Syncs** and keeps running and `emitting` events that are captured by this library.
+2. [Start the client](#matrix-client), this runs the **Initial Sync** and keeps running and `emitting` events that are captured by this library.
 3. Save a local copy of the Session Data, available at `state.user.matrixClientData`
 4. Make your App `React` to the change state.
 
@@ -148,13 +148,13 @@ store.dispatch(UserActions.restoreSession(matrixClientData));
 ## Matrix Client
 The MatrixClient runs until the App closes and `emits` events that are catched by this library. The MatrixClient has this transition:
 
-                                          +---->STOPPED
-                                          |
-              +----->PREPARED -------> SYNCING <--+
-              |        ^                  |       |
-   null ------+        |  +---------------+       |
-              |        |  V                       |
-              +------->ERROR ---------------------+
+                                            +---->STOPPED
+                                            |
+                +----->PREPARED -------> SYNCING <--+
+                |        ^                  |       |
+     null ------+        |  +---------------+       |
+                |        |  V                       |
+                +------->ERROR ---------------------+
 
 
 #### 1. Starting the Client
