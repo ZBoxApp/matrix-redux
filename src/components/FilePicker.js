@@ -25,7 +25,7 @@ export default class FilePicker extends Component {
     }
 
     render () {
-        const {icon, mini, accent, pickMultipleFiles} = this.props;
+        const {icon, accent, pickMultipleFiles} = this.props;
         const attrs = {};
 
         if (pickMultipleFiles) {
@@ -34,7 +34,7 @@ export default class FilePicker extends Component {
 
         return (
             <label htmlFor={this.id}>
-                <IconButton icon={icon} accent={accent} mini={mini} onMouseUp={this.pickFile} />
+                <IconButton icon={icon} accent={accent} ripple onMouseUp={this.pickFile} />
                 <input type="file" style={{display: 'none'}} id={this.id} ref={this.id} onChange={this.onFilePick} {...attrs} />
             </label>
         );
@@ -44,7 +44,6 @@ export default class FilePicker extends Component {
 FilePicker.propTypes = {
     icon: React.PropTypes.string,
     accent: React.PropTypes.bool,
-    mini: React.PropTypes.bool,
     onPickFile: React.PropTypes.func,
     pickMultipleFiles: React.PropTypes.bool
 };
@@ -52,6 +51,5 @@ FilePicker.propTypes = {
 FilePicker.defaultProps = {
     icon: 'attach_file',
     accent: true,
-    mini: true,
     pickMultipleFiles: false
 };

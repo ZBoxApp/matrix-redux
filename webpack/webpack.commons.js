@@ -32,6 +32,11 @@ const commons = {
             {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!resolve-url!sass?sourceMap')
+            },
+            {
+                test: /\.yaml$/,
+                loader: 'yaml',
+                include: path.resolve(path.src, 'translations')
             }
         ]
     },

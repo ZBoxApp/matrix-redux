@@ -1,7 +1,9 @@
 :global .viewerBox {
   overflow: hidden;
   position: relative;
-  border-radius: 15px; }
+  border-radius: 15px;
+  max-height: 200px;
+  max-width: 250px; }
   :global .viewerBox .imageViewer {
     width: auto;
     max-width: 100%;

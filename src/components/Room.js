@@ -4,6 +4,7 @@ import Bubble from '../components/Bubble';
 import FilePicker from '../components/FilePicker';
 import ImageViewer from '../components/ImageViewer';
 import Styles from '../sass/global/index.scss';
+import {getTranslation} from '../utils/utils.ui';
 
 export default class Room extends Component {
     constructor(props) {
@@ -111,16 +112,12 @@ export default class Room extends Component {
         return (
             <Layout>
                 <Panel>
-                    <section className={Styles.containerScrollable}>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
+                    <section className={Styles.containerScroll}>
                         {msg}
                     </section>
 
                     <section className={Styles.messageBox}>
-                        <div contentEditable={true} data-placeholder={'Type your message...'} className={'writeBox'}></div>
+                        <div contentEditable={true} data-placeholder={getTranslation('app.view.messages.field.message')} className={'writeBox'}></div>
                         <div className={'controls-box'}>
                             <div className={'flex'}>
                                 <div>
@@ -128,7 +125,9 @@ export default class Room extends Component {
                                 </div>
 
                                 <div>
-                                    <Button icon={'send'} mini raised accent flat ripple>Enviar</Button>
+                                    <Button icon={'send'} mini raised accent flat ripple>
+                                        {getTranslation('app.view.messages.button.send')}
+                                    </Button>
                                 </div>
                             </div>
                         </div>

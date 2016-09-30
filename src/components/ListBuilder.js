@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox';
+import { List, ListItem, ListDivider } from 'react-toolbox';
 import {browserHistory} from 'react-router';
 
 
@@ -18,16 +18,22 @@ export default class CustomListItem extends Component {
             const title = list.title || 'Untitle';
             const unreadMsg = list.lastMessage || '';
             const legend = list.legend || 'Mensaje nuevo...';
+            const setSeparator = lists[index + 1] ? true : false;
 
             return (
-                <ListItem
-                    key={`${index}-room-${new Date().getTime()}`}
-                    avatar={avatar}
-                    caption={title}
-                    rightIcon={unreadMsg}
-                    legend={legend}
-                    onClick={this.onClickChat.bind(this, index)}
-                />
+                <div>
+                    <ListItem
+                        key={`${index}-room-${new Date().getTime()}`}
+                        avatar={avatar}
+                        caption={title}
+                        rightIcon={unreadMsg}
+                        legend={legend}
+                        onClick={this.onClickChat.bind(this, index)}
+                    />
+                    {setSeparator && (
+                        <ListDivider inset={true} />
+                    )}
+                </div>
             );
         });
 

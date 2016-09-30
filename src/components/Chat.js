@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { ProgressBar, AppBar, Layout, Panel, Drawer, Tab, Tabs, List, ListItem} from 'react-toolbox';
 import ListBuilt from './ListBuilder';
-import Styles from '../sass/chat/chat';
+import Styles from '../sass/global/index.scss';
 
 export default class Chat extends Component {
     constructor(props) {
@@ -106,7 +106,7 @@ export default class Chat extends Component {
         return (
             <Layout>
                 <Panel>
-                    <section className={Styles.containerChats}>
+                    <section className={Styles.containerScroll}>
                         <Tabs index={index} onChange={this.onChangeTab} fixed>
                             <Tab label={'Chats'}>
                                 <ListBuilt lists={lists}/>

@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 import { AppBar, Drawer, List, ListItem, ProgressBar, Layout } from 'react-toolbox';
 import Styles from '../sass/global/index';
+import DevTools from '../containers/DevTools';
+
+const isDev = process.env.NODE_ENV === 'development' ? true : false;
 
 export default class App extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            showMenu: false
+            show: false
         };
 
         this.onClickMenu = this.onClickMenu.bind(this);
@@ -37,6 +40,9 @@ export default class App extends Component {
                     <ProgressBar type='circular' mode='indeterminate' className={Styles.loaderSize} multicolor />
                 </AppBar>
                 {children}
+                {isDev && (
+                    <DevTools/>
+                )}
             </Layout>
         );
     }

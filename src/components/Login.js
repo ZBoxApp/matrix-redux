@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Layout, Panel, Button, Input } from 'react-toolbox';
+import {getTranslation} from '../utils/utils.ui';
 import Styles from '../sass/login/login';
 
 export default class LoginForm extends Component {
@@ -42,16 +43,16 @@ export default class LoginForm extends Component {
                         </h1>
 
                         <div className={Styles.inputColor}>
-                            <Input type='text' label='Username' value={username} icon='account_circle' onChange={(e) => {
+                            <Input type='text' label={getTranslation('app.forms.login.field.username')} value={username} icon='account_circle' onChange={(e) => {
                                 this.onChangesInput(e, 'username');
                             }} />
-                            <Input type='password' label='Password' value={password} icon='lock' onChange={(e) => {
+                            <Input type='password' label={getTranslation('app.forms.login.field.password')} value={password} icon='lock' onChange={(e) => {
                                 this.onChangesInput(e, 'password');
                             }} />
-                            <Input type='text' label='Custom Server' value={server} icon='cloud_queue' onChange={(e) => {
+                            <Input type='text' label={getTranslation('app.forms.login.field.server')} value={server} icon='cloud_queue' onChange={(e) => {
                                 this.onChangesInput(e, 'server');
                             }} />
-                            <Button label='Entrar' className={Styles.fullWidth} raised primary onClick={this.onLogin} />
+                            <Button label={getTranslation('app.forms.login.button.submit')} className={Styles.fullWidth} raised primary onClick={this.onLogin} />
                         </div>
                     </div>
                 </Panel>

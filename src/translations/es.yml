@@ -1,0 +1,18 @@
+app:
+  forms:
+    login:
+      field:
+        username: "Usuario"
+        password: "Contraseña"
+        server: "Servidor Propio"
+      button:
+        submit: "Entrar"
+  view:
+    messages:
+      field:
+        message: "Escribe tu mensaje..."
+      button:
+        send: "Enviar"
+      bubble:
+        file:
+          download: "Descargar"

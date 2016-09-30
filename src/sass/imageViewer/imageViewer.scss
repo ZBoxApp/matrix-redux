@@ -4,6 +4,8 @@
     overflow: hidden;
     position: relative;
     border-radius: 15px;
+    max-height: 200px;
+    max-width: 250px;
 
     .imageViewer {
       width: auto;
