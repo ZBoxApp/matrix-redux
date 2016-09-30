@@ -1,8 +1,18 @@
 "use strict";
 
-import {expect, logTestUser, removeTestRoom} from "./helper";
-import {getPublicRooms, leaveRoom, createRoom} from "../src/actions/rooms";
+import {expect, clearMatrixClient, userFixture} from "./helper";
+import createStore from "../src/store/store";
+import * as RoomsActions from "../src/actions/rooms";
+import MatrixClient from "../src/utils/client";
+
 let store = {};
+let state;
+
+const testUserName = userFixture.testUserName;
+const testUserId = userFixture.testUserId;
+const testUserPassword = userFixture.testUserPassword;
+const clientOptions = userFixture.clientOptions;
+const homeServerName = userFixture.homeServerName;
 
 describe('Room Actions Tests', () => {
 
@@ -14,11 +24,11 @@ describe('Room Actions Tests', () => {
         });
     });
 
-    it('on request public rooms action', (done) => {
-        store.dispatch(getPublicRooms()).then((rooms) => {
-            done();
+    it('Request public rooms action', (done) => {
+        store.dispatch(RoomsActions.loadPublicRooms()).then((rooms) => {
             const state = store.getState();
-            expect(state.rooms.rooms).to.not.empty;
+            expect(state.rooms.items).to.not.empty;
+            done();
         }).catch((err) => {
             console.log("on request public rooms action -- ", err);
             done();
@@ -26,7 +36,7 @@ describe('Room Actions Tests', () => {
     });
 
     it('on create room action', (done) => {
-        store.dispatch(createRoom({
+        store.dispatch(RoomsActions.createRoom({
             room_alias_name: `real_poof_pre_2${new Date().getTime()}`,
             visibility: 'public',
             pepe: true
@@ -43,7 +53,7 @@ describe('Room Actions Tests', () => {
     });
 
     it('on leave room action', (done) => {
-        store.dispatch(leaveRoom('!hGVbivIrTvQuQPfbvq:zboxapp.dev')).then((suc) => {
+        store.dispatch(RoomsActions.leaveRoom('!hGVbivIrTvQuQPfbvq:zboxapp.dev')).then((suc) => {
             done();
         }).catch((err) => {
             //console.log(err, 'ERROR');

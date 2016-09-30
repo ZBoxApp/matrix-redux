@@ -8,7 +8,7 @@ import createStore from "../src/store/store";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
-const store = createStore({user: null, login: null});
+const store = createStore({user: null, sync: null});
 
 
 /**

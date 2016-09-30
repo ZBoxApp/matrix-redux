@@ -123,6 +123,13 @@ export default class MatrixClient {
         return this.client.getSyncState();
     }
 
+    static stopClient() {
+      return new Promise((resolve) => {
+        this.client.stopClient();
+        resolve();
+      });
+    }
+
     /**
      * Update the MatrixClient.client with session information
      * @param {Object}  loginResult - Object returned after a successful login

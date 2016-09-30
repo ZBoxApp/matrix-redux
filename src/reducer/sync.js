@@ -1,17 +1,20 @@
 'use strict';
 
-import {SyncActionConstants} from "../actions/sync";
+import * as ActionTypes from '../actions/sync';
 
 const initialState = {
-    isLoading: false
+    isRunning: false,
+    initialSyncComplete: false
 };
 
 const sync = function (state = initialState, action) {
     let newState = null;
     switch (action.type) {
-        case SyncActionConstants.STARTED_REQUEST_SYNC:
-        case SyncActionConstants.FAILED_REQUEST_SYNC:
-            newState = {...state, ['isLoading']: action.payload.isLoading};
+        case ActionTypes.SYNC_REQUEST:
+        case ActionTypes.SYNC_FAILURE:
+        case ActionTypes.SYNC_SUCCESS:
+            const payload = action.payload;
+            newState = {...state, ...payload };
             return newState;
             break;
         default:

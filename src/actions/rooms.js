@@ -2,23 +2,16 @@
  * ACTIONS FOR ROOMS
  **/
 
-import {setError} from "./error";
 import MatrixClient from "../utils/client";
-import {createDefaultConstants, createDefaultActions} from "../utils/utils";
+import {setError} from "./error";
 
-export const RoomActionConstants = createDefaultConstants('room');
-export const RoomActions = createDefaultActions('room');
+export const ROOMS_REQUEST = 'ROOMS_REQUEST';
+export const ROOMS_FAILURE = 'ROOMS_FAILURE';
+export const ROOMS_SUCCESS = 'ROOMS_SUCCESS';
 
-
-export const START_REQUEST_ROOM = 'START_REQUEST_ROOM';
-export const FAILED_REQUEST_ROOM = 'FAILED_REQUEST_ROOM';
-export const CREATE_ROOM_SUCCESS = 'CREATE_ROOM_SUCCESS';
-export const REMOVE_ROOM_SUCCESS = 'REMOVE_ROOM_SUCCESS';
-
-export const SET_ROOM = 'SET_ROOM';
-export const SET_MULTIPLE_ROOM = 'SET_MULTIPLE_ROOM';
-export const REMOVE_ROOM = 'REMOVE_ROOM';
-export const UPDATE_ROOM = 'UPDATE_ROOM';
+const requestRooms = (type, payload) => {
+  return { type, payload }
+};
 
 const startRequestRoom = () => {
     return {

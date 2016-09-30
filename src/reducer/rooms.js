@@ -1,51 +1,33 @@
-import {
-    START_REQUEST_ROOM,
-    FAILED_REQUEST_ROOM,
-    CREATE_ROOM_SUCCESS,
-    SET_ROOM,
-    REMOVE_ROOM,
-    UPDATE_ROOM,
-    SET_MULTIPLE_ROOM,
-    REMOVE_ROOM_SUCCESS
-} from "../actions/rooms";
+import * as ActionTypes from '../actions/rooms';
 
+/**
+ * @type {Object} items
+ * @type {Object} items.room
+ * @type {String} items.room.roomId
+ * @type {String} items.room.name
+ * @type {Array} items.room.timeline
+ * @type {Object} items.item.tags
+ * @type {Object} items.item.accountData
+ * @type {RoomState} items.item.room.oldState
+ * @type {RoomState} items.item.room.currentState
+ * @type {RoomSumary} items.item.room.summary
+ * @type {*} items.item.room.storageToken
+ * @type {Array} ids - A list of Rooms Ids
+ */
 const initialState = {
-    rooms: {},
-    isLoading: false
+    items: {},
+    isLoading: false,
+    ids: [],
 };
 
 const Rooms = function (state = initialState, action) {
     let newState = null;
     switch (action.type) {
-        case START_REQUEST_ROOM:
-        case CREATE_ROOM_SUCCESS:
-        case FAILED_REQUEST_ROOM:
-        case REMOVE_ROOM_SUCCESS:
+        case ActionTypes.ROOMS_REQUEST:
+        case ActionTypes.ROOMS_FAILED:
             newState = {...state, ['isLoading']: action.payload.isLoading};
             return newState;
             break;
-        case SET_ROOM:
-            const currentRooms = {...state.rooms, [action.payload.id]: {...action.payload.room}};
-            newState = {...state, ['rooms']: currentRooms};
-            return newState;
-            break;
-
-        case SET_MULTIPLE_ROOM:
-            newState = setRoomInLoop(state, action);
-            return newState;
-            break;
-
-        case REMOVE_ROOM:
-            newState = {...state};
-            delete newState['rooms'][action.payload.room_id];
-            return newState;
-            break;
-
-        case UPDATE_ROOM:
-            newState = {...state.error, [action.payload.id]: action.payload.room};
-            return newState;
-            break;
-
         default:
             return state;
             break;

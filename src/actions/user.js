@@ -10,13 +10,10 @@ export const USER_FAILURE = 'USER_FAILURE';
 export const USER_SUCCESS = 'USER_SUCCESS';
 
 const requestUser = (type, payload) => {
-  return {
-    type,
-    payload
-  }
+  return { type, payload }
 };
 
-export const requestUserProfile = (userId) => {
+export const loadUserProfile = (userId) => {
     return dispatch => {
         dispatch(CurrentUserActions.startedRequestUser());
 
@@ -41,9 +38,7 @@ export const requestUserProfile = (userId) => {
  */
 export const loginWithPassword = (userName, userPassword, opts) => {
     return dispatch => {
-
         dispatch(requestUser(USER_REQUEST, { isLoading: true }));
-
         return new Promise((resolve, reject) => {
             MatrixClient.loginWithPassword(userName, userPassword, opts, (err, data) => {
                 if (err) {
