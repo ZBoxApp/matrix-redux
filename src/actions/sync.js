@@ -58,9 +58,9 @@ export const start = (opts) => {
               }
               switch (syncState) {
                 case SYNC_STATE_FAILURE:
-                  dispatch(setError({key: 'sync.start', error: syncState}));
+                  dispatch(setError({key: 'sync.start', error: state}));
                   dispatch(requestSync(SYNC_FAILURE, { isRunning: false }));
-                  return reject(syncState);
+                  return reject(state);
                   break;
 
                 case SYNC_STATE_RUNNING:
