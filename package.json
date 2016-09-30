@@ -1,6 +1,6 @@
 {
   "name": "matrix-redux",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "matrix redux",
   "main": "src/index.js",
   "scripts": {
