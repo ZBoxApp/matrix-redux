@@ -33,6 +33,14 @@ const Rooms = function (state = initialState, action) {
             newState = {...state, ...payload};
             return newState;
             break;
+        case ActionTypes.ROOMS_REMOVE:
+            newState = {...state};
+            delete newState.items[payload.roomId];
+            delete newState.publicIds[payload.roomId];
+            delete newState.ids[payload.roomId];
+            newState.isLoading = false;
+            return newState;
+            break;
         default:
             return state;
             break;

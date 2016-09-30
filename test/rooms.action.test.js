@@ -10,12 +10,6 @@ let state;
 var testRoomName = (new Date().getTime() + '');
 var testRoomId;
 var newRoomId;
-const roomAliasName = randomRoomName();
-const newRoomOptions = {
-  "visibility":"public",
-  "room_alias_name": roomAliasName,
-  "name": roomAliasName
-};
 
 const testUserName = userFixture.testUserName;
 const testUserId = userFixture.testUserId;
@@ -26,10 +20,22 @@ const homeServerName = userFixture.homeServerName;
 describe('Room Actions Tests', function() {
 
     beforeEach(function(done) {
+      const roomAliasName = randomRoomName();
+      const newRoomOptions = {
+        "visibility":"public",
+        "room_alias_name": roomAliasName,
+        "name": roomAliasName
+      };
       logTestUser(function(e, d) {
         if (e) return console.error(e);
         store = d;
-        done();
+        store.dispatch(RoomsActions.createRoom(newRoomOptions)).then(function(data){
+          newRoomId = data.room_id;
+          done();
+        }).catch(function(err){
+          return console.log(err);
+          done();
+        });
       });
     });
 
@@ -55,6 +61,7 @@ describe('Room Actions Tests', function() {
     });
 
     it('2. Create Room', function() {
+      this.timeout(10000);
       const roomData = {
         "room_alias_name": testRoomName,
         "visibility": "public",
@@ -68,31 +75,13 @@ describe('Room Actions Tests', function() {
       });
     });
 
-    // it('Create Room', function(done) {
-    //     store.dispatch(RoomsActions.createRoom({
-    //         room_alias_name: testRoomName,
-    //         visibility: 'public',
-    //         pepe: true
-    //     })).then(function(room) {
-    //         testRoomId = room.id;
-    //         state = store.getState();
-    //         expect(typeof state.rooms.items[room.id]).to.equal('object');
-    //         done();
-    //     }).catch(function(err) {
-    //         console.log('on create room action ----', err);
-    //         expect(err).to.not.exists;
-    //         done();
-    //     });
-    // });
-    //
-    // it('on leave room action', function(done) {
-    //     store.dispatch(RoomsActions.leaveRoom(newRoomId)).then(function(suc) {
-    //       state = store.getState();
-    //       expect(state.rooms.items[newRoomId]).to.be.undefined;
-    //       done();
-    //     }).catch(function(err) {
-    //       console.log('on leave room action ----', err);
-    //       done();
-    //     });
-    // });
+    it('3. Leave Room', function() {
+      this.timeout(10000);
+      return store.dispatch(RoomsActions.leaveRoom(newRoomId)).then(function(){
+        state = store.getState();
+        expect(state.rooms.items[newRoomId]).to.be.undefined;
+      }, function rejected(err) {
+        throw new Error('WTF: ' + err);
+      });
+    });
 });

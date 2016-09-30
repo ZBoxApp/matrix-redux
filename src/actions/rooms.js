@@ -8,26 +8,32 @@ import {setError} from "./error";
 export const ROOMS_REQUEST = 'ROOMS_REQUEST';
 export const ROOMS_FAILURE = 'ROOMS_FAILURE';
 export const ROOMS_SUCCESS = 'ROOMS_SUCCESS';
+export const ROOMS_REMOVE = 'ROOMS_REMOVE';
 
 const requestRooms = (type, payload) => {
   return { type, payload }
 };
 
-export const leaveRoom = (room_id) => {
+/**
+ * @param {string} roomId
+ * @param {module:client.callback} callback Optional.
+ * @return {module:client.Promise} Resolves: TODO
+ * @return {module:http-api.MatrixError} Rejects: with an error response.
+ */
+export const leaveRoom = (roomId) => {
     return dispatch => {
-        dispatch(startRequestRoom());
+        dispatch(requestRooms(ROOMS_REQUEST, { isLoading: true }));
 
         return new Promise((resolve, reject) => {
-            MatrixClient.callApi('leave', room_id, (err, removed) => {
+            MatrixClient.client.leave(roomId, (err, data) => {
                 if (err) {
                   dispatch(setError({key: 'rooms.leaveRoom', error: err}));
-                  dispatch(requestUser(USER_FAILURE, { isLogged: false }));
+                  dispatch(requestRooms(ROOMS_FAILURE, { isLoading: false }));
                   return reject(err);
                 }
-
-                dispatch(requestRemoveRoomSucess());
-                dispatch(removeRoom(room_id));
-                resolve(removed);
+                const payload = {'roomId': roomId, 'isLoading': false};
+                dispatch(requestRooms(ROOMS_REMOVE, payload));
+                resolve(data);
             });
         });
     };
