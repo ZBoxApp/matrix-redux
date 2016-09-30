@@ -1,16 +1,5 @@
 "use strict";
-
-import isomorphicFetch from "isomorphic-fetch";
 import {CONSTANTS} from "./constants";
-
-/**
- * If fetch is not defined, as in Node and old Browsers,
- * use isomorphicFetch Pollify
- */
-if (typeof(fetch) === 'undefined') {
-    fetch = isomorphicFetch;
-}
-
 
 /**
  * @param {Object} options - The options for the request to Matrix

@@ -12,7 +12,10 @@ export default class MatrixClient {
      * {@link module:scheduler~MatrixScheduler}.
      **/
     static createClient(options) {
-        this.client = matrixSDK.createClient(options);
+        if (typeof fetch === 'function' || typeof options.request === 'function') {
+          return this.client = matrixSDK.createClient(options);
+        }
+        throw new Error("You need a fetch Pollify, or initialze MatrixClient with opts.request function")
     }
 
     static callApi() {

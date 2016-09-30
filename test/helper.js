@@ -6,11 +6,11 @@ import MatrixClient from "../src/utils/client";
 import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
 import createStore from "../src/store/store";
+import fetch from "isomorphic-fetch";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
 const store = createStore({user: null, sync: null});
-
 
 /**
  * Just a function to clean some values of the
