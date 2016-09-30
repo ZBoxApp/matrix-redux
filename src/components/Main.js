@@ -40,6 +40,7 @@ export default class App extends Component {
                     <ProgressBar type='circular' mode='indeterminate' className={Styles.loaderSize} multicolor />
                 </AppBar>
                 {children}
+
                 {isDev && (
                     <DevTools/>
                 )}

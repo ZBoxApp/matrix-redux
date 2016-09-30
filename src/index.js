@@ -65,6 +65,7 @@ const store = createStore({
         messages: window.translations[DEFAULT_LOCALE]
     }
 });
+
 const history = syncHistoryWithStore(browserHistory, store);
 
 function checkUserLogged(nextState, replace, callback) {
