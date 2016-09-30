@@ -222,7 +222,7 @@ store.dispatch(SyncActions.stop())
 The `Room` object has the following properties:
 
 |Name|Type|Description|
-|---|
+|----|----|-----------|
 |roomId|String|The ID of this room.|
 |name|String|The human-readable display name for this room.|
 |timeline|Array<[MatrixEvent](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#MatrixEvent)>|The live event timeline for this room, with the oldest event at index 0. Present for backwards compatibility - prefer getLiveTimeline().getEvents().
