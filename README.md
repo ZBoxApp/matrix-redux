@@ -4,15 +4,15 @@
 No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 
 ## Installation
-For now it's better to use this as a [Git Submodule](https://git-scm.com/docs/git-submodule).
+For now it's better to use this as a [Git Submodule](https://git-scm.com/docs/git-submodule). Maybe in the future we'll make a `NPM Module`.
 
 ## React Native
-The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) use a lot of functions not current available on React-Native, so you need to **nodeify** you React-Native App doing this:
+The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) use a lot of functions not currently available on React-Native, so you need to **nodeify** you React-Native App doing this:
 
 #### 1. Add a Post Install Script
 Your `package.json` scripts section should look similar to:
 
-```javascropt
+```javascript
 "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "postinstall": "node_modules/.bin/rn-nodeify --install --hack"
@@ -25,12 +25,33 @@ $ npm i --save-dev rn-nodeify
 $ npm run postinstall
 ```
 
-Maybe in the future we'll make a `NPM Module`
 
 ## Table of Contents
+- [How to use this](#how-to-use-this)
 - [Fetch Function](#fetch-function)
 - [Login](#login)
-- [Start the Client][#start-the-client]
+- [Matrix Client](#matrix-client)
+- [Store and reducers](#store-and-reducers)
+
+
+## How to use this
+
+### First time
+
+1. [Login the user](#login), your platform must have a valid [fetch function](#fetch-function)
+2. [Start the client](#matrix-client), this runs the **Initial Syncs** and keeps running and `emitting` events that are captured by this library.
+3. Save a local copy of the Session Data, available at `state.user.matrixClientData`
+4. Make your App `React` to the change state.
+
+### After the First time
+
+1. [Restore the Session](#login), with the data saved on the previous `3rd step`.
+2. Same as before
+3. Same as before
+4. Same as before
+
+### Reacting to changes
+The `Store`, `State`, `Actions` will be documented at: [Store and reducers](#store-and-reducers).
 
 ## Fetch Function
 The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) library needs a compliant `fetch()` function, so maybe you need to implement it. For example:
@@ -115,7 +136,7 @@ const matrixClientData = {
 store.dispatch(UserActions.restoreSession(matrixClientData));
 ```
 
-## Start the Client
+## Matrix Client
 The MatrixClient runs until the App closes and `emits` events that are catched by this library. The MatrixClient has this transition:
 
                                           +---->STOPPED
@@ -128,6 +149,12 @@ The MatrixClient runs until the App closes and `emits` events that are catched b
 
 
 #### 1. Starting the Client
+This starts the syncing process, after a susccesfully initial sync, `PREPARED` state, a `syncToken` is received and saved in the reducers.
+
+* `user.matrixClientData.store.syncToken`,
+* `sync.syncToken`.
+
+You should save this token locally for later use if the App is closed.
 
 The `opts` object take the following paramaters:
 
@@ -139,3 +166,26 @@ The `opts` object take the following paramaters:
 // @returns {Promise}
 store.dispatch(SyncActions.start(opts))
 ```
+
+#### 2. Stop the Client
+This stop the client and close all listerners:
+
+```javascript
+store.dispatch(SyncActions.stop())
+```
+
+## Store and reducers
+
+### Errors
+
+### Events
+
+### Members
+
+### Notifications
+
+### Rooms
+
+### Sync
+
+### User
