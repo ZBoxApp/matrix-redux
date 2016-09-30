@@ -1,20 +1,24 @@
 {
   "name": "matrix-redux",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": "matrix redux",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 mocha --compilers js:babel-register"
+    "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 BABEL_ENV=test mocha --compilers js:babel-register"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ZBoxApp/matrix-redux.git"
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ]
+    "env": {
+      "test": {
+        "presets": [
+          "es2015",
+          "stage-0"
+        ]
+      }
+    }
   },
   "author": "ZBox",
   "license": "ISC",
