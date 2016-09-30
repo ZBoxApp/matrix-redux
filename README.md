@@ -82,15 +82,32 @@ UserActions.loginWithPassword(userName, userPassword, opts);
 ```
 
 #### For React Native
+You can pass a custom `fetch()` function to the MatrixClient in `opts.request`, for example:
 
 ```javascript
-import {fetchRequest as fetch} from '../src/utils/utils';
+import {fetchRequest} from '../src/utils/utils';
+
+const userName = 'testuser';
+const userPassword = 'YouSup3rP4ssw0rd';
+const opts = {
+  'request': fetchRequest,
+  'baseUrl': 'https://matrixserver.com:8448'
+};
+
+UserActions.loginWithPassword(userName, userPassword, opts);
+```
+
+```javascript
+import {fetchRequest} from '../src/utils/utils';
 import * as UserActions from "../src/actions/user";
 import MatrixClient from "../src/utils/client";
 
 const userName = 'testuser';
 const userPassword = 'YouSup3rP4ssw0rd';
-const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
+const opts = {
+  'request': fetchRequest,
+  'baseUrl': 'https://matrixserver.com:8448'
+};
 
 // This is returns a Promise
 UserActions.loginWithPassword(userName, userPassword, opts);
