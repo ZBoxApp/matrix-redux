@@ -1,6 +1,6 @@
 {
   "name": "matrix-redux",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "matrix redux",
   "main": "src/index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "lodash": "^4.16.2",
     "matrix-js-sdk": "^0.6.1",
     "redux": "^3.6.0",
+    "redux-persist": "^4.0.0-alpha6",
     "redux-thunk": "^2.1.0"
   },
   "devDependencies": {

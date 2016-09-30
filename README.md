@@ -7,6 +7,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 ## Table of Contents
 - [Installation](#installation)
 - [How to use this](#how-to-use-this)
+- [Persistence][#persistence]
 - [Fetch Function](#fetch-function)
 - [Login](#login)
 - [Matrix Client](#matrix-client)
@@ -40,7 +41,7 @@ $ npm run postinstall
 You have to install a couple of modules on your App for this to work ok:
 
 ```
-$ npm i --save lodash matrix-js-sdk redux redux-thunk
+$ npm i --save lodash matrix-js-sdk redux redux-thunk redux-persist
 ```
 
 ## How to use this
@@ -62,8 +63,32 @@ $ npm i --save lodash matrix-js-sdk redux redux-thunk
 ### Reacting to changes
 The `Store`, `State`, `Actions` will be documented at: [Store and reducers](#store-and-reducers).
 
+## Persistence
+We are using the `redux-persist` module, so if you want to persists your data you have to initialize the `Store` with a `persistOps` Object:
+
+```javascript
+import createStore from "../src/store/store";
+
+const persistOps = {
+  callback: function(err, data){ console.log(err, data)},
+  config: {
+    storage: localStorage // AsyncStorage for React Native
+  }
+};
+const store = createStore({}, persistOps);
+```
+
+More information at the official repo: [https://github.com/rt2zz/redux-persist#storage-backends](https://github.com/rt2zz/redux-persist#storage-backends)
+
+### No Persistence
+```javascript
+import createStore from "../src/store/store";
+const store = createStore({});
+```
+
 ## Fetch Function
 The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) library needs a compliant `fetch()` function, so maybe you need to implement it. For example:
+
 
 #### For Nodejs
 
@@ -175,6 +200,12 @@ The MatrixClient runs until the App closes and `emits` events that are catched b
 
 
 #### 1. Starting the Client
+
+```javascript
+// @returns {Promise}
+store.dispatch(SyncActions.start(opts))
+```
+
 This starts the syncing process, after a susccesfully initial sync, `PREPARED` state, a `syncToken` is received and saved in the reducers.
 
 * `user.matrixClientData.store.syncToken`,
@@ -188,10 +219,6 @@ The `opts` object take the following paramaters:
 * `opts.includeArchivedRooms`: True to put `archived=true` on the `/initialSync/` request. Default: `false`.
 * `opts.pollTimeout`, The number of milliseconds to wait on `/events`. Default: 30000 (30 seconds).
 
-```javascript
-// @returns {Promise}
-store.dispatch(SyncActions.start(opts))
-```
 
 #### 2. Stop the Client
 This stop the client and close all listerners:
