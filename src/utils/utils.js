@@ -7,24 +7,31 @@ import {CONSTANTS} from "./constants";
  * @param {Function} callback - Callback to return the data
  */
 export const fetchRequest = (options, callback) => {
-    const uri = options.uri;
     options.body = JSON.stringify(options.body);
+    const queryString = objectToQueryString(options.qs);
+    const uri = options.uri + '?' + queryString;
+    delete options.qs;
+    delete options._matrix_opts;
 
-    fetch(uri, options)
+    return fetch(uri, options)
         .then(function (response) {
             if (response.status >= 400) {
                 var error = new Error("Bad response from server");
                 return callback(error);
             }
             return response.json();
-
         })
         .then(function (response) {
-            callback(null, response, response);
+            return callback(null, response, response);
         }).catch((error) => {
         callback(error);
     });
 };
+
+// const nodeRequest = function(options, callback) => {
+//
+// }
+
 
 /**
  * A builder of Action Creators
@@ -82,3 +89,46 @@ export const createDefaultConstants = (actionName) => {
 const isLoading = (status) => {
     return (status === 'started');
 };
+
+const objectToQueryString = function (a) {
+        var prefix, s, add, name, r20, output;
+        s = [];
+        r20 = /%20/g;
+        add = function (key, value) {
+            // If value is a function, invoke it and return its value
+            value = ( typeof value == 'function' ) ? value() : ( value == null ? "" : value );
+            s[ s.length ] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
+        };
+        if (a instanceof Array) {
+            for (name in a) {
+                add(name, a[name]);
+            }
+        } else {
+            for (prefix in a) {
+                buildParams(prefix, a[ prefix ], add);
+            }
+        }
+        output = s.join("&").replace(r20, "+");
+        return output;
+    };
+    function buildParams(prefix, obj, add) {
+        var name, i, l, rbracket;
+        rbracket = /\[\]$/;
+        if (obj instanceof Array) {
+            for (i = 0, l = obj.length; i < l; i++) {
+                if (rbracket.test(prefix)) {
+                    add(prefix, obj[i]);
+                } else {
+                    buildParams(prefix + "[" + ( typeof obj[i] === "object" ? i : "" ) + "]", obj[i], add);
+                }
+            }
+        } else if (typeof obj == "object") {
+            // Serialize object item.
+            for (name in obj) {
+                buildParams(prefix + "[" + name + "]", obj[ name ], add);
+            }
+        } else {
+            // Serialize scalar item.
+            add(prefix, obj);
+        }
+    }

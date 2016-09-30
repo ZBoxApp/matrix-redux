@@ -4,6 +4,7 @@ import chai from "chai";
 import _ from 'lodash';
 import {combineReducers} from "redux";
 import MatrixClient from "../src/utils/client";
+import {fetchRequest} from "../src/utils/utils";
 import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
 import createStore from "../src/store/store";

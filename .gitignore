@@ -2,3 +2,4 @@
 .idea/
 /tmp/
 /logs/
+.babelrc
