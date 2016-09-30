@@ -219,7 +219,7 @@ store.dispatch(SyncActions.stop())
 * ids: `{Array}`, list of `roomId`,
 * publicIds: `{Array}`, list of `roomId` for public rooms.
 
-The `Room` object has the following properties:
+#### `Room` Properties
 
 |Name|Type|Description|
 |----|----|-----------|
