@@ -58,9 +58,9 @@ export const start = (opts) => {
               }
               switch (syncState) {
                 case SYNC_STATE_FAILURE:
-                  dispatch(setError({key: 'sync.start', error: state}));
+                  dispatch(setError({key: 'sync.start', error: syncState}));
                   dispatch(requestSync(SYNC_FAILURE, { isRunning: false }));
-                  return reject(state);
+                  return reject(syncState);
                   break;
 
                 case SYNC_STATE_RUNNING:
@@ -108,9 +108,9 @@ export const stop = () => {
  */
 export const getSyncState = () => {
     return dispatch => {
-        const state = MatrixClient.getSyncState();
+        const syncState = MatrixClient.getSyncState();
         let isRunnning;
-        switch (state) {
+        switch (syncState) {
           case SYNC_STATE_RUNNING:
             isRunning = true;
             break;

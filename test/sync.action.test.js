@@ -1,7 +1,6 @@
 "use strict";
 
-import {expect, clearMatrixClient, logTestUser, userFixture} from "./helper";
-import createStore from "../src/store/store"
+import {createStoreHelper, expect, clearMatrixClient, logTestUser, userFixture} from "./helper";
 import * as SyncActions from "../src/actions/sync";
 import MatrixClient from "../src/utils/client";
 

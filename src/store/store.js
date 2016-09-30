@@ -8,7 +8,7 @@
 import {createStore, applyMiddleware, compose} from "redux";
 import {persistStore, autoRehydrate} from 'redux-persist'
 import thunk from "redux-thunk";
-import rootReducer from "../reducer";
+
 
 const enhancer = compose(
     applyMiddleware(thunk)
@@ -21,6 +21,7 @@ const enhancerWithRehydrate = compose(
 
 /**
  * Returns the Redux Store
+ * @param {Object} combinedReducers - The `combinedReducers`
  * @param {Object} preloadedState - The initial state
  * @param {Object} persistOps
  * @param {Object} persistOps.config - Config for redux-persist
@@ -33,11 +34,11 @@ const enhancerWithRehydrate = compose(
  * @param {Function} persistOps.callback - function will be called after rehydration is finished.
  * @return {Object}                - Store
  */
-export default function createAppStore(preloadedState, persistOps) {
+export default function createAppStore(combinedReducers, preloadedState, persistOps) {
     if (persistOps && typeof persistOps === 'object'){
-      const store = createStore(rootReducer, preloadedState, enhancerWithRehydrate);
+      const store = createStore(combinedReducers, preloadedState, enhancerWithRehydrate);
       persistStore(store);
       return store;
     }
-    return createStore(rootReducer, preloadedState, enhancer);  
+    return createStore(combinedReducers, preloadedState, enhancer);
 }

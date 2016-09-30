@@ -2,15 +2,23 @@
 
 import chai from "chai";
 import _ from 'lodash';
+import {combineReducers} from "redux";
 import MatrixClient from "../src/utils/client";
 import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
 import createStore from "../src/store/store";
 import fetch from "isomorphic-fetch";
+import rootReducer from "../src/reducer";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
-const store = createStore({user: null, sync: null});
+
+export const createStoreHelper = function(preloadedState, persistOps) {
+  const combinedReducers = combineReducers(rootReducer);
+  return createStore(combinedReducers, preloadedState, persistOps)
+}
+
+const store = createStoreHelper({user: null, sync: null});
 
 /**
  * Just a function to clean some values of the

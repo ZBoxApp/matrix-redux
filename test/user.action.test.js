@@ -1,7 +1,6 @@
 "use strict";
 
-import {expect, clearMatrixClient, userFixture} from "./helper";
-import createStore from "../src/store/store";
+import {createStoreHelper,expect, clearMatrixClient, userFixture} from "./helper";
 import * as UserActions from "../src/actions/user";
 import MatrixClient from "../src/utils/client";
 
@@ -17,7 +16,7 @@ const homeServerName = userFixture.homeServerName;
 describe('User Action Creators Tests', () => {
 
     beforeEach(() => {
-        store = createStore({});
+        store = createStoreHelper({});
         state = {};
     });
 

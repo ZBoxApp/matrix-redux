@@ -1,7 +1,6 @@
 "use strict";
 
-import {expect, randomRoomName, clearMatrixClient, userFixture, logTestUser} from "./helper";
-import createStore from "../src/store/store";
+import {createStoreHelper, expect, randomRoomName, clearMatrixClient, userFixture, logTestUser} from "./helper";
 import * as RoomsActions from "../src/actions/rooms";
 import MatrixClient from "../src/utils/client";
 
