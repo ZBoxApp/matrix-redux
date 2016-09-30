@@ -95,9 +95,31 @@ export const stop = () => {
   };
 };
 
+/**
+ * Return the current state of the sync
+ *
+ */
 export const getSyncState = () => {
     return dispatch => {
-        // dispatch(CurrentUserActions.startedRequestUser());
-        return MatrixClient.getSyncState();
+        const state = MatrixClient.getSyncState();
+        let isRunnning;
+        switch (state) {
+          case SYNC_STATE_RUNNING:
+            isRunning = true;
+            break;
+
+          case SYNC_STATE_SUCCESS:
+            isRunning = true;
+            break;
+
+          case SYNC_STATE_STOPPED:
+            isRunning = false;
+            break;
+
+          default:
+            isRunning = false;
+            break;
+        };
+        dispatch(requestSync(SYNC_SUCCESS, { isRunning: isRunning}));
     };
 }

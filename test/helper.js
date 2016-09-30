@@ -1,6 +1,7 @@
 'use strict';
 
 import chai from "chai";
+import _ from 'lodash';
 import MatrixClient from "../src/utils/client";
 import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
@@ -59,6 +60,15 @@ export const logTestUser = (callback) => {
     });
     // MatrixClient.login(testUserName, testUserPassword, clientOptions, callback);
 };
+
+export const randomRoomName = () => {
+  const chars = "abcdefghijklmnopqrstufwxyz";
+  let result = "";
+  for (let i = 15; i > 0; --i) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
+}
 
 export const removeTestRoom = (roomId) => {
     store.dispatch(leaveRoom(roomId)).then(() => {

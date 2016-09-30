@@ -22,10 +22,15 @@ const initialState = {
 
 const Rooms = function (state = initialState, action) {
     let newState = null;
+    const payload = action.payload;
     switch (action.type) {
         case ActionTypes.ROOMS_REQUEST:
         case ActionTypes.ROOMS_FAILED:
-            newState = {...state, ['isLoading']: action.payload.isLoading};
+            newState = {...state, ...payload};
+            return newState;
+            break;
+        case ActionTypes.ROOMS_SUCCESS:
+            newState = {...state, ...payload};
             return newState;
             break;
         default:

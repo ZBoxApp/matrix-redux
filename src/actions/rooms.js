@@ -13,77 +13,6 @@ const requestRooms = (type, payload) => {
   return { type, payload }
 };
 
-const startRequestRoom = () => {
-    return {
-        type: START_REQUEST_ROOM,
-        payload: {
-            isLoading: true
-        }
-    };
-};
-
-const failedRequestRoom = () => {
-    return {
-        type: FAILED_REQUEST_ROOM,
-        payload: {
-            isLoading: false
-        }
-    };
-};
-
-const requestRemoveRoomSucess = () => {
-    return {
-        type: REMOVE_ROOM_SUCCESS,
-        payload: {
-            isLoading: false
-        }
-    };
-};
-
-const updateRoom = (id, room) => {
-    return {
-        type: UPDATE_ROOM,
-        payload: {
-            id,
-            room
-        }
-    };
-};
-
-const setRoom = (room) => {
-    return {
-        type: SET_ROOM,
-        payload: room
-    };
-};
-
-const setRooms = (rooms) => {
-    return {
-        type: SET_MULTIPLE_ROOM,
-        payload: {
-            rooms
-        }
-    };
-};
-
-const roomCreated = () => {
-    return {
-        type: CREATE_ROOM_SUCCESS,
-        payload: {
-            isLoading: false
-        }
-    };
-};
-
-const removeRoom = (room_id) => {
-    return {
-        type: REMOVE_ROOM,
-        payload: {
-            room_id
-        }
-    };
-};
-
 export const leaveRoom = (room_id) => {
     return dispatch => {
         dispatch(startRequestRoom());
@@ -91,10 +20,9 @@ export const leaveRoom = (room_id) => {
         return new Promise((resolve, reject) => {
             MatrixClient.callApi('leave', room_id, (err, removed) => {
                 if (err) {
-                    dispatch(failedRequestRoom());
-                    dispatch(setError(err));
-
-                    return reject(err);
+                  dispatch(setError({key: 'rooms.leaveRoom', error: err}));
+                  dispatch(requestUser(USER_FAILURE, { isLogged: false }));
+                  return reject(err);
                 }
 
                 dispatch(requestRemoveRoomSucess());
@@ -105,48 +33,90 @@ export const leaveRoom = (room_id) => {
     };
 };
 
+/**
+ * Get an Object of Public Rooms
+ * @return {Object} rooms - Public Rooms
+ * @return {String} rooms.next_batch - to Request more rooms
+ * @return {Array} rooms.chunk - Array of Rooms
+ */
 export const getPublicRooms = () => {
     return dispatch => {
-        dispatch(startRequestRoom());
+        dispatch(requestRooms(ROOMS_REQUEST, { isLoading: true }));
 
         return new Promise((resolve, reject) => {
-            MatrixClient.callApi('publicRooms', (err, rooms) => {
+            MatrixClient.callApi('publicRooms', (err, data) => {
                 if (err) {
-                    dispatch(failedRequestRoom());
-                    dispatch(setError(err));
-                    return reject(err);
+                  dispatch(setError({key: 'rooms.getPublicRooms', error: err}));
+                  dispatch(requestRooms(ROOMS_FAILURE, { isLoading: false }));
+                  return reject(err);
                 }
-
-                dispatch(setRooms(rooms));
-                resolve(rooms);
-            });
-        });
-    };
-};
-
-export const createRoom = (attributes) => {
-    return dispatch => {
-        dispatch(startRequestRoom());
-
-        return new Promise((resolve, reject) => {
-            MatrixClient.callApi('createRoom', attributes, (err, room) => {
-                if (err) {
-                    dispatch(failedRequestRoom());
-                    dispatch(setError(err));
-                    return reject(err);
-                }
-
-                const {room_id} = room;
-
-                const data = {
-                    id: room_id,
-                    room: attributes
-                };
-
-                dispatch(roomCreated());
-                dispatch(setRoom(data));
+                const payload = roomsToPayload(data);
+                dispatch(requestRooms(ROOMS_SUCCESS, payload));
                 resolve(data);
             });
         });
     };
 };
+
+/**
+* Create a new room.
+* @param {Object} options a list of options to pass to the /createRoom API.
+* @param {string} options.room_alias_name The alias localpart to assign to
+* this room.
+* @param {string} options.visibility Either 'public' or 'private'.
+* @param {string[]} options.invite A list of user IDs to invite to this room.
+* @param {string} options.name The name to give this room.
+* @param {string} options.topic The topic to give this room.
+* @param {module:client.callback} callback Optional.
+* @return {module:client.Promise} Resolves: <code>{room_id: {string},
+* room_alias: {string(opt)}}</code>
+* @return {module:http-api.MatrixError} Rejects: with an error response.
+ */
+export const createRoom = (options) => {
+    return dispatch => {
+        dispatch(requestRooms(ROOMS_REQUEST, { isLoading: true }));
+
+        return new Promise((resolve, reject) => {
+            MatrixClient.client.createRoom(options, (err, data) => {
+              if (err) {
+                dispatch(setError({key: 'rooms.createRoom', error: err}));
+                dispatch(requestRooms(ROOMS_FAILURE, { isLoading: false }));
+                return reject(err);
+              };
+              const newRoom = { chunk: [{
+                  canonical_alias: data.room_alias,
+                  room_id: data.room_id,
+                  aliases: [data.room_alias]
+                }]};
+              const payload = roomsToPayload(newRoom);
+              dispatch(requestRooms(ROOMS_SUCCESS, payload));
+              resolve(data);
+            });
+        });
+    };
+};
+
+/**
+ * Process the response from the server to make the payload
+ * @param  {Array} publicRooms - Response from server
+ * @return {Object} payload
+ * @return {String} payload.isLoading
+ * @return {Object} payload.rooms
+ * @return {Object} payload.rooms.room
+ * @return {Array} payload.publicIds
+ */
+const roomsToPayload = function(publicRooms) {
+  const publicIds = [];
+  const items = {};
+  const ids = [];
+  const roomsArray = publicRooms.chunk || [];
+  roomsArray.forEach((room) => {
+    publicIds.push(room.room_id);
+    ids.push(room.room_id);
+    items[room.room_id] = room;
+  });
+  return {
+    isLoading: false, items: items, ids: ids,
+    publicIds: publicIds, next_batch: publicRooms.next_batch
+  };
+}
