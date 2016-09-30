@@ -202,15 +202,15 @@ store.dispatch(SyncActions.stop())
 
 ## Store and reducers
 
-### Errors
+### Errors Reducer
 
-### Events
+### Events Reducer
 
-### Members
+### Members Reducer
 
 ### Notifications
 
-### Rooms
+### Rooms Reducer
 
 #### State
 
@@ -233,6 +233,6 @@ store.dispatch(SyncActions.stop())
 |summary|RoomSumary|The room summary.|
 |storageToken|*|A token which a data store can use to remember the state of the room.|
 
-### Sync
+### Sync Reducer
 
-### User
+### User Reducer
