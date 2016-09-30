@@ -212,6 +212,27 @@ store.dispatch(SyncActions.stop())
 
 ### Rooms
 
+#### State
+
+* items `{Room}`, the rooms by `roomId`,
+* isLoading `{Boolean}`,
+* ids: `{Array}`, list of `roomId`,
+* publicIds: `{Array}`, list of `roomId` for public rooms.
+
+The `Room` object has the following properties:
+
+|Name|Type|Description|
+|---|
+|roomId|String|The ID of this room.|
+|name|String|The human-readable display name for this room.|
+|timeline|Array<[MatrixEvent](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#MatrixEvent)>|The live event timeline for this room, with the oldest event at index 0. Present for backwards compatibility - prefer getLiveTimeline().getEvents().
+|tags|Object|Dict of room tags; the keys are the tag name and the values are any metadata associated with the tag - e.g. { "fav" : { order: 1 } }|
+|accountData|Object|Dict of per-room account_data events; the keys are the event type and the values are the events.|
+|oldState|[RoomState](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#RoomState)|The state of the room at the time of the oldest event in the live timeline. Present for backwards compatibility - prefer getLiveTimeline().getState(true).|
+|currentState|[RoomState](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#RoomState)|The state of the room at the time of the oldest event in the live timeline. Present for backwards compatibility - prefer getLiveTimeline().getState(false).|
+|summary|RoomSumary|The room summary.|
+|storageToken|*|A token which a data store can use to remember the state of the room.|
+
 ### Sync
 
 ### User

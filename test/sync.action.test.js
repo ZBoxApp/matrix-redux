@@ -29,36 +29,37 @@ describe('Sync Actions', function () {
       done();
     });
 
-    // it('1. Sync Start Should Update Sync State', function (done) {
-    //     this.timeout(15000);
-    //     const opts = {pollTimeout: 1000};
-    //     store.dispatch(SyncActions.start(opts)).then(function (data) {
-    //       setTimeout(function(){
-    //         state = store.getState();
-    //         expect(state.sync.isRunning).to.be.true;
-    //         expect(state.sync.initialSyncComplete).to.be.true;
-    //         expect(state.sync.syncToken).to.not.be.undefined;
-    //         expect(typeof state.sync.filters).to.equal("object");
-    //         MatrixClient.client.stopClient();
-    //         done();
-    //       }, 2000);
-    //     }).catch((err) => {
-    //         console.log(err);
-    //         done();
-    //     });
-    // });
-    //
-    // it('2. Stop Should Update Sync State', function (done) {
-    //     this.timeout(20000);
-    //     const opts = {pollTimeout: 1000};
-    //     MatrixClient.client.startClient(opts);
-    //     store.dispatch(SyncActions.stop(opts));
-    //     setTimeout(function(){
-    //       state = store.getState();
-    //       expect(state.sync.isRunning).to.be.false;
-    //       done();
-    //     }, 3000);
-    // });
+    it('1. Sync Start Should Update Sync State', function (done) {
+        this.timeout(15000);
+        const opts = {pollTimeout: 1000};
+        store.dispatch(SyncActions.start(opts)).then(function (data) {
+          setTimeout(function(){
+            state = store.getState();
+            expect(state.sync.isRunning).to.be.true;
+            expect(state.sync.initialSyncComplete).to.be.true;
+            expect(state.sync.syncToken).to.not.be.undefined;
+            expect(typeof state.sync.filters).to.equal("object");
+            console.log(state.rooms.items);
+            MatrixClient.client.stopClient();
+            done();
+          }, 2000);
+        }).catch((err) => {
+            console.log(err);
+            done();
+        });
+    });
+
+    it('2. Stop Should Update Sync State', function (done) {
+        this.timeout(20000);
+        const opts = {pollTimeout: 1000};
+        MatrixClient.client.startClient(opts);
+        store.dispatch(SyncActions.stop(opts));
+        setTimeout(function(){
+          state = store.getState();
+          expect(state.sync.isRunning).to.be.false;
+          done();
+        }, 3000);
+    });
 
     it('3. Sync save the Sync Token in the user reducer', function (done) {
         this.timeout(15000);
