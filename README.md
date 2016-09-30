@@ -3,6 +3,17 @@
 ### What is Matrix?
 No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 
+
+## Table of Contents
+- [Installation](#installation)
+- [How to use this](#how-to-use-this)
+- [Fetch Function](#fetch-function)
+- [Login](#login)
+- [Matrix Client](#matrix-client)
+- [Store and reducers](#store-and-reducers)
+
+
+
 ## Installation
 For now it's better to use this as a [Git Submodule](https://git-scm.com/docs/git-submodule). Maybe in the future we'll make a `NPM Module`.
 
@@ -24,15 +35,6 @@ Your `package.json` scripts section should look similar to:
 $ npm i --save-dev rn-nodeify
 $ npm run postinstall
 ```
-
-
-## Table of Contents
-- [How to use this](#how-to-use-this)
-- [Fetch Function](#fetch-function)
-- [Login](#login)
-- [Matrix Client](#matrix-client)
-- [Store and reducers](#store-and-reducers)
-
 
 ## How to use this
 
