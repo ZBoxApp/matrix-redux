@@ -17,7 +17,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 ## Installation
 For now it's better to use this as a [Git Submodule](https://git-scm.com/docs/git-submodule). Maybe in the future we'll make a `NPM Module`.
 
-## React Native
+### React Native
 The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) use a lot of functions not currently available on React-Native, so you need to **nodeify** you React-Native App doing this:
 
 #### 1. Add a Post Install Script
@@ -34,6 +34,13 @@ Your `package.json` scripts section should look similar to:
 ```
 $ npm i --save-dev rn-nodeify
 $ npm run postinstall
+```
+
+### Modules And Dependencies
+You have to install a couple of modules on your App for this to work ok:
+
+```
+$ npm i --save lodash matrix-js-sdk redux redux-thunk
 ```
 
 ## How to use this
