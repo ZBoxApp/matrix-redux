@@ -1,0 +1,55 @@
+.bubbleWrap {
+  clear: both; }
+
+.bubbleWrap :global .bubble {
+  max-width: 80%;
+  width: auto;
+  border-radius: 25px;
+  position: relative;
+  padding: 10px;
+  margin-bottom: 10px; }
+
+.bubbleWrap :global .bubble-right {
+  float: right;
+  text-align: left;
+  background: #0B93F6;
+  margin-right: 10px; }
+  .bubbleWrap :global .bubble-right.last-active:before {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    height: 20px;
+    border-color: #0B93F6;
+    border-bottom-left-radius: 82px 78px;
+    z-index: 1;
+    right: 5px;
+    border-style: solid;
+    border-width: 10px;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    transform: rotate(-30deg); }
+
+.bubbleWrap :global .bubble-left {
+  float: left;
+  text-align: left;
+  background: #E5E5EA;
+  margin-left: 10px; }
+  .bubbleWrap :global .bubble-left.last-active:before {
+    content: "";
+    position: absolute;
+    bottom: 20px;
+    height: 20px;
+    border-color: #E5E5EA;
+    border-bottom-right-radius: 82px 78px;
+    z-index: 1;
+    top: 31px;
+    left: 5px;
+    border-style: solid;
+    border-width: 10px;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    transform: rotate(30deg); }
+
+/*# sourceMappingURL=bubble.css.map */
