@@ -202,15 +202,21 @@ store.dispatch(SyncActions.stop())
 
 ## Store and reducers
 
-### Errors Reducer
+### Errors
 
-### Events Reducer
+### Events
 
-### Members Reducer
+### Members
 
 ### Notifications
 
-### Rooms Reducer
+### Rooms
+
+#### Actions Creators
+
+* `getPublicRooms()`: `<Promise>`
+* `createRoom(opts)`: `<Promise>`
+* `leaveRoom(roomId)`: `<Promise>`
 
 #### State
 
@@ -233,6 +239,6 @@ store.dispatch(SyncActions.stop())
 |summary|RoomSumary|The room summary.|
 |storageToken|*|A token which a data store can use to remember the state of the room.|
 
-### Sync Reducer
+### Sync
 
-### User Reducer
+### User
