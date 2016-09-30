@@ -84,7 +84,7 @@ UserActions.loginWithPassword(userName, userPassword, opts);
 #### For React Native
 
 ```javascript
-import fetchRequest from '../src/utils/utils';
+import {fetchRequest as fetch} from '../src/utils/utils';
 import * as UserActions from "../src/actions/user";
 import MatrixClient from "../src/utils/client";
 
