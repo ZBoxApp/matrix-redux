@@ -76,7 +76,7 @@ describe('Room Actions Tests', function() {
     });
 
     it('3. Leave Room', function() {
-      this.timeout(10000);
+      this.timeout(20000);
       return store.dispatch(RoomsActions.leaveRoom(newRoomId)).then(function(){
         state = store.getState();
         expect(state.rooms.items[newRoomId]).to.be.undefined;

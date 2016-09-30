@@ -14,6 +14,7 @@ const clientOptions = userFixture.clientOptions;
 const homeServerName = userFixture.homeServerName;
 
 describe('Sync Actions', function () {
+  this.timeout(10000);
     beforeEach((done) => {
         logTestUser((e, d) => {
             if (e) return console.error(e);

@@ -59,6 +59,7 @@ describe('User Action Creators Tests', () => {
     });
 
     it('4. LoginReducer must have the Auth Data for MatrixClient Constructor', function (endTest) {
+      this.timeout(5000);
         store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then((loginData) => {
             state = store.getState();
             expect(state.user.isLogged).to.be.true;
@@ -79,6 +80,7 @@ describe('User Action Creators Tests', () => {
     });
 
     it('5. restoreSession should update user and login reducers', function (endTest) {
+      this.timeout(5000);
         store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then(() => {
             state = store.getState();
             const matrixClientData = state.user.matrixClientData;
