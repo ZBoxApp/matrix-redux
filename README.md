@@ -7,7 +7,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 ## Table of Contents
 - [Installation](#installation)
 - [How to use this](#how-to-use-this)
-- [Persistence][#persistence]
+- [Persistence](#persistence)
 - [Fetch Function](#fetch-function)
 - [Login](#login)
 - [Matrix Client](#matrix-client)
