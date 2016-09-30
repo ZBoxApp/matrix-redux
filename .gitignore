@@ -2,3 +2,7 @@
 .idea/
 /tmp/
 /logs/
+*compiled.js
+*compiled.js.map
+*.log
+*.map
