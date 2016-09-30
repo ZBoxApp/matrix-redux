@@ -1,4 +1,5 @@
 import * as ActionTypes from '../actions/user';
+import * as SyncActionTypes from '../actions/sync';
 
 const initialState = {
     isLoading: false,
@@ -12,7 +13,9 @@ const initialState = {
     credentials: null,
     displayName: null,
     avatarUrl: null,
-    roomsIds: []
+    roomsIds: [],
+    store: {},
+    matrixClientData: { }
 };
 
 const user = function (state = initialState, action) {
@@ -28,6 +31,11 @@ const user = function (state = initialState, action) {
             newState = {...state, ...action.payload};
             return newState;
             break;
+        case SyncActionTypes.SYNC_TOKEN:
+            const matrixClientData = {...state.matrixClientData, ['store']: {syncToken: action.payload.syncToken}};
+            newState = {...state, matrixClientData};
+            return newState;
+            break
         default:
             return state;
             break;

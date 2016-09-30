@@ -6,32 +6,84 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 ## Installation
 For now it's better to use this as a [Git Submodule](https://git-scm.com/docs/git-submodule).
 
+## React Native
+The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) use a lot of functions not current available on React-Native, so you need to **nodeify** you React-Native App doing this:
+
+#### 1. Add a Post Install Script
+Your `package.json` scripts section should look similar to:
+
+```javascropt
+"scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "postinstall": "node_modules/.bin/rn-nodeify --install --hack"
+  },
+```
+
+#### 2. Install rn-nodeify and Nodeify your App
+```
+$ npm i --save-dev rn-nodeify
+$ npm run postinstall
+```
+
 Maybe in the future we'll make a `NPM Module`
 
 ## Table of Contents
+- [Fetch Function](#fetch-function)
 - [Login](#login)
+- [Start the Client][#start-the-client]
+
+## Fetch Function
+The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) library needs a compliant `fetch()` function, so maybe you need to implement it. For example:
+
+#### For Nodejs
+
+```javascript
+import fetch from "isomorphic-fetch";
+import * as UserActions from "../src/actions/user";
+import MatrixClient from "../src/utils/client";
+
+const userName = 'testuser';
+const userPassword = 'YouSup3rP4ssw0rd';
+const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
+
+// This is returns a Promise
+UserActions.loginWithPassword(userName, userPassword, opts);
+
+```
+
+#### For React Native
+
+```javascript
+import fetchRequest from '../src/utils/utils';
+import * as UserActions from "../src/actions/user";
+import MatrixClient from "../src/utils/client";
+
+const userName = 'testuser';
+const userPassword = 'YouSup3rP4ssw0rd';
+const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
+
+// This is returns a Promise
+UserActions.loginWithPassword(userName, userPassword, opts);
+
+```
 
 ## Login
-This `login` methods update the following `reducers`:
-
-* `login`,
-* `currentUser`
+- Return `accessToken` from server.
+- Reducers: `user`.
 
 ### 1. Login With Password
 
 ```javascript
-import createStore from './src/store/store';
-import {LoginActions} from './src/actions/login';
-import MatrixClient from './src/utils/client';
+import createStore from "../src/store/store";
+import * as UserActions from "../src/actions/user";
+import MatrixClient from "../src/utils/client";
 
 let store = createStore({});
 const userName = 'testuser';
 const userPassword = 'YouSup3rP4ssw0rd';
-const opts = {
-  'baseUrl': 'https://your.matrixserver.com:8448';
-};
+const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
 
-store.dispatch(LoginActions.loginWithPassword(userName, userPassword, opts)).then((loginData) => {
+store.dispatch(UserActions.loginWithPassword(userName, userPassword, opts)).then((loginData) => {
   const state = store.getState();
   console.log(state.login);
   console.log(state.currentUser);
@@ -60,5 +112,30 @@ const matrixClientData = {
   }
 };
 
-store.dispatch(LoginActions.restoreSession(matrixClientData));
+store.dispatch(UserActions.restoreSession(matrixClientData));
+```
+
+## Start the Client
+The MatrixClient runs until the App closes and `emits` events that are catched by this library. The MatrixClient has this transition:
+
+                                          +---->STOPPED
+                                          |
+              +----->PREPARED -------> SYNCING <--+
+              |        ^                  |       |
+   null ------+        |  +---------------+       |
+              |        |  V                       |
+              +------->ERROR ---------------------+
+
+
+#### 1. Starting the Client
+
+The `opts` object take the following paramaters:
+
+* `opts.initialSyncLimit`: The event `limit=` to apply to initial sync. Default: 8.
+* `opts.includeArchivedRooms`: True to put `archived=true` on the `/initialSync/` request. Default: `false`.
+* `opts.pollTimeout`, The number of milliseconds to wait on `/events`. Default: 30000 (30 seconds).
+
+```javascript
+// @returns {Promise}
+store.dispatch(SyncActions.start(opts))
 ```

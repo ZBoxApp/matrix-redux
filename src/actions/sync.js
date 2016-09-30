@@ -8,6 +8,7 @@ import {setError} from "./error";
 export const SYNC_REQUEST = 'SYNC_REQUEST';
 export const SYNC_FAILURE = 'SYNC_FAILURE';
 export const SYNC_SUCCESS = 'SYNC_SUCCESS';
+export const SYNC_TOKEN = 'SYNC_TOKEN';
 
 /**
  * This are the possible states of the Syncing process
@@ -49,6 +50,12 @@ export const start = (opts) => {
             let payload;
             MatrixClient.client.on("sync", (state, prevState, data) => {
               resolve(data);
+              const matrixStore = MatrixClient.client.store;
+              if (matrixStore && matrixStore.syncToken) {
+                dispatch(requestSync(SYNC_TOKEN, {
+                  syncToken: matrixStore.syncToken, state: state
+                }));
+              }
               switch (state) {
                 case SYNC_STATE_FAILURE:
                   dispatch(setError({key: 'sync.start', error: syncState}));

@@ -4,7 +4,8 @@ import * as ActionTypes from '../actions/sync';
 
 const initialState = {
     isRunning: false,
-    initialSyncComplete: false
+    initialSyncComplete: false,
+    syncToken: null
 };
 
 const sync = function (state = initialState, action) {

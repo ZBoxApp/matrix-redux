@@ -35,6 +35,7 @@ export const loadUserProfile = (userId) => {
  * @param {String} userName - Matrix User Name
  * @param {String} userPassword - Matrix User Password
  * @param {Object} opts - Options to initialize Matrix Client
+ * @returns {Promise}
  */
 export const loginWithPassword = (userName, userPassword, opts) => {
     return dispatch => {
@@ -61,6 +62,7 @@ export const loginWithPassword = (userName, userPassword, opts) => {
  * @param {String} userName - Matrix User Name
  * @param {String} userPassword - Matrix User Password
  * @param {Object} opts - Options to initialize Matrix Client
+ * @returns {Promise}
  */
 export const loginWithToken = (token, opts) => {
     return dispatch => {
@@ -82,6 +84,11 @@ export const loginWithToken = (token, opts) => {
     };
 };
 
+/**
+ * Initialize MatrixClient with the given session information
+ * @param  {Object} opts
+ * @return {[type]}      [description]
+ */
 export const restoreSession = (opts) => {
     return dispatch => {
         MatrixClient.restoreSession(opts);
@@ -108,7 +115,8 @@ const formatUserData = function(data) {
         deviceId: data.deviceId,
         homeServer: data.homeServer
       }
-    }
+    },
+    store: { syncToken: null}
   }
   return data;
 }
