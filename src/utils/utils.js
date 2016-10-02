@@ -10,6 +10,7 @@ export const fetchRequest = (options, callback) => {
     options.body = JSON.stringify(options.body);
     const queryString = objectToQueryString(options.qs);
     const uri = options.uri + '?' + queryString;
+
     delete options.qs;
     delete options._matrix_opts;
 
@@ -27,10 +28,6 @@ export const fetchRequest = (options, callback) => {
         callback(error);
     });
 };
-
-// const nodeRequest = function(options, callback) => {
-//
-// }
 
 
 /**
@@ -52,83 +49,48 @@ const actionCreator = (actionName, status) => {
     return action;
 };
 
-/**
- * Creates the Default Action Creators
- * @param  {String} actionName The Action Creator Module Name
- * @return {Object}            Object with all the Action Creator Functions
- */
-export const createDefaultActions = (actionName) => {
-    const result = {};
-    CONSTANTS.defaultStatus.forEach((status) => {
-        const method = actionCreator(actionName, status);
-        const methodName = status + 'Request' + actionName.charAt(0).toUpperCase() + actionName.slice(1);
-        result[methodName] = method;
-    });
-    return result;
-};
 
-/**
- * Creates the Default Constants for the Action Creator Module
- * @param  {String} actionName The Action Creator Module Name
- * @return {Object}            Object with all the Constants
- */
-export const createDefaultConstants = (actionName) => {
-    const result = {};
-    CONSTANTS.defaultStatus.forEach((status) => {
-        const constName = [status, 'request', actionName].join('_').toUpperCase();
-        result[constName] = constName;
-    });
-    return result;
-};
-
-/**
- * Return if the state should be marked as loading
- * @param  {String}  status The status of the Action Creator
- * @return {Boolean}        If should be loading or not
- */
-const isLoading = (status) => {
-    return (status === 'started');
-};
 
 const objectToQueryString = function (a) {
-        var prefix, s, add, name, r20, output;
-        s = [];
-        r20 = /%20/g;
-        add = function (key, value) {
-            // If value is a function, invoke it and return its value
-            value = ( typeof value == 'function' ) ? value() : ( value == null ? "" : value );
-            s[ s.length ] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
-        };
-        if (a instanceof Array) {
-            for (name in a) {
-                add(name, a[name]);
-            }
-        } else {
-            for (prefix in a) {
-                buildParams(prefix, a[ prefix ], add);
-            }
-        }
-        output = s.join("&").replace(r20, "+");
-        return output;
-    };
-    function buildParams(prefix, obj, add) {
-        var name, i, l, rbracket;
-        rbracket = /\[\]$/;
-        if (obj instanceof Array) {
-            for (i = 0, l = obj.length; i < l; i++) {
-                if (rbracket.test(prefix)) {
-                    add(prefix, obj[i]);
-                } else {
-                    buildParams(prefix + "[" + ( typeof obj[i] === "object" ? i : "" ) + "]", obj[i], add);
-                }
-            }
-        } else if (typeof obj == "object") {
-            // Serialize object item.
-            for (name in obj) {
-                buildParams(prefix + "[" + name + "]", obj[ name ], add);
-            }
-        } else {
-            // Serialize scalar item.
-            add(prefix, obj);
-        }
+  var prefix, s, add, name, r20, output;
+  s = [];
+  r20 = /%20/g;
+  add = function (key, value) {
+    // If value is a function, invoke it and return its value
+    value = ( typeof value == 'function' ) ? value() : ( value == null ? "" : value );
+    s[ s.length ] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
+  };
+  if (a instanceof Array) {
+    for (name in a) {
+      add(name, a[name]);
     }
+  } else {
+    for (prefix in a) {
+      buildParams(prefix, a[ prefix ], add);
+    }
+  }
+  output = s.join("&").replace(r20, "+");
+  return output;
+};
+
+const buildParams = function (prefix, obj, add) {
+  var name, i, l, rbracket;
+  rbracket = /\[\]$/;
+  if (obj instanceof Array) {
+    for (i = 0, l = obj.length; i < l; i++) {
+      if (rbracket.test(prefix)) {
+        add(prefix, obj[i]);
+      } else {
+        buildParams(prefix + "[" + ( typeof obj[i] === "object" ? i : "" ) + "]", obj[i], add);
+      }
+    }
+  } else if (typeof obj == "object") {
+    // Serialize object item.
+    for (name in obj) {
+      buildParams(prefix + "[" + name + "]", obj[ name ], add);
+    }
+  } else {
+    // Serialize scalar item.
+    add(prefix, obj);
+  }
+};
