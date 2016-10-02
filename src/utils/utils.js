@@ -25,8 +25,8 @@ export const fetchRequest = (options, callback) => {
         .then(function (response) {
             return callback(null, response, response);
         }).catch((error) => {
-        callback(error);
-    });
+            callback(error);
+        });
 };
 
 
@@ -72,6 +72,7 @@ const objectToQueryString = function (a) {
   output = s.join("&").replace(r20, "+");
   return output;
 };
+
 
 const buildParams = function (prefix, obj, add) {
   var name, i, l, rbracket;

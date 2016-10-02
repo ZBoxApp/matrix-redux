@@ -49,18 +49,18 @@ export const start = (opts) => {
             MatrixClient.callApi("startClient", opts);
             let payload;
             MatrixClient.client.on("sync", (syncState, prevState, data) => {
-              resolve(data);
               const matrixStore = MatrixClient.client.store;
               if (matrixStore && matrixStore.syncToken) {
                 dispatch(requestSync(SYNC_TOKEN, {
                   syncToken: matrixStore.syncToken, state: syncState
                 }));
               }
+              resolve(data);
               switch (syncState) {
                 case SYNC_STATE_FAILURE:
-                  dispatch(setError({key: 'sync.start', error: syncState}));
+                  dispatch(setError({key: 'sync.start', error: data}));
                   dispatch(requestSync(SYNC_FAILURE, { isRunning: false }));
-                  return reject(syncState);
+                  return reject({state: syncState, data: data});
                   break;
 
                 case SYNC_STATE_RUNNING:
