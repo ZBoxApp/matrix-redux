@@ -22,11 +22,36 @@ export const fetchRequest = (options, callback) => {
             }
             return response.json();
         }).then(function (jsonResponse) {
-            return callback(null, jsonResponse);
+            return callback(null, jsonResponse, jsonResponse);
         }).catch((error) => {
             callback(error);
         });
 };
+
+/**
+ * Return a Logger method to use everywhere
+ * @param {Object} loggerObject - A logger Object that response to console methods
+ * @type {[type]}
+ */
+export const Logger = (loggerObject, logLevel) => {
+  if (!loggerObject || typeof loggerObject !== 'object') {
+    loggerObject = console;
+  }
+  logLevel = logLevel || 'INFO';
+  return {
+    log: logLevel => {
+      if (logLevel === 'NONE') return (function(){});
+      return loggerObject.log()
+    },
+    error: logLevel => {
+      return loggerObject.error();
+    },
+    debug: logLevel => {
+      if (logLevel === 'DEBUG')
+        return loggerObject.debug();
+    }
+  }
+}
 
 const objectToQueryString = function (a) {
   var prefix, s, add, name, r20, output;

@@ -45,9 +45,9 @@ export const userFixture = {
     testUserDisplayName: "test",
     testUserName: "test",
     testUserPassword: "123456",
-    baseUrl: 'https://192.168.0.104:8448',
+    baseUrl: 'https://192.168.1.11:8448',
     clientOptions: {
-        baseUrl: 'https://192.168.0.104:8448'
+        baseUrl: 'https://192.168.1.11:8448'
     }
 };
 

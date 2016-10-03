@@ -1,5 +1,5 @@
-//import polyfiil from 'es6-promise';
 import matrixSDK from "matrix-js-sdk";
+import {Logger} from "./utils";
 import _ from "lodash";
 
 export default class MatrixClient {
@@ -9,10 +9,14 @@ export default class MatrixClient {
      * @param {Object} opts.store If not set, defaults to
      * {@link module:store/memory.MatrixInMemoryStore}.
      * @param {Object} opts.scheduler If not set, defaults to
+     * @param {Object} opts.loggerObject - The Logger Objet to use
+     * @param {String} opts.logLevel - The log level ['INFO', 'DEBUG', 'NONE']
      * {@link module:scheduler~MatrixScheduler}.
      **/
     static createClient(options) {
+        this.LOGGER = Logger(options.loggerObject, options.logLevel);
         if (typeof fetch === 'function' || typeof options.request === 'function') {
+          this.LOGGER.debug("Creating Matrix Client with opts: " + options);
           return this.client = matrixSDK.createClient(options);
         }
         throw new Error("You need a fetch Pollify, or initialze MatrixClient with opts.request function")
