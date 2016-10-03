@@ -6,6 +6,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 
 ## Table of Contents
 - [Installation](#installation)
+- [Logs](#logs)
 - [How to use this](#how-to-use-this)
 - [Persistence](#persistence)
 - [Network Request Function](#network-request-function)
@@ -47,6 +48,21 @@ $ npm i --save lodash matrix-js-sdk redux redux-thunk redux-persist
 ### For Nodejs and Browsers
 This library uses the new [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), so you will also need a module tha implements this, like [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch).
 
+## LOGS
+You can enable `DEBUG` Logs level when initializing the MatrixClient at login time, like:
+
+```javascript
+const userName = 'testuser';
+const userPassword = 'YouSup3rP4ssw0rd';
+const opts = {
+  'request': fetchRequest,
+  'baseUrl': 'https://matrixserver.com:8448',
+  'logLevel': 'DEBUG'
+};
+
+UserActions.loginWithPassword(userName, userPassword, opts);
+
+```
 
 ## How to use this
 

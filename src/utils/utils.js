@@ -41,17 +41,21 @@ export const Logger = (loggerObject, logLevel) => {
   return {
     log: logLevel => {
       if (logLevel === 'NONE') return (function(){});
-      return loggerObject.log()
+      return loggerObject.log('INFO --- ', arguments)
     },
-    error: logLevel => {
-      return loggerObject.error();
+    error: () => {
+      return loggerObject.error('ERROR --- ', arguments);
     },
     debug: logLevel => {
       if (logLevel === 'DEBUG')
-        return loggerObject.debug();
+        return loggerObject.log('DEBUG --- ', arguments);
+    },
+    warn: () => {
+      return loggerObject.log('WARN ---', arguments);
     }
   }
 }
+
 
 const objectToQueryString = function (a) {
   var prefix, s, add, name, r20, output;

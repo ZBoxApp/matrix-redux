@@ -58,7 +58,7 @@ export const testRoomFixturre = {
 
 const clientOptions = {
     baseUrl: userFixture.baseUrl,
-    logLevel: 'DEBUG'
+    logLevel: process.env.DEBUG || 'INFO'
 };
 
 export const logTestUser = (callback) => {
