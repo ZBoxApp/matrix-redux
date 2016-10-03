@@ -1,3 +1,10 @@
+/*
+ * Copyright 2015-present, ZBox Spa.
+ * All rights reserved.
+ */
+
+'use strict';
+
 import matrixSDK from "matrix-js-sdk";
 import {Logger} from "./utils";
 import _ from "lodash";
