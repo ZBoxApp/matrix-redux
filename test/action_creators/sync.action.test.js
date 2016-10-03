@@ -1,8 +1,9 @@
 "use strict";
 
-import {createStoreHelper, expect, clearMatrixClient, logTestUser, userFixture} from "./helper";
-import * as SyncActions from "../src/actions/sync";
-import MatrixClient from "../src/utils/client";
+import {createStoreHelper, expect, clearMatrixClient,
+  logTestUser, userFixture} from "../helper";
+import * as SyncActions from "../../src/actions/sync";
+import MatrixClient from "../../src/utils/client";
 
 let store = {};
 let state;

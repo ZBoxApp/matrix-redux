@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+  - "6.2"
+
+sudo: required
+
+before_install:
+  - sudo apt-key add test/vendors/matrix-repo-key.asc
+  - sudo echo "deb http://matrix.org/packages/debian jessie main" > /etc/apt/sources.list.d/matrix.list
+  - sudo apt-get -qq update
+  - sudo apt-get install -y curl coturn python-lxml python-jinja2 python-bleach matrix-synapse matrix-synapse-angular-client python-ldap3 pwgen
+  - sudo mkdir -p /data
+  - sudo cp -a test/vendors/start.sh /start.sh && sudo chmod +x /start.sh
+  - export SERVER_NAME=zboxapp.dev && export REPORT_STATS=no && sudo -E /start.sh generate
+  - sudo cp -a test/vendors/homeserver.yaml /data/homeserver.yaml
+  - sudo nohup /start.sh start &
+
+before_script:
+  - echo "PLACE_HOLDER"
+
+script:
+  - npm run test

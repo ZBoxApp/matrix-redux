@@ -4,7 +4,7 @@
   "description": "matrix redux",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 BABEL_ENV=test mocha --compilers js:babel-register"
+    "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 BABEL_ENV=test mocha --recursive --compilers js:babel-register"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,8 @@
 "use strict";
 
-import {createStoreHelper,expect, clearMatrixClient, userFixture} from "./helper";
-import * as UserActions from "../src/actions/user";
-import MatrixClient from "../src/utils/client";
+import {createStoreHelper,expect, clearMatrixClient, userFixture} from "../helper";
+import * as UserActions from "../../src/actions/user";
+import MatrixClient from "../../src/utils/client";
 
 let store = {};
 let state;
