@@ -3,18 +3,17 @@ language: node_js
 node_js:
   - "6.2"
 
+services:
+  - docker
+
 sudo: required
 
-before_script:
-  - sudo apt-key add test/vendors/matrix-repo-key.asc
-  - echo "deb http://matrix.org/packages/debian jessie main" | sudo tee -a /etc/apt/sources.list
-  - sudo apt-get -qq update
-  - sudo apt-get install -y curl coturn python-lxml python-jinja2 python-bleach matrix-synapse matrix-synapse-angular-client python-ldap3 pwgen
-  - sudo mkdir -p /data
-  - sudo cp -a test/vendors/start.sh /start.sh && sudo chmod +x /start.sh
-  - export SERVER_NAME=zboxapp.dev && export REPORT_STATS=no && sudo -E /start.sh generate
-  - sudo cp -af test/vendors/homeserver.yaml /data/homeserver.yaml
-  - sudo nohup /start.sh start &
+before_install:
+  - docker pull zboxapp/docker-matrix
+  - sudo mkdir -p /opt/matrix/data
+  - docker run -v /opt/matrix/data:/data --rm -e SERVER_NAME=zboxapp.dev -e REPORT_STATS=no zboxapp/docker-matrix generate
+  - sudo cp -af test/vendors/homeserver.yaml /opt/matrix/data/homeserver.yaml
+  - docker run -d -p 127.0.0.1:8448:8448 -p 127.0.0.1:8008:8008 -v /opt/matrix/data:/data zboxapp/docker-matrix start
   - npm install
 
 script:
