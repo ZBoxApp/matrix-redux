@@ -8,13 +8,14 @@ import {setError} from "./error";
 export const SYNC_REQUEST = 'SYNC_REQUEST';
 export const SYNC_FAILURE = 'SYNC_FAILURE';
 export const SYNC_SUCCESS = 'SYNC_SUCCESS';
+export const SYNC_INITIAL = 'SYNC_INITIAL';
 export const SYNC_TOKEN = 'SYNC_TOKEN';
 
 /**
  * This are the possible states of the Syncing process
  * as documented on http://matrix-org.github.io/matrix-js-sdk/0.6.1/client.js.html#line2853
  */
-export const SYNC_STATE_SUCCESS = 'PREPARED';
+export const SYNC_INITIAL_SUCCESS = 'PREPARED';
 export const SYNC_STATE_FAILURE = 'ERROR';
 export const SYNC_STATE_RUNNING = 'SYNCING';
 export const SYNC_STATE_STOPPED = 'STOPPED';
@@ -65,20 +66,22 @@ export const start = (opts) => {
 
                 case SYNC_STATE_RUNNING:
                   payload = {
-                    isRunning: true, initialSyncComplete: true,
+                    isRunning: true,
                     syncToken: MatrixClient.client.store.syncToken,
                     filters: MatrixClient.client.store.filters,
                   }
                   dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
                   break;
 
-                case SYNC_STATE_SUCCESS:
+                case SYNC_INITIAL_SUCCESS:
                   payload = {
                     isRunning: true, initialSyncComplete: true,
                     syncToken: MatrixClient.client.store.syncToken,
                     filters: MatrixClient.client.store.filters,
+                    data: MatrixClient.client.store
                   }
                   dispatch(requestSync(SYNC_SUCCESS, payload));
+                  dispatch(requestSync(SYNC_INITIAL, payload));
                   break;
 
                 case SYNC_STATE_STOPPED:

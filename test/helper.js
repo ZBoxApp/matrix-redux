@@ -47,7 +47,8 @@ export const userFixture = {
     testUserPassword: "123456",
     baseUrl: 'https://192.168.1.11:8448',
     clientOptions: {
-        baseUrl: 'https://192.168.1.11:8448'
+        baseUrl: 'https://192.168.1.11:8448',
+        logLevel: process.env.DEBUG
     }
 };
 
@@ -56,7 +57,8 @@ export const testRoomFixturre = {
 };
 
 const clientOptions = {
-    baseUrl: userFixture.baseUrl
+    baseUrl: userFixture.baseUrl,
+    logLevel: 'DEBUG'
 };
 
 export const logTestUser = (callback) => {

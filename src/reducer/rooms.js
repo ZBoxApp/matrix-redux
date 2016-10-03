@@ -1,4 +1,5 @@
 import * as ActionTypes from '../actions/rooms';
+import * as SyncTypes from '../actions/sync';
 
 /**
  * @type {Object} items
@@ -15,7 +16,7 @@ import * as ActionTypes from '../actions/rooms';
  * @type {Array} ids - A list of Rooms Ids
  */
 const initialState = {
-    items: {},
+    entities: {},
     isLoading: false,
     ids: [],
 };
@@ -38,6 +39,12 @@ const Rooms = function (state = initialState, action) {
             delete newState.items[payload.roomId];
             delete newState.publicIds[payload.roomId];
             delete newState.ids[payload.roomId];
+            newState.isLoading = false;
+            return newState;
+            break;
+        case SyncTypes.SYNC_INITIAL:
+            const entities = action.payload.data.rooms;
+            newState = {...state, entities};
             newState.isLoading = false;
             return newState;
             break;
