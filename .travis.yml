@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+  - "6.2"
+
+services:
+  - docker
+
+sudo: required
+
+before_install:
+  - docker pull zboxapp/docker-matrix
+  - sudo mkdir -p /opt/matrix/data
+  - docker run -v /opt/matrix/data:/data --rm -e SERVER_NAME=zboxapp.dev -e REPORT_STATS=no zboxapp/docker-matrix generate
+  - sudo cp -af test/vendors/homeserver.yaml /opt/matrix/data/homeserver.yaml
+  - docker run -d --name docker-matrix -p 8448:8448 -p 8008:8008 -v /opt/matrix/data:/data zboxapp/docker-matrix start
+  - sleep 10
+  - npm install
+  - docker exec -ti docker-matrix /usr/bin/register_new_matrix_user -c /data/homeserver.yaml https://127.0.0.1:8448 -u test -p 123456 -a
+
+script:
+  - npm run test

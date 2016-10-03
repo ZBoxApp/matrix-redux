@@ -13,6 +13,7 @@ import rootReducer from "../src/reducer";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
+export const BaseURL = "https://localhost:8448" || process.env.BASE_URL;
 
 export const createStoreHelper = function(preloadedState, persistOps) {
   const combinedReducers = combineReducers(rootReducer);
@@ -45,9 +46,9 @@ export const userFixture = {
     testUserDisplayName: "test",
     testUserName: "test",
     testUserPassword: "123456",
-    baseUrl: 'https://192.168.1.11:8448',
+    baseUrl: BaseURL,
     clientOptions: {
-        baseUrl: 'https://192.168.1.11:8448',
+        baseUrl: BaseURL,
         logLevel: process.env.DEBUG
     }
 };
