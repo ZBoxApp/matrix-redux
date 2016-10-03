@@ -17,39 +17,16 @@ export const fetchRequest = (options, callback) => {
     return fetch(uri, options)
         .then(function (response) {
             if (response.status >= 400) {
-                var error = new Error("Bad response from server");
+                var error = new Error("Bad response from server: " + response.status);
                 return callback(error);
             }
             return response.json();
-        })
-        .then(function (response) {
-            return callback(null, response, response);
+        }).then(function (jsonResponse) {
+            return callback(null, jsonResponse);
         }).catch((error) => {
             callback(error);
         });
 };
-
-
-/**
- * A builder of Action Creators
- * @param  {String} actionName The ActionCreator name
- * @param  {[type]} status     The Status of the Action
- * @return {Function}          The Action Creator Function
- */
-const actionCreator = (actionName, status) => {
-    const type = [status, 'request', actionName].join('_').toUpperCase();
-    const action = (payload) => {
-        payload = payload || {};
-        payload.isLoading = isLoading(status);
-        return {
-            type: type,
-            payload: payload
-        }
-    };
-    return action;
-};
-
-
 
 const objectToQueryString = function (a) {
   var prefix, s, add, name, r20, output;

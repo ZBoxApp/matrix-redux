@@ -8,7 +8,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 - [Installation](#installation)
 - [How to use this](#how-to-use-this)
 - [Persistence](#persistence)
-- [Fetch Function](#fetch-function)
+- [Network Request Function](#network-request-function)
 - [Login](#login)
 - [Matrix Client](#matrix-client)
 - [Store and reducers](#store-and-reducers)
@@ -43,6 +43,10 @@ You have to install a couple of modules on your App for this to work ok:
 ```
 $ npm i --save lodash matrix-js-sdk redux redux-thunk redux-persist
 ```
+
+### For Nodejs and Browsers
+This library uses the new [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), so you will also need a module tha implements this, like [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch).
+
 
 ## How to use this
 
@@ -86,28 +90,13 @@ import createStore from "../src/store/store";
 const store = createStore({});
 ```
 
-## Fetch Function
 The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) library needs a compliant `fetch()` function, so maybe you need to implement it. For example:
 
+## Network Request Function
+This is the function that will make all the network requests, you can implement your own but with ship one: `utils.fetchRequest()`.
 
-#### For Nodejs
+When you initialize the client in the `loginWithPassword()` or `restoreSession()` methods you can pass the function as shown below:
 
-```javascript
-import fetch from "isomorphic-fetch";
-import * as UserActions from "../src/actions/user";
-import MatrixClient from "../src/utils/client";
-
-const userName = 'testuser';
-const userPassword = 'YouSup3rP4ssw0rd';
-const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
-
-// This is returns a Promise
-UserActions.loginWithPassword(userName, userPassword, opts);
-
-```
-
-#### For React Native
-You can pass a custom `fetch()` function to the MatrixClient in `opts.request`, for example:
 
 ```javascript
 import {fetchRequest} from '../src/utils/utils';
@@ -120,23 +109,6 @@ const opts = {
 };
 
 UserActions.loginWithPassword(userName, userPassword, opts);
-```
-
-```javascript
-import {fetchRequest} from '../src/utils/utils';
-import * as UserActions from "../src/actions/user";
-import MatrixClient from "../src/utils/client";
-
-const userName = 'testuser';
-const userPassword = 'YouSup3rP4ssw0rd';
-const opts = {
-  'request': fetchRequest,
-  'baseUrl': 'https://matrixserver.com:8448'
-};
-
-// This is returns a Promise
-UserActions.loginWithPassword(userName, userPassword, opts);
-
 ```
 
 ## Login
