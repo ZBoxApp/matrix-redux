@@ -13,7 +13,7 @@ import rootReducer from "../src/reducer";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
-export const BaseURL = "https://localhost:8448" || process.env.BASE_URL;
+export const BaseURL = process.env.BASE_URL || "https://localhost:8448" ;
 
 export const createStoreHelper = function(preloadedState, persistOps) {
   const combinedReducers = combineReducers(rootReducer);

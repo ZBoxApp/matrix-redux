@@ -1,0 +1,1174 @@
+{
+  "rooms": {
+    "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev": {
+      "roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+      "name": "private2",
+      "tags": {},
+      "accountData": {},
+      "summary": {
+        "roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+        "info": {
+          "title": "private2"
+        }
+      },
+      "_opts": {
+        "pendingEventOrdering": "chronological",
+        "timelineSupport": false
+      },
+      "_txnToEvent": {},
+      "_receipts": {
+        "m.read": {
+          "@test:zboxapp.dev": {
+            "eventId": "$1475529733205soZnU:zboxapp.dev",
+            "data": {
+              "ts": 1475529733810
+            }
+          }
+        }
+      },
+      "_receiptCacheByEventId": {
+        "$1475529733205soZnU:zboxapp.dev": [
+          {
+            "userId": "@test:zboxapp.dev",
+            "type": "m.read",
+            "data": "[Circular]"
+          }
+        ]
+      },
+      "_realReceipts": {},
+      "_notificationCounts": {},
+      "_timelineSets": [
+        {
+          "room": "[Circular]",
+          "_timelineSupport": false,
+          "_liveTimeline": {
+            "_eventTimelineSet": "[Circular]",
+            "_roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+            "_events": [
+              {
+                "event": {
+                  "origin_server_ts": 1475529733533,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733199ZdnWE:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076758
+                  },
+                  "state_key": "",
+                  "content": {
+                    "creator": "@test:zboxapp.dev"
+                  },
+                  "type": "m.room.create",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": null,
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475529733582,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733200RpHCa:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076709
+                  },
+                  "state_key": "@test:zboxapp.dev",
+                  "content": {
+                    "membership": "join",
+                    "avatar_url": "mxc://zboxapp.dev/TINPCdRqDlKOWENuUoUbGAGj",
+                    "displayname": "test"
+                  },
+                  "membership": "join",
+                  "type": "m.room.member",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": {
+                  "roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+                  "userId": "@test:zboxapp.dev",
+                  "typing": false,
+                  "name": "test",
+                  "powerLevel": 0,
+                  "powerLevelNorm": 0,
+                  "user": null,
+                  "membership": "join",
+                  "events": {
+                    "member": "[Circular]"
+                  },
+                  "_modified": 1475530810355
+                },
+                "target": "[Circular]",
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475529733636,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733201TArst:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076655
+                  },
+                  "state_key": "",
+                  "content": {
+                    "redact": 50,
+                    "events_default": 0,
+                    "users": {
+                      "@test:zboxapp.dev": 100
+                    },
+                    "invite": 0,
+                    "ban": 50,
+                    "state_default": 50,
+                    "events": {
+                      "m.room.avatar": 50,
+                      "m.room.history_visibility": 100,
+                      "m.room.canonical_alias": 50,
+                      "m.room.name": 50,
+                      "m.room.power_levels": 100
+                    },
+                    "kick": 50,
+                    "users_default": 0
+                  },
+                  "type": "m.room.power_levels",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475529733673,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733202zUcnm:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076618
+                  },
+                  "state_key": "",
+                  "content": {
+                    "join_rule": "invite"
+                  },
+                  "type": "m.room.join_rules",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475529733703,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733203aQaMz:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076588
+                  },
+                  "state_key": "",
+                  "content": {
+                    "history_visibility": "shared"
+                  },
+                  "type": "m.room.history_visibility",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475529733764,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733204vtnFg:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076527
+                  },
+                  "state_key": "",
+                  "content": {
+                    "guest_access": "can_join"
+                  },
+                  "type": "m.room.guest_access",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475529733810,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475529733205soZnU:zboxapp.dev",
+                  "unsigned": {
+                    "age": 1076481
+                  },
+                  "state_key": "",
+                  "content": {
+                    "name": "private2"
+                  },
+                  "type": "m.room.name",
+                  "room_id": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              }
+            ],
+            "_baseIndex": 0,
+            "_startState": {
+              "roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+              "members": {},
+              "events": {},
+              "paginationToken": "s2866_1608_0_1_2_1_2",
+              "_sentinels": {},
+              "_modified": 1475530810352,
+              "_displayNameToUserIds": {},
+              "_userIdsToDisplayNames": {},
+              "_tokenToInvite": {}
+            },
+            "_endState": {
+              "roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+              "members": {
+                "@test:zboxapp.dev": {
+                  "roomId": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev",
+                  "userId": "@test:zboxapp.dev",
+                  "typing": false,
+                  "name": "test",
+                  "powerLevel": 100,
+                  "powerLevelNorm": 100,
+                  "user": {
+                    "userId": "@test:zboxapp.dev",
+                    "presence": "online",
+                    "presenceStatusMsg": null,
+                    "displayName": "test",
+                    "rawDisplayName": "test",
+                    "avatarUrl": "mxc://zboxapp.dev/TINPCdRqDlKOWENuUoUbGAGj",
+                    "lastActiveAgo": 20,
+                    "lastPresenceTs": 1475530810349,
+                    "currentlyActive": true,
+                    "events": {
+                      "presence": {
+                        "event": {
+                          "content": {
+                            "presence": "online",
+                            "last_active_ago": 20,
+                            "currently_active": true
+                          },
+                          "type": "m.presence",
+                          "sender": "@test:zboxapp.dev"
+                        },
+                        "sender": null,
+                        "target": null,
+                        "status": null,
+                        "forwardLooking": true,
+                        "_clearEvent": {},
+                        "_pushActions": null,
+                        "_keysProved": {},
+                        "_keysClaimed": {}
+                      },
+                      "profile": null
+                    },
+                    "_modified": 1475530810357,
+                    "_events": {},
+                    "_eventsCount": 5
+                  },
+                  "membership": "join",
+                  "events": {
+                    "member": "[Circular]"
+                  },
+                  "_modified": 1475530810356,
+                  "_events": {},
+                  "_eventsCount": 4
+                }
+              },
+              "events": {
+                "m.room.create": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": null,
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.member": {
+                  "@test:zboxapp.dev": "[Circular]"
+                },
+                "m.room.power_levels": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.join_rules": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.history_visibility": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.guest_access": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.name": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                }
+              },
+              "paginationToken": null,
+              "_sentinels": {
+                "@test:zboxapp.dev": "[Circular]"
+              },
+              "_modified": 1475530810356,
+              "_displayNameToUserIds": {
+                "test": [
+                  "@test:zboxapp.dev"
+                ]
+              },
+              "_userIdsToDisplayNames": {
+                "@test:zboxapp.dev": "test"
+              },
+              "_tokenToInvite": {},
+              "_events": {
+                "RoomState.members": [
+                  null,
+                  null
+                ],
+                "RoomState.newMember": [
+                  null,
+                  null
+                ]
+              },
+              "_eventsCount": 3
+            },
+            "_prevTimeline": null,
+            "_nextTimeline": null,
+            "_paginationRequests": {
+              "b": null,
+              "f": null
+            },
+            "_name": "!ZaMAOrXXDmvZTDoZZF:zboxapp.dev:2016-10-03T21:40:10.351Z"
+          },
+          "_timelines": [
+            "[Circular]"
+          ],
+          "_eventIdToTimeline": {
+            "$1475529733199ZdnWE:zboxapp.dev": "[Circular]",
+            "$1475529733200RpHCa:zboxapp.dev": "[Circular]",
+            "$1475529733201TArst:zboxapp.dev": "[Circular]",
+            "$1475529733202zUcnm:zboxapp.dev": "[Circular]",
+            "$1475529733203aQaMz:zboxapp.dev": "[Circular]",
+            "$1475529733204vtnFg:zboxapp.dev": "[Circular]",
+            "$1475529733205soZnU:zboxapp.dev": "[Circular]"
+          },
+          "_filter": null,
+          "_events": {},
+          "_eventsCount": 2
+        }
+      ],
+      "timeline": "[Circular]",
+      "oldState": "[Circular]",
+      "currentState": "[Circular]",
+      "_filteredTimelineSets": {},
+      "_events": {},
+      "_eventsCount": 8
+    },
+    "!FIMlgLirVpVbOYQliq:zboxapp.dev": {
+      "roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+      "name": "#private:zboxapp.dev",
+      "tags": {},
+      "accountData": {},
+      "summary": {
+        "roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+        "info": {
+          "title": "#private:zboxapp.dev"
+        }
+      },
+      "_opts": {
+        "pendingEventOrdering": "chronological",
+        "timelineSupport": false
+      },
+      "_txnToEvent": {},
+      "_receipts": {
+        "m.read": {
+          "@test:zboxapp.dev": {
+            "eventId": "$1475528460198SZoDz:zboxapp.dev",
+            "data": {
+              "ts": 1475528460182
+            }
+          }
+        }
+      },
+      "_receiptCacheByEventId": {
+        "$1475528460198SZoDz:zboxapp.dev": [
+          {
+            "userId": "@test:zboxapp.dev",
+            "type": "m.read",
+            "data": "[Circular]"
+          }
+        ]
+      },
+      "_realReceipts": {},
+      "_notificationCounts": {},
+      "_timelineSets": [
+        {
+          "room": "[Circular]",
+          "_timelineSupport": false,
+          "_liveTimeline": {
+            "_eventTimelineSet": "[Circular]",
+            "_roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+            "_events": [
+              {
+                "event": {
+                  "origin_server_ts": 1475528459935,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528459192LYvUg:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350356
+                  },
+                  "state_key": "",
+                  "content": {
+                    "creator": "@test:zboxapp.dev"
+                  },
+                  "type": "m.room.create",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": null,
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475528459978,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528459193HKhyB:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350313
+                  },
+                  "state_key": "@test:zboxapp.dev",
+                  "content": {
+                    "membership": "join",
+                    "avatar_url": "mxc://zboxapp.dev/TINPCdRqDlKOWENuUoUbGAGj",
+                    "displayname": "test"
+                  },
+                  "membership": "join",
+                  "type": "m.room.member",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": {
+                  "roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+                  "userId": "@test:zboxapp.dev",
+                  "typing": false,
+                  "name": "test",
+                  "powerLevel": 0,
+                  "powerLevelNorm": 0,
+                  "user": null,
+                  "membership": "join",
+                  "events": {
+                    "member": "[Circular]"
+                  },
+                  "_modified": 1475530810357
+                },
+                "target": "[Circular]",
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475528460029,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528460194YgXBY:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350262
+                  },
+                  "state_key": "",
+                  "content": {
+                    "redact": 50,
+                    "events_default": 0,
+                    "users": {
+                      "@test:zboxapp.dev": 100
+                    },
+                    "invite": 0,
+                    "ban": 50,
+                    "state_default": 50,
+                    "events": {
+                      "m.room.avatar": 50,
+                      "m.room.history_visibility": 100,
+                      "m.room.canonical_alias": 50,
+                      "m.room.name": 50,
+                      "m.room.power_levels": 100
+                    },
+                    "kick": 50,
+                    "users_default": 0
+                  },
+                  "type": "m.room.power_levels",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475528460065,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528460195yqJaE:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350226
+                  },
+                  "state_key": "",
+                  "content": {
+                    "alias": "#private:zboxapp.dev"
+                  },
+                  "type": "m.room.canonical_alias",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475528460115,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528460196rNOif:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350176
+                  },
+                  "state_key": "",
+                  "content": {
+                    "join_rule": "invite"
+                  },
+                  "type": "m.room.join_rules",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475528460144,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528460197lHkZQ:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350147
+                  },
+                  "state_key": "",
+                  "content": {
+                    "history_visibility": "shared"
+                  },
+                  "type": "m.room.history_visibility",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              },
+              {
+                "event": {
+                  "origin_server_ts": 1475528460182,
+                  "sender": "@test:zboxapp.dev",
+                  "event_id": "$1475528460198SZoDz:zboxapp.dev",
+                  "unsigned": {
+                    "age": 2350109
+                  },
+                  "state_key": "zboxapp.dev",
+                  "content": {
+                    "aliases": [
+                      "#private:zboxapp.dev"
+                    ]
+                  },
+                  "type": "m.room.aliases",
+                  "room_id": "!FIMlgLirVpVbOYQliq:zboxapp.dev"
+                },
+                "sender": "[Circular]",
+                "target": null,
+                "status": null,
+                "forwardLooking": true,
+                "_clearEvent": {},
+                "_pushActions": null,
+                "_keysProved": {},
+                "_keysClaimed": {}
+              }
+            ],
+            "_baseIndex": 0,
+            "_startState": {
+              "roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+              "members": {},
+              "events": {},
+              "paginationToken": "s2866_1608_0_1_2_1_2",
+              "_sentinels": {},
+              "_modified": 1475530810357,
+              "_displayNameToUserIds": {},
+              "_userIdsToDisplayNames": {},
+              "_tokenToInvite": {}
+            },
+            "_endState": {
+              "roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+              "members": {
+                "@test:zboxapp.dev": {
+                  "roomId": "!FIMlgLirVpVbOYQliq:zboxapp.dev",
+                  "userId": "@test:zboxapp.dev",
+                  "typing": false,
+                  "name": "test",
+                  "powerLevel": 100,
+                  "powerLevelNorm": 100,
+                  "user": "[Circular]",
+                  "membership": "join",
+                  "events": {
+                    "member": "[Circular]"
+                  },
+                  "_modified": 1475530810357,
+                  "_events": {},
+                  "_eventsCount": 4
+                }
+              },
+              "events": {
+                "m.room.create": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": null,
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.member": {
+                  "@test:zboxapp.dev": "[Circular]"
+                },
+                "m.room.power_levels": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.canonical_alias": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.join_rules": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.history_visibility": {
+                  "": {
+                    "event": "[Circular]",
+                    "sender": "[Circular]",
+                    "target": null,
+                    "status": null,
+                    "forwardLooking": true,
+                    "_clearEvent": "[Circular]",
+                    "_pushActions": null,
+                    "_keysProved": "[Circular]",
+                    "_keysClaimed": "[Circular]"
+                  }
+                },
+                "m.room.aliases": {
+                  "zboxapp.dev": "[Circular]"
+                }
+              },
+              "paginationToken": null,
+              "_sentinels": {
+                "@test:zboxapp.dev": "[Circular]"
+              },
+              "_modified": 1475530810357,
+              "_displayNameToUserIds": {
+                "test": [
+                  "@test:zboxapp.dev"
+                ]
+              },
+              "_userIdsToDisplayNames": {
+                "@test:zboxapp.dev": "test"
+              },
+              "_tokenToInvite": {},
+              "_events": {
+                "RoomState.members": [
+                  null,
+                  null
+                ],
+                "RoomState.newMember": [
+                  null,
+                  null
+                ]
+              },
+              "_eventsCount": 3
+            },
+            "_prevTimeline": null,
+            "_nextTimeline": null,
+            "_paginationRequests": {
+              "b": null,
+              "f": null
+            },
+            "_name": "!FIMlgLirVpVbOYQliq:zboxapp.dev:2016-10-03T21:40:10.351Z"
+          },
+          "_timelines": [
+            "[Circular]"
+          ],
+          "_eventIdToTimeline": {
+            "$1475528459192LYvUg:zboxapp.dev": "[Circular]",
+            "$1475528459193HKhyB:zboxapp.dev": "[Circular]",
+            "$1475528460194YgXBY:zboxapp.dev": "[Circular]",
+            "$1475528460195yqJaE:zboxapp.dev": "[Circular]",
+            "$1475528460196rNOif:zboxapp.dev": "[Circular]",
+            "$1475528460197lHkZQ:zboxapp.dev": "[Circular]",
+            "$1475528460198SZoDz:zboxapp.dev": "[Circular]"
+          },
+          "_filter": null,
+          "_events": {},
+          "_eventsCount": 2
+        }
+      ],
+      "timeline": "[Circular]",
+      "oldState": "[Circular]",
+      "currentState": "[Circular]",
+      "_filteredTimelineSets": {},
+      "_events": {},
+      "_eventsCount": 8
+    }
+  },
+  "users": {
+    "@test:zboxapp.dev": "[Circular]"
+  },
+  "syncToken": "s2866_1608_0_1_2_1_2",
+  "filters": {
+    "@test:zboxapp.dev": {
+      "313": {
+        "userId": "@test:zboxapp.dev",
+        "filterId": "313",
+        "definition": {
+          "room": {
+            "timeline": {
+              "limit": 8
+            }
+          }
+        },
+        "_include_leave": false,
+        "_room_filter": {
+          "filter_json": {},
+          "types": null,
+          "not_types": [],
+          "rooms": null,
+          "not_rooms": [],
+          "senders": null,
+          "not_senders": [],
+          "contains_url": null
+        },
+        "_room_timeline_filter": {
+          "filter_json": "[Circular]",
+          "types": null,
+          "not_types": [],
+          "rooms": null,
+          "not_rooms": [],
+          "senders": null,
+          "not_senders": [],
+          "contains_url": null
+        }
+      }
+    }
+  },
+  "accountData": {
+    "m.push_rules": {
+      "event": {
+        "content": {
+          "device": {},
+          "global": {
+            "content": [
+              {
+                "default": true,
+                "pattern": "test",
+                "enabled": true,
+                "rule_id": ".m.rule.contains_user_name",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight"
+                  }
+                ]
+              }
+            ],
+            "override": [
+              {
+                "default": true,
+                "enabled": false,
+                "conditions": [],
+                "rule_id": ".m.rule.master",
+                "actions": [
+                  "dont_notify"
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.notice",
+                    "kind": "event_match",
+                    "key": "content.msgtype"
+                  }
+                ],
+                "rule_id": ".m.rule.suppress_notices",
+                "actions": [
+                  "dont_notify"
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.member",
+                    "kind": "event_match",
+                    "key": "type"
+                  },
+                  {
+                    "pattern": "invite",
+                    "kind": "event_match",
+                    "key": "content.membership"
+                  },
+                  {
+                    "pattern": "@test:zboxapp.dev",
+                    "kind": "event_match",
+                    "key": "state_key"
+                  }
+                ],
+                "rule_id": ".m.rule.invite_for_me",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.member",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.member_event",
+                "actions": [
+                  "dont_notify"
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "kind": "contains_display_name"
+                  }
+                ],
+                "rule_id": ".m.rule.contains_display_name",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight"
+                  }
+                ]
+              }
+            ],
+            "sender": [],
+            "room": [],
+            "underride": [
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.call.invite",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.call",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "ring"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "kind": "room_member_count",
+                    "is": "2"
+                  },
+                  {
+                    "pattern": "m.room.message",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.room_one_to_one",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "kind": "room_member_count",
+                    "is": "2"
+                  },
+                  {
+                    "pattern": "m.room.encrypted",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.encrypted_room_one_to_one",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "sound",
+                    "value": "default"
+                  },
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.message",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.message",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              },
+              {
+                "default": true,
+                "enabled": true,
+                "conditions": [
+                  {
+                    "pattern": "m.room.encrypted",
+                    "kind": "event_match",
+                    "key": "type"
+                  }
+                ],
+                "rule_id": ".m.rule.encrypted",
+                "actions": [
+                  "notify",
+                  {
+                    "set_tweak": "highlight",
+                    "value": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "type": "m.push_rules"
+      },
+      "sender": null,
+      "target": null,
+      "status": null,
+      "forwardLooking": true,
+      "_clearEvent": {},
+      "_pushActions": null,
+      "_keysProved": {},
+      "_keysClaimed": {}
+    },
+    "m.direct": {
+      "event": {
+        "content": {},
+        "type": "m.direct"
+      },
+      "sender": null,
+      "target": null,
+      "status": null,
+      "forwardLooking": true,
+      "_clearEvent": {},
+      "_pushActions": null,
+      "_keysProved": {},
+      "_keysClaimed": {}
+    }
+  }
+}

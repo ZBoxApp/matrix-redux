@@ -40,6 +40,7 @@ describe('Sync Actions', function () {
             expect(state.sync.syncToken).to.not.be.undefined;
             expect(typeof state.sync.filters).to.equal("object");
             expect(Object.keys(state.rooms).length).to.be.above(0);
+            console.log(MatrixClient.client.store.getRoom.toString());
             MatrixClient.client.stopClient();
             done();
           }, 2000);
