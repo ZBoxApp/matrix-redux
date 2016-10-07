@@ -26,14 +26,16 @@ const ROOM_MEMBERSHIP_STATES = ['leave', 'join', 'invite'];
  */
 export const fixRoomJson = json => {
 	const roomsObject = (typeof json.rooms === 'undefined') ? json : json.rooms;
+	const roomsArray = [];
 	ROOM_MEMBERSHIP_STATES.forEach((state) => {
 		Object.keys(roomsObject[state]).forEach((roomId) => {
-			roomsObject[roomId] = addAttrsToRoom(roomsObject[state][roomId], state, roomId);
+			const formatedRoom = addAttrsToRoom(roomsObject[state][roomId], state, roomId);
+			roomsArray.push(formatedRoom);
 		});
-		delete roomsObject[state];
+
 	});
-	if (typeof json.rooms === 'undefined') return roomsObject;
-	json.rooms = roomsObject;
+	if (typeof json.rooms === 'undefined') return roomsArray;
+	json.rooms = roomsArray;
 	return json;
 };
 
