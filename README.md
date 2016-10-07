@@ -42,7 +42,7 @@ $ npm run postinstall
 You have to install a couple of modules on your App for this to work ok:
 
 ```
-$ npm i --save lodash matrix-js-sdk redux redux-thunk redux-persist
+$ npm i --save lodash matrix-js-sdk redux redux-thunk redux-persist normalizr humps
 ```
 
 ### For Nodejs and Browsers

@@ -7,6 +7,7 @@
 
 import matrixSDK from "matrix-js-sdk";
 import {Logger} from "./utils";
+import SyncApi from "matrix-js-sdk";
 import _ from "lodash";
 
 export default class MatrixClient {
@@ -24,7 +25,8 @@ export default class MatrixClient {
         this.LOGGER = Logger(options.loggerObject, options.logLevel);
         if (typeof fetch === 'function' || typeof options.request === 'function') {
           this.LOGGER.debug("Creating Matrix Client with opts: " + options);
-          return this.client = matrixSDK.createClient(options);
+          this.client = matrixSDK.createClient(options);
+          return this.client;
         }
         throw new Error("You need a fetch Pollify, or initialze MatrixClient with opts.request function")
     }
@@ -137,6 +139,11 @@ export default class MatrixClient {
         return this.client.getSyncState();
     }
 
+    static startClient(opts) {
+      this.client.startClient(opts);
+      this.client._syncApi._processSyncResponse = patchProcessSyncResponse(this.client._syncApi);
+    }
+
     static stopClient() {
       return new Promise((resolve) => {
         this.client.stopClient();
@@ -158,3 +165,15 @@ export default class MatrixClient {
         this.client.deviceId = loginResult.device_id;
     }
 };
+
+const patchProcessSyncResponse = function(syncApiObject) {
+  const oldProcessSyncResponse = syncApiObject._processSyncResponse;
+  const newProcessSyncResponse = function(syncToken, data) {
+    console.log("---- New processSyncResponse ");
+    // console.log(JSON.stringify(data.rooms.join, 2, 2));
+    console.log(data);
+    console.log("--------- ---------")
+    return oldProcessSyncResponse.apply(this, arguments);
+  }
+  return newProcessSyncResponse;
+}

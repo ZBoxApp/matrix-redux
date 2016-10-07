@@ -47,9 +47,10 @@ const requestSync = (type, payload) => {
 export const start = (opts) => {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            MatrixClient.callApi("startClient", opts);
+            MatrixClient.startClient(opts);
             let payload;
             MatrixClient.client.on("sync", (syncState, prevState, data) => {
+              console.log(data);
               const matrixStore = MatrixClient.client.store;
               if (matrixStore && matrixStore.syncToken) {
                 dispatch(requestSync(SYNC_TOKEN, {
@@ -80,6 +81,7 @@ export const start = (opts) => {
                     filters: MatrixClient.client.store.filters,
                     data: MatrixClient.client.store
                   }
+                  console.log(data);
                   dispatch(requestSync(SYNC_SUCCESS, payload));
                   dispatch(requestSync(SYNC_INITIAL, payload));
                   break;
