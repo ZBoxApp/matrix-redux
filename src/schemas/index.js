@@ -25,12 +25,15 @@ const ROOM_MEMBERSHIP_STATES = ['leave', 'join', 'invite'];
  * @return {Object}      The reformarted json
  */
 export const fixRoomJson = json => {
+	const roomsObject = (typeof json.rooms === 'undefined') ? json : json.rooms;
 	ROOM_MEMBERSHIP_STATES.forEach((state) => {
-		Object.keys(json[state]).forEach((roomId) => {
-			json[roomId] = addAttrsToRoom(json[state][roomId], state, roomId);
+		Object.keys(roomsObject[state]).forEach((roomId) => {
+			roomsObject[roomId] = addAttrsToRoom(roomsObject[state][roomId], state, roomId);
 		});
-		delete json[state];
+		delete roomsObject[state];
 	});
+	if (typeof json.rooms === 'undefined') return roomsObject;
+	json.rooms = roomsObject;
 	return json;
 };
 
