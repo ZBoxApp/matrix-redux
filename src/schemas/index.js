@@ -7,6 +7,8 @@
 
 import { normalize, Schema, arrayOf, unionOf, valuesOf } from 'normalizr';
 import { camelizeKeys } from 'humps';
+import { CONSTANTS } from '../utils/constants';
+import uuid from 'uuid';
 import _ from 'lodash';
 
 
@@ -15,6 +17,67 @@ import _ from 'lodash';
  * @type {Array}
  */
 const ROOM_MEMBERSHIP_STATES = ['leave', 'join', 'invite'];
+const EVENTS = CONSTANTS.events;
+
+const assignRoomEntity = (output, key, value, input) => {
+    if(key === 'state' && input.state.events.length > 0) {
+    	output.name = setRoomName(input.state, input.id);
+    	output.memberships = setRoomMembers(input.state);
+    }
+};
+
+const setRoomMembers = (roomState) => {
+	const memberships = {
+		[EVENTS.ROOM_MEMBER_JOIN]: [], 
+		[EVENTS.ROOM_MEMBER_LEAVE]: [],
+		[EVENTS.ROOM_MEMBER_INVITE]: []
+	};
+	const roomMemberEvents = selectEventsByType(roomState.events, EVENTS.ROOM_MEMBER);
+	const roomMemberEventsByMember = _.groupBy(roomMemberEvents, (event) => {
+		return event.sender;
+	});
+
+	if (roomMemberEventsByMember.length < 1) return memberships;
+	Object.keys(roomMemberEventsByMember).forEach((member) => {
+		const event = lastEvent(roomMemberEventsByMember[member]);
+		if (!event.membership) return;
+		memberships[event.membership].push(event.sender);
+	});
+	return memberships;
+};
+
+/**
+ * Set the name for the Room
+ * if no name, then returns the Id
+ * @param  {Object} roomState - the state with the Object of Events
+ * @return {String}           - The Room Name
+ */
+const setRoomName = (roomState, roomId) => {
+	const roomNameEvents = selectEventsByType(roomState.events, EVENTS.ROOM_NAME);
+	if (roomNameEvents.length < 1) return roomId;
+	const event = lastEvent(roomNameEvents);
+	return event.content.name;
+};
+
+const lastEvent = (events) => {
+	events.sort((a,b) => {
+		return a.unsigned.age - b.unsigned.age;
+	});
+	return events[0];
+};
+
+/**
+ * Returns an array of events by type
+ * @param  {Array} events
+ * @param  {String} type
+ * @return {Array}        
+ */
+const selectEventsByType = (events, type) => {
+	const selectedEvents = events.filter((event) => { 
+		return event.type === type; 
+	});
+	return selectedEvents;
+};
 
 /**
  * Convert the original JSON for room from 
@@ -48,15 +111,16 @@ export const fixRoomJson = json => {
  */
 const addAttrsToRoom = (room, membershipState, roomId) => {
 	room.id = roomId;
-	room.membershipState = membershipState;
-	return room;
+	room.currentUserMembership = membershipState;
+	if (typeof room.state === 'object') room.state.id = roomId;
+	return camelizeKeys(room);
 };
 
 /**
  * Function to fix timeLine JSON
  * documented at: {@link https://github.com/paularmstrong/normalizr#normalizeobj-schema-options}
  */
-const assignTimelineEntity = function(output, key, value, input) {
+const assignEventsArray = function(output, key, value, input) {
 	if (key === 'events') {
 		output.eventTypes = buildEventTypesObject(input.events);
 	}
@@ -86,26 +150,35 @@ const eventSchema = new Schema('events', { idAttribute: "eventId" });
 const messageSchema = new Schema('messages');
 const notificationSchema = new Schema('notifications');
 const presenceSchema = new Schema('presences');
-const roomSchema = new Schema('rooms');
+const roomSchema = new Schema('rooms', {
+	assignEntity: assignRoomEntity,
+});
+const roomStateSchema = new Schema('roomsStates', {
+	assignEntity: assignEventsArray
+});
 const syncSchema = new Schema('sync', { idAttribute: 'nextBatch' });
 const timelineSchema = new Schema('timelines', {
 	idAttribute: 'prevBatch', 
-	assignEntity: assignTimelineEntity 
+	assignEntity: assignEventsArray 
 });
+
 const userSchema = new Schema('users');
 
-
-syncSchema.define({
-	rooms: arrayOf(roomSchema),
-});
 
 timelineSchema.define({
 	events: arrayOf(eventSchema),
 });
 
+roomStateSchema.define({
+	events: arrayOf(eventSchema)
+});
+
 roomSchema.define({
 	timeline: timelineSchema,
+	state: roomStateSchema
 });
+
+
 
 /**
  * Export the schemas
@@ -116,6 +189,7 @@ export const Schemas = {
   NOTIFICATION: notificationSchema,
   PRESENCE: presenceSchema,
   ROOM: roomSchema,
+  ROOM_STATE: roomStateSchema,
   TIMELINE: timelineSchema,
   USER: userSchema,
   SYNC: syncSchema

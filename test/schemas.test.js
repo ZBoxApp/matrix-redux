@@ -32,8 +32,10 @@ describe('Schema Tests', function () {
 	it('1. should re-format the room object', function() {
 		const formatedRooms = fixRoomJson(apiFixture.rooms);
 		expect(Array.isArray(formatedRooms)).to.be.true;
-		expect(randomElement(formatedRooms).id).to.not.be.undefined;
-		const membershipState = randomElement(formatedRooms).membershipState;
+		const randomRoom = randomElement(formatedRooms);
+		expect(randomRoom.id).to.not.be.undefined;
+		expect(randomRoom.state.id).to.be.equal(randomRoom.id);
+		const membershipState = randomRoom.currentUserMembership;
 		expect(membershipState).to.match(/(join|leave|invite)/);
 	});
 
@@ -41,19 +43,30 @@ describe('Schema Tests', function () {
 		const formatedApiFixture = fixRoomJson(apiFixture);
 		const formatedRooms = formatedApiFixture.rooms;
 		expect(Array.isArray(formatedRooms)).to.be.true;
-		expect(randomElement(formatedRooms).id).to.not.be.undefined;
-		const membershipState = randomElement(formatedRooms).membershipState;
+		const randomRoom = randomElement(formatedRooms);
+		expect(randomRoom.id).to.not.be.undefined;
+		expect(randomRoom.state.id).to.be.equal(randomRoom.id);
+		const membershipState = randomRoom.currentUserMembership;
 		expect(membershipState).to.match(/(join|leave|invite)/);
 	});
 
 	it('3. Should transform the Rooms', function() {
   		const formatedRooms = fixRoomJson(apiFixture.rooms);
     	const normalizedRooms = normalize(formatedRooms, arrayOf(Schemas.ROOM) );
-    	console.log(normalizedRooms);
-    	const randomRoom = randomElement(normalizedRooms);
+    	// Two times because first is an Array of Objects :(
+    	let randomRoom = normalizedRooms.entities.rooms[randomElement(normalizedRooms.result)];
     	expect(normalizedRooms.entities).to.not.be.undefined;
-    	expect(normalizedRooms.results).to.not.be.undefined;
+    	expect(normalizedRooms.result).to.not.be.undefined;
     	expect(Object.keys(normalizedRooms.entities).length).to.be.above(1);
+    	expect(randomRoom.currentUserMembership).to.match(/(leave|join|invite)/);
+    	expect(normalizedRooms.entities.rooms[randomRoom.id]).to.not.be.undefined;
+    	expect(randomRoom.state).to.be.equal(randomRoom.id);
+    	expect(normalizedRooms.entities.roomsStates[randomRoom.id]).to.not.be.undefined;
+    	expect(randomRoom.name).to.not.be.undefined;
+    	expect(randomRoom.memberships).to.not.be.undefined;
+    	expect(randomElement(randomRoom.memberships.join)).to.match(/@/);
+    	console.log(randomRoom);
+    	
     // console.log(JSON.stringify(normalizedSchema, 2, 2));
   	});
 
