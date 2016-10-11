@@ -65,7 +65,7 @@ describe('Schema Tests', function () {
     	expect(randomRoom.name).to.not.be.undefined;
     	expect(randomRoom.memberships).to.not.be.undefined;
     	expect(randomElement(randomRoom.memberships.join)).to.match(/@/);
-    	console.log(randomRoom);
+    	console.log(JSON.stringify(normalizedRooms, 2, 2));
     	
     // console.log(JSON.stringify(normalizedSchema, 2, 2));
   	});
