@@ -152,7 +152,26 @@ describe('Room Tests', function() {
 		expect(validationResult.errors).to.be.empty;
 	});
 
+});
 
+describe('Room Tests', function() {
 
+	beforeEach(function() {
+		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
+	});
+
+	it('1. Event should have the expected attributes', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomEvent = randomElement(matrixJson.events);
+		expect(randomEvent.id).to.match(/^\$[0-9].*[a-zA-Z]{5}:.*/);
+		expect(randomEvent.userId).to.match(/^@[a-zA-Z].*:.*/);
+	});
+
+	it('2. event should validate against the schema', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomEvent = randomElement(matrixJson.events);
+		const validationResult = validateSchema(randomEvent, "event");
+		expect(validationResult.errors).to.be.empty;
+	});
 });
 

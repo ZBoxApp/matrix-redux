@@ -80,7 +80,10 @@ export const fixTimelineJson = (timeline, roomId) => {
 	timeline.events.forEach((event) => {
 		newEvents[event.eventId] = event;
 		newEvents[event.eventId].roomId = roomId;
+		newEvents[event.eventId].id = event.eventId;
+		newEvents[event.eventId].userId = event.sender;
 		newEvents[event.eventId].age = event.unsigned.age || null;
+		delete(newEvents[event.eventId].eventId);
 	});
 	// Keep a copy for later use when we call extractTimelineEvents();
 	timeline._oldEvents = newEvents;

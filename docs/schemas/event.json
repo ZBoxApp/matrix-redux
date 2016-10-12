@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Event",
+    "description": "A Matrix Event",
+    "type": "object",
+    "properties": { 
+        "id": {
+            "description": "The room id",
+            "type": "string",
+            "pattern": "^\\$[0-9].*[a-zA-Z]{5}:.*"
+        },
+        "originServerTs": {
+            "description": "Timestamp in seconds",
+            "type": "integer"
+        },
+        "userId": {
+            "description": "The user id who send the event",
+            "type": "string",
+            "pattern": "^@[a-zA-Z].*:.*"
+        },
+        "age": {
+            "description": "Age in seconds",
+            "type": "integer"
+        },
+        "content": {
+            "description": "The content of the object",
+            "type": "object"
+        },
+        "type": {
+            "description": "The type of Room Event. Check http://matrix.org/docs/spec/client_server/r0.2.0.html#room-events",
+            "type": "string",
+            "pattern": "^m\\.*"
+        },
+        "roomId": {
+            "description": "The room id of the event",
+            "type": "string",
+            "pattern": "^![a-zA-Z].*:.*"
+        }
+    },
+    "required": [ "roomId", "userId", "age", "type", "id" ]
+}
