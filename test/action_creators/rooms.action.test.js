@@ -1,7 +1,7 @@
 "use strict";
 
 import {createStoreHelper, expect, randomRoomName,
-  clearMatrixClient, userFixture, logTestUser} from "../helper";
+  clearMatrixClient, userFixture, logTestUser, createPublicRoom, loginStore} from "../helper";
 import * as RoomsActions from "../../src/actions/rooms";
 import MatrixClient from "../../src/utils/client";
 
@@ -20,33 +20,20 @@ const homeServerName = userFixture.homeServerName;
 describe('Room Actions Tests', function() {
 
     beforeEach(function(done) {
-      const roomAliasName = randomRoomName();
-      const newRoomOptions = {
-        "visibility":"public",
-        "room_alias_name": roomAliasName,
-        "name": roomAliasName
-      };
-      logTestUser(function(e, d) {
-        if (e) return console.error(e);
-        store = d;
-        store.dispatch(RoomsActions.createRoom(newRoomOptions)).then(function(data){
+      createPublicRoom(function(err, data){
+        if (err) {
+          console.error(err);
+          done();
+        } else {
           newRoomId = data.room_id;
-          done();
-        }).catch(function(err){
-          return console.log(err);
-          done();
-        });
+          loginStore(function(err, data){
+            store = data;
+            done();
+          });
+        } 
       });
-    });
 
-    // afterEach(function(done) {
-    //   MatrixClient.client.leave(newRoomId, function(err, data) {
-    //     if (err) return console.error(err);
-    //     testRoomId = '';
-    //     testRoomName = '';
-    //     done();
-    //   });
-    // });
+    });
 
     it('1. Request public rooms action', function() {
       this.timeout(10000);

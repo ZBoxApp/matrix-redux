@@ -13,7 +13,10 @@ import rootReducer from "../src/reducer";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
-export const BaseURL = "https://localhost:8448" || process.env.BASE_URL;
+export const BaseURL = process.env.BASE_URL || "https://localhost:8448";
+const testUserId = process.env.USER_ID || "@test:zboxapp.dev";
+const testUserPassword = process.env.USER_PASS || "123456";
+const testUserName = process.env.USER_NAME || "test";
 
 export const createStoreHelper = function(preloadedState, persistOps) {
   const combinedReducers = combineReducers(rootReducer);
@@ -42,10 +45,10 @@ export const endTest = function (err) {
 
 export const userFixture = {
     homeServerName: "zboxapp.dev",
-    testUserId: "@test:zboxapp.dev",
+    testUserId: testUserId,
     testUserDisplayName: "test",
-    testUserName: "test",
-    testUserPassword: "123456",
+    testUserName: testUserName,
+    testUserPassword: testUserPassword,
     baseUrl: BaseURL,
     clientOptions: {
         baseUrl: BaseURL,
@@ -62,15 +65,26 @@ const clientOptions = {
     logLevel: process.env.DEBUG || 'INFO'
 };
 
-export const logTestUser = (callback) => {
+export const logTestUser = (opts, callback) => {
+    if (typeof opts === 'function') {
+        callback = opts;
+        opts = clientOptions;
+    }
     const testUserName = userFixture.testUserName;
     const testUserPassword = userFixture.testUserPassword;
-    store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, clientOptions)).then((data) => {
+    MatrixClient.loginWithPassword(testUserName, testUserPassword, opts, callback);
+};
+
+export const loginStore = (opts, callback) => {
+    if (typeof opts === 'function') {
+        callback = opts;
+        opts = clientOptions;
+    }
+    store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, opts)).then((data) => {
         callback(null, store);
     }).catch((e) => {
         callback(e);
     });
-    // MatrixClient.login(testUserName, testUserPassword, clientOptions, callback);
 };
 
 export const randomRoomName = () => {
@@ -81,6 +95,18 @@ export const randomRoomName = () => {
   }
   return result;
 }
+
+export const createPublicRoom = (callback) => {
+    logTestUser(function(err, data){
+        const roomAliasName = randomRoomName();
+        const newRoomOptions = {
+            "visibility": "public",
+            "room_alias_name": roomAliasName,
+            "name": roomAliasName
+        };
+        MatrixClient.client.createRoom(newRoomOptions, callback);
+    });
+};
 
 export const removeTestRoom = (roomId) => {
     store.dispatch(leaveRoom(roomId)).then(() => {

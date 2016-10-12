@@ -1,0 +1,51 @@
+// Rooms
+
+{
+	"currentRoomId": "ROOM_ID",
+	"isLoading": false,
+	"byIds":{
+		"ROOM_ID": {
+			"id": "ROOM_ID",
+			"name": "name",
+			"topic": "topic",
+			"avatarUrl": "url",
+			"members": ["ARRAY OF Users Ids"],
+			"membersTyping": ["ARRAY OF Users Ids"],
+			"notifications": ["ARRAY OF Notifications Ids"],
+			"eventsTimeLine": ["ARRAY OF Events Ids"],
+			"notificationRules": {},
+			"invitations": ["ARRAY OF Invited Members"],
+			"tags": {}
+		}
+	}
+}
+
+// Events
+{
+	"isLoading": true,
+	"byIds": {
+		"EVENT_ID": {
+			"id": "EVENT_ID",
+			"type": "EVENT_TYPE",
+			"state": "BOOLEAN", // Si es un evento de tipo estado
+			"content": {"OBJECT WITH EVENT INFO"},
+			"origin_server_ts": 1431961217939,
+  			"roomId": "!Cuyf34gef24t:localhost",
+  			"sender": "@example:localhost"
+		}
+	},
+	"byType": {
+		"---eventType": ["ARRAY Of IDS"],
+	}
+}
+
+// Errors
+
+
+// Users
+
+// Notifications
+
+
+
+// Sync

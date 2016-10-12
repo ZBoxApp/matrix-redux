@@ -1,7 +1,7 @@
 "use strict";
 
 import {createStoreHelper, expect, clearMatrixClient,
-  logTestUser, userFixture} from "../helper";
+  logTestUser, userFixture, loginStore} from "../helper";
 import * as SyncActions from "../../src/actions/sync";
 import MatrixClient from "../../src/utils/client";
 
@@ -17,9 +17,8 @@ const homeServerName = userFixture.homeServerName;
 describe('Sync Actions', function () {
   this.timeout(10000);
     beforeEach((done) => {
-        logTestUser((e, d) => {
-            if (e) return console.error(e);
-            store = d;
+        loginStore(function(err, data){
+            store = data;
             done();
         });
     });
