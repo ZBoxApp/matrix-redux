@@ -4,6 +4,7 @@
 "use strict";
 
 import _ from 'lodash';
+import jsonschema from 'jsonschema';
 import {
 	createStoreHelper, expect, clearMatrixClient,
 	logTestUser, userFixture
@@ -21,6 +22,13 @@ const randomElement = function(object) {
 	if (Array.isArray(object)) return _.sample(object);
 	const key = _.sample(Object.keys(object));
 	return object[key];
+};
+
+const validateSchema = function(instance, schema) {
+	const Validator = jsonschema.Validator;
+	const v = new Validator();
+  	const schemaFile = require('../docs/schemas/' + schema + '.json');
+  	return v.validate(instance, schemaFile);
 };
 
 describe('Utils functions', function() {
@@ -130,12 +138,21 @@ describe('Room Tests', function() {
 		expect(matrixJson.events[randomEvent].roomId).to.equal(randomRoom.id);
 	});
 
-	it('5. Room.timeline.events should sorted by age', function() {
+	it('6. Room.timeline.events should sorted by age', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		const randomRoom = randomElement(matrixJson.rooms);
 		const events = randomRoom.timeline.events;
 		expect(matrixJson.events[events[0]].age).to.be.above(matrixJson.events[events[4]].age);
 	});
+
+	it('7. room should validate against the schema', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = matrixJson.rooms[machosRoomId];
+		const validationResult = validateSchema(randomRoom, "room");
+		expect(validationResult.errors).to.be.empty;
+	});
+
+
 
 });
 

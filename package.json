@@ -38,6 +38,7 @@
     "chai": "^3.5.0",
     "child": "0.0.3",
     "isomorphic-fetch": "^2.2.1",
+    "jsonschema": "^1.1.0",
     "mocha": "^3.0.2"
   }
 }
