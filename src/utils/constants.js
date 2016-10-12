@@ -8,5 +8,7 @@ export const CONSTANTS = {
     	'ROOM_MEMBER_JOIN': 'join',
     	'ROOM_MEMBER_LEAVE': 'leave',
     	'ROOM_MEMBER_INVITE': 'invite',
+    	'ROOM_TOPIC': 'm.room.topic',
+    	'ROOM_AVATAR': 'm.room.avatar',
     }
 };

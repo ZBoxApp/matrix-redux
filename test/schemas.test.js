@@ -13,6 +13,8 @@ import MatrixClient from "../src/utils/client";
 import { matrixJsonParser, fixTimelineJson } from "../src/utils/matrixJsonParser";
 const jsonFixture = require('./model_schemas/initialSync.original.json');
 
+const machosRoomId = "!YbkEIQjnehrBrvscpm:zboxapp.dev";
+
 let apiFixture;
 
 const randomElement = function(object) {
@@ -49,16 +51,18 @@ describe('Schema Tests', function () {
 	it('2. should reformat rooms object with rooms ids as firsts keys', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		expect(typeof matrixJson.rooms).to.equal("object");
+		expect(Array.isArray(matrixJson.rooms)).to.be.false;
 		const ids = Object.keys(matrixJson.rooms);
 		expect(_.sample(ids)).to.match(/^![a-zA-Z].*:zboxapp.dev$/);
 	});
 
 
-	it('3. should return timeLine object with eventId as first key', function() {
+	it('3. should return events object with eventId as first key', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		expect(typeof matrixJson.events).to.equal("object");
+
 		const ids = Object.keys(matrixJson.events);
-		expect(_.sample(ids)).to.match(/^\$[0-9].*[a-zA-Z]{5}:zboxapp.dev$/);
+		expect(_.sample(ids)).to.match(/^\$[0-9].*[a-zA-Z]{5}:.*/);
 	});
 
 	it('4. should return the accountData object', function() {
@@ -79,42 +83,59 @@ describe('Schema Tests', function () {
 		expect(randomId).to.equal(matrixJson.presence.events[randomId].sender);
 	});
 
-	// const randomRoom = randomElement(formatedRooms);
-	// 	expect(randomRoom.id).to.not.be.undefined;
-	// 	expect(randomRoom.state.id).to.be.equal(randomRoom.id);
-	// 	const membershipState = randomRoom.currentUserMembership;
-	// 	expect(membershipState).to.match(/(join|leave|invite)/);
+});
 
-	// it('2. fixRoomJson should return the full JSON if passed', function() {
-	// 	const formatedApiFixture = fixRoomJson(apiFixture);
-	// 	const formatedRooms = formatedApiFixture.rooms;
-	// 	expect(Array.isArray(formatedRooms)).to.be.true;
-	// 	const randomRoom = randomElement(formatedRooms);
-	// 	expect(randomRoom.id).to.not.be.undefined;
-	// 	expect(randomRoom.state.id).to.be.equal(randomRoom.id);
-	// 	const membershipState = randomRoom.currentUserMembership;
-	// 	expect(membershipState).to.match(/(join|leave|invite)/);
-	// });
+describe('Room Tests', function() {
 
-	// it('3. Should transform the Rooms', function() {
- //  		const formatedRooms = fixRoomJson(apiFixture.rooms);
- //    	const normalizedRooms = normalize(formatedRooms, arrayOf(Schemas.ROOM) );
- //    	// Two times because first is an Array of Objects :(
- //    	let randomRoom = normalizedRooms.entities.rooms[randomElement(normalizedRooms.result)];
- //    	expect(normalizedRooms.entities).to.not.be.undefined;
- //    	expect(normalizedRooms.result).to.not.be.undefined;
- //    	expect(Object.keys(normalizedRooms.entities).length).to.be.above(1);
- //    	expect(randomRoom.currentUserMembership).to.match(/(leave|join|invite)/);
- //    	expect(normalizedRooms.entities.rooms[randomRoom.id]).to.not.be.undefined;
- //    	expect(randomRoom.state).to.be.equal(randomRoom.id);
- //    	expect(normalizedRooms.entities.roomsStates[randomRoom.id]).to.not.be.undefined;
- //    	expect(randomRoom.name).to.not.be.undefined;
- //    	expect(randomRoom.memberships).to.not.be.undefined;
- //    	expect(randomElement(randomRoom.memberships.join)).to.match(/@/);
- //    	console.log(JSON.stringify(normalizedRooms, 2, 2));
-    	
- //    // console.log(JSON.stringify(normalizedSchema, 2, 2));
- //  	});
+	beforeEach(function() {
+		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
+	});
+
+	it('1. Room should have the expected attributes', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = randomElement(matrixJson.rooms);
+		expect(randomRoom.id).to.not.be.undefined;
+		expect(randomRoom.membershipState).to.match(/(join|leave|invite)/);
+	});
+
+	it('2. Room should have info attributes added', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = matrixJson.rooms[machosRoomId];
+		expect(randomRoom.name).to.equal('Machos');
+		expect(randomRoom.topic).to.equal('Temas para solo Hombres');
+		expect(randomRoom.avatarUrl).to.equal('mxc://zboxapp.com/INgKbqNGUGDxhJwIYxXUfnhZ');
+		expect(randomRoom.unreadNotifications.highlightCount).to.be.above(-1);
+		expect(randomRoom.unreadNotifications.notificationCount).to.be.above(-1);
+	});
+
+	it('3. Room.members should be an Object with membershipState as keys', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = matrixJson.rooms[machosRoomId];
+		const randomMembership = randomElement(Object.keys(randomRoom.members));
+		expect(randomMembership).to.match(/(join|leave|invite)/);
+	});
+
+	it('4. Room.members join be an array with user ids', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = matrixJson.rooms[machosRoomId];
+		const randomMember = randomElement(randomRoom.members.join);
+		expect(randomMember).to.match(/^@[a-zA-Z].*:zboxapp.dev$/);
+	});
+
+	it('5. Room.timeline.events should be an array with Events Ids', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = randomElement(matrixJson.rooms);
+		expect(Array.isArray(randomRoom.timeline.events)).to.be.true;
+		const randomEvent = randomElement(randomRoom.timeline.events);
+		expect(matrixJson.events[randomEvent].roomId).to.equal(randomRoom.id);
+	});
+
+	it('5. Room.timeline.events should sorted by age', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomRoom = randomElement(matrixJson.rooms);
+		const events = randomRoom.timeline.events;
+		expect(matrixJson.events[events[0]].age).to.be.above(matrixJson.events[events[4]].age);
+	});
 
 });
 
