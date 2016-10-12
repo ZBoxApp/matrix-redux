@@ -19,6 +19,7 @@ export const matrixJsonParser = (json) => {
 	let newJson = camelizeKeys(json);
 	newJson = fixRoomJson(newJson);
 	newJson.events = extractTimelineEvents(newJson.rooms);
+	newJson.presence = fixPresenceJson(newJson.presence);
 	return newJson;
 };
 
@@ -98,6 +99,19 @@ const selectEventsByType = (events, type) => {
 	});
 	return selectedEvents;
 };
+
+
+const fixPresenceJson = (presenceJson) => {
+	const newEvents = {};
+	const events = presenceJson.events || [];
+
+	events.forEach((event) => {
+		newEvents[event.sender] = event;
+	});
+
+	presenceJson.events = newEvents;
+	return presenceJson;
+}
 
 /**
  * Convert the original JSON for room from 

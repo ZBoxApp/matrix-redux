@@ -61,6 +61,24 @@ describe('Schema Tests', function () {
 		expect(_.sample(ids)).to.match(/^\$[0-9].*[a-zA-Z]{5}:zboxapp.dev$/);
 	});
 
+	it('4. should return the accountData object', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		expect(typeof matrixJson.accountData).to.equal("object");
+	});
+
+	it('5. should return the toDevice object', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		expect(typeof matrixJson.toDevice).to.equal("object");
+	});
+
+	it('6. should return the presence object with events as an object with keys of userIds', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		expect(typeof matrixJson.presence.events).to.equal("object");
+		const ids = Object.keys(matrixJson.presence.events);
+		const randomId = randomElement(ids);
+		expect(randomId).to.equal(matrixJson.presence.events[randomId].sender);
+	});
+
 	// const randomRoom = randomElement(formatedRooms);
 	// 	expect(randomRoom.id).to.not.be.undefined;
 	// 	expect(randomRoom.state.id).to.be.equal(randomRoom.id);
