@@ -66,15 +66,25 @@ const clientOptions = {
 };
 
 export const logTestUser = (opts, callback) => {
-    opts = opts || clientOptions;
+    if (typeof opts === 'function') {
+        callback = opts;
+        opts = clientOptions;
+    }
     const testUserName = userFixture.testUserName;
     const testUserPassword = userFixture.testUserPassword;
+    MatrixClient.loginWithPassword(testUserName, testUserPassword, opts, callback);
+};
+
+export const loginStore = (opts, callback) => {
+    if (typeof opts === 'function') {
+        callback = opts;
+        opts = clientOptions;
+    }
     store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, opts)).then((data) => {
         callback(null, store);
     }).catch((e) => {
         callback(e);
     });
-    // MatrixClient.login(testUserName, testUserPassword, clientOptions, callback);
 };
 
 export const randomRoomName = () => {
@@ -85,6 +95,18 @@ export const randomRoomName = () => {
   }
   return result;
 }
+
+export const createPublicRoom = (callback) => {
+    logTestUser(function(err, data){
+        const roomAliasName = randomRoomName();
+        const newRoomOptions = {
+            "visibility": "public",
+            "room_alias_name": roomAliasName,
+            "name": roomAliasName
+        };
+        MatrixClient.client.createRoom(newRoomOptions, callback);
+    });
+};
 
 export const removeTestRoom = (roomId) => {
     store.dispatch(leaveRoom(roomId)).then(() => {

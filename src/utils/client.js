@@ -169,10 +169,6 @@ export default class MatrixClient {
 const patchProcessSyncResponse = function(syncApiObject) {
   const oldProcessSyncResponse = syncApiObject._processSyncResponse;
   const newProcessSyncResponse = function(syncToken, data) {
-    console.log("---- New processSyncResponse ");
-    // console.log(JSON.stringify(data.rooms.join, 2, 2));
-    console.log(data);
-    console.log("--------- ---------")
     return oldProcessSyncResponse.apply(this, arguments);
   }
   return newProcessSyncResponse;
