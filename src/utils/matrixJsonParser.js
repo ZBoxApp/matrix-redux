@@ -5,12 +5,22 @@
 
 'use strict';
 
-import { normalize, Schema, arrayOf, unionOf, valuesOf } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import { CONSTANTS } from '../utils/constants';
 import uuid from 'uuid';
 import _ from 'lodash';
 
+/**
+ * Return a JSON parsed as we like it
+ * @param  {Object} json - The original JSON as returned by the Matrix Server
+ * @return {Object}      - Formated Json
+ */
+export const matrixJsonParser = (json) => {
+	let newJson = camelizeKeys(json);
+	newJson = fixRoomJson(newJson);
+	newJson.events = extractTimelineEvents(newJson.rooms);
+	return newJson;
+};
 
 /**
  * This are the room memberships returnerd by the server
@@ -24,6 +34,16 @@ const assignRoomEntity = (output, key, value, input) => {
     	output.name = setRoomName(input.state, input.id);
     	output.memberships = setRoomMembers(input.state);
     }
+};
+
+const extractTimelineEvents = (rooms) => {
+	const result = {};
+	const roomsIds = Object.keys(rooms);
+	roomsIds.forEach((roomId) => {
+		const roomEvents = rooms[roomId].timeline.events;
+		_.merge(result, roomEvents);
+	});
+	return result;
 };
 
 const setRoomMembers = (roomState) => {
@@ -87,19 +107,50 @@ const selectEventsByType = (events, type) => {
  * @param  {Object} json - The orinal rooms json response from server
  * @return {Object}      The reformarted json
  */
-export const fixRoomJson = json => {
-	const roomsObject = (typeof json.rooms === 'undefined') ? json : json.rooms;
-	const roomsArray = [];
+export const fixRoomJson = (json) => {
+	const roomsObject = json.rooms;
+	const newRoomsObject = [];
 	ROOM_MEMBERSHIP_STATES.forEach((state) => {
 		Object.keys(roomsObject[state]).forEach((roomId) => {
-			const formatedRoom = addAttrsToRoom(roomsObject[state][roomId], state, roomId);
-			roomsArray.push(formatedRoom);
+			const formatedRoom = formatRoom(roomsObject[state][roomId], state, roomId);
+
+			newRoomsObject[roomId] = formatedRoom;
 		});
 
 	});
-	if (typeof json.rooms === 'undefined') return roomsArray;
-	json.rooms = roomsArray;
+	json.rooms = newRoomsObject;
 	return json;
+};
+
+/**
+ * Format the rooms as we need
+ * @param  {Object} room            - Room JSON
+ * @param  {String} membershipState - The state
+ * @param  {String} roomId          - The roomId
+ * @return {Object}                 - The updated Room JSON
+ */
+const formatRoom = (room, membershipState, roomId) => {
+	const newRoom = addAttrsToRoom(room, membershipState, roomId);
+	newRoom.timeline = fixTimelineJson(newRoom.timeline, roomId);
+
+	return newRoom;
+};
+
+/**
+ * Convert the original JSON for room.timeline
+ * @param {Object} timeline - The orinal timeline json response from server
+ * @param {String} roomId - The room id
+ * @return {Object}      The reformarted json
+ */
+export const fixTimelineJson = (timeline, roomId) => {
+	timeline = timeline || { 'events': [] };
+	const newEvents = {};
+	timeline.events.forEach((event) => {
+		newEvents[event.eventId] = event;
+		newEvents[event.eventId].roomId = roomId;
+	});
+	timeline.events = newEvents;
+	return timeline;
 };
 
 /**
@@ -113,7 +164,7 @@ const addAttrsToRoom = (room, membershipState, roomId) => {
 	room.id = roomId;
 	room.currentUserMembership = membershipState;
 	if (typeof room.state === 'object') room.state.id = roomId;
-	return camelizeKeys(room);
+	return room;
 };
 
 /**
@@ -143,54 +194,16 @@ const buildEventTypesObject = events => {
 	return eventTypes;
 };
 
-/**
- * The schemas
- */
-const eventSchema = new Schema('events', { idAttribute: "eventId" });
-const messageSchema = new Schema('messages');
-const notificationSchema = new Schema('notifications');
-const presenceSchema = new Schema('presences');
-const roomSchema = new Schema('rooms', {
-	assignEntity: assignRoomEntity,
-});
-const roomStateSchema = new Schema('roomsStates', {
-	assignEntity: assignEventsArray
-});
-const syncSchema = new Schema('sync', { idAttribute: 'nextBatch' });
-const timelineSchema = new Schema('timelines', {
-	idAttribute: 'prevBatch', 
-	assignEntity: assignEventsArray 
-});
-
-const userSchema = new Schema('users');
-
-
-timelineSchema.define({
-	events: arrayOf(eventSchema),
-});
-
-roomStateSchema.define({
-	events: arrayOf(eventSchema)
-});
-
-roomSchema.define({
-	timeline: timelineSchema,
-	state: roomStateSchema
-});
 
 
 
-/**
- * Export the schemas
- */
-export const Schemas = {
-  EVENT: eventSchema,
-  MESSAGE: messageSchema,
-  NOTIFICATION: notificationSchema,
-  PRESENCE: presenceSchema,
-  ROOM: roomSchema,
-  ROOM_STATE: roomStateSchema,
-  TIMELINE: timelineSchema,
-  USER: userSchema,
-  SYNC: syncSchema
-};
+
+
+
+
+
+
+
+
+
+

@@ -3,7 +3,7 @@
 import {createStoreHelper, logTestUser, expect, clearMatrixClient, userFixture} from "../helper";
 import MatrixClient from "../../src/utils/client";
 import * as SyncActions from "../../src/actions/sync";
-import ReduxStorageEngine from "../../src/utils/redux_storage_engine";
+import ReduxStorageEngine from "../../src/middleware/redux_storage_engine";
 
 let store = {};
 let state;
