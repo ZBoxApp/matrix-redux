@@ -23,7 +23,8 @@
         },
         "avatarUrl": {
             "description": "The room avatar url",
-            "type": "string"
+            "type": "string",
+            "pattern": "^mxc:\/\/.*"
         },
         "members": {
             "description": "A list of users ids group by membership state",

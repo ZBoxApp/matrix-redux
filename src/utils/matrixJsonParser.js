@@ -28,6 +28,7 @@ export const matrixJsonParser = (json) => {
 	newJson = fixRoomJson(newJson);
 	newJson.events = extractTimelineEvents(newJson.rooms);
 	newJson.presence = fixPresenceJson(newJson.presence);
+	newJson.users = extractUsersFromRooms(newJson.rooms, newJson.presence);
 	return newJson;
 };
 
@@ -134,6 +135,55 @@ const extractTimelineEvents = (rooms) => {
 	return result;
 };
 
+const extractUsersFromRooms = (rooms, presenceState) => {
+	const users = {};
+	const roomsIds = Object.keys(rooms);
+	roomsIds.forEach((roomId) => {
+		const room = rooms[roomId];
+		const roomUsers = extractUsersFromRoom(room, presenceState);
+		_.merge(users, roomUsers);
+	});
+	return users;
+};
+
+/**
+ * Build a User Object with all the members of the room
+ * @param {Object} room - Room Json
+ * @param {Object} presenceState - The presence Events
+ * @return {[Object}      Users for this room
+ */
+const extractUsersFromRoom = (room, presenceState) => {
+	const users = {};
+	if (!room.state || !room.state.events) return users;
+	const roomMemberEvents = selectEventsByType(room.state.events, EVENTS.ROOM_MEMBER);
+	roomMemberEvents.forEach((event) => {
+		const user = setUserAttrs(event, presenceState);
+		if(users[event.sender])
+			_.merge(users[event.sender], user);
+		else
+			users[event.sender] = user;
+	});
+	return users;
+};
+
+const setUserAttrs = (user, presenceState) => {
+	let formatedUser = {};
+	formatedUser.id = user.sender;
+	formatedUser.name = user.content.displayname || formatedUser.id;
+	formatedUser.displayName = user.content.displayname || formatedUser.id;
+	if (user.content.avatarUrl) formatedUser.avatarUrl = user.content.avatarUrl;
+	formatedUser = setUserPresence(formatedUser, presenceState);
+	return formatedUser;
+};
+
+const setUserPresence = (user, presenceState) => {
+	const presenceData = presenceState.events[user.id] || { "content": {} };
+	user.presence = presenceData.content.presence || "offline";
+	user.lastActiveAgo = presenceData.content.lastActiveAgo || 0;
+	user.currentlyActive = presenceData.content.currentlyActive || false;
+
+	return user;
+};
 
 export const setRoomAttr = (room, attrName, defaultValue) => {
 	defaultValue = defaultValue || '';

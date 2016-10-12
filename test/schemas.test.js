@@ -91,6 +91,15 @@ describe('Schema Tests', function () {
 		expect(randomId).to.equal(matrixJson.presence.events[randomId].sender);
 	});
 
+	it('7. should return user object with users ids as firsts keys', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		expect(typeof matrixJson.users).to.equal("object");
+		expect(Array.isArray(matrixJson.users)).to.be.false;
+		const randomUserId = randomElement(Object.keys(matrixJson.users));
+		const randomUser = matrixJson.users[randomUserId];
+		expect(randomUser.id).to.match(/^@[_a-zA-Z].*:.*/);
+	});
+
 });
 
 describe('Room Tests', function() {
@@ -135,6 +144,9 @@ describe('Room Tests', function() {
 		const randomRoom = randomElement(matrixJson.rooms);
 		expect(Array.isArray(randomRoom.timeline.events)).to.be.true;
 		const randomEvent = randomElement(randomRoom.timeline.events);
+		if (!matrixJson.events[randomEvent].roomId) {
+			console.error(randomRoom);
+		}
 		expect(matrixJson.events[randomEvent].roomId).to.equal(randomRoom.id);
 	});
 
@@ -142,7 +154,8 @@ describe('Room Tests', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		const randomRoom = randomElement(matrixJson.rooms);
 		const events = randomRoom.timeline.events;
-		expect(matrixJson.events[events[0]].age).to.be.above(matrixJson.events[events[4]].age);
+		if (randomRoom.membershipState !== 'invite')
+			expect(matrixJson.events[events[0]].age).to.be.above(matrixJson.events[events[4]].age);
 	});
 
 	it('7. room should validate against the schema', function() {
@@ -154,7 +167,7 @@ describe('Room Tests', function() {
 
 });
 
-describe('Room Tests', function() {
+describe('Event Tests', function() {
 
 	beforeEach(function() {
 		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
@@ -164,13 +177,48 @@ describe('Room Tests', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		const randomEvent = randomElement(matrixJson.events);
 		expect(randomEvent.id).to.match(/^\$[0-9].*[a-zA-Z]{5}:.*/);
-		expect(randomEvent.userId).to.match(/^@[a-zA-Z].*:.*/);
+		expect(randomEvent.userId).to.match(/^@[_a-zA-Z].*:.*/);
 	});
 
 	it('2. event should validate against the schema', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		const randomEvent = randomElement(matrixJson.events);
 		const validationResult = validateSchema(randomEvent, "event");
+		expect(validationResult.errors).to.be.empty;
+	});
+});
+
+describe('Users Tests', function() {
+
+	beforeEach(function() {
+		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
+	});
+
+	it('1. User should have the expected attributes', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomUser = matrixJson.users["@pbruna:zboxapp.dev"];
+		expect(randomUser.id).to.match(/^@[a-zA-Z].*:.*/);
+		expect(randomUser.avatarUrl).to.match(/^mxc:\/\/.*/);
+		expect(randomUser.name).to.exists;
+		expect(randomUser.displayName).to.exists;
+	});
+
+	it('2. User should have presence information', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomUser = matrixJson.users["@pbruna:zboxapp.dev"];
+		expect(randomUser.presence).to.match(/(online|offline|unavailable)/);
+		expect(randomUser.lastActiveAgo).to.be.above(1);
+		expect(randomUser.currentlyActive).to.be.true;
+	});
+
+	it('3. User should validate against the schema', function() {
+		const matrixJson = matrixJsonParser(apiFixture);
+		const randomUser = randomElement(matrixJson.users);
+		const validationResult = validateSchema(randomUser, "user");
+		if (validationResult.errors.length > 0) {
+			console.error(randomUser);
+			console.error(validationResult.errors);
+		}
 		expect(validationResult.errors).to.be.empty;
 	});
 });
