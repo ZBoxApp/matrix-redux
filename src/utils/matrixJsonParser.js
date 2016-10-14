@@ -47,9 +47,10 @@ export const matrixJsonParser = (json) => {
  * @return {Object}      The reformarted json
  */
 export const fixRoomJson = (json) => {
-	const roomsObject = json.rooms;
+	const roomsObject = json.rooms || {};
 	const newRoomsObject = {};
 	ROOM_MEMBERSHIP_STATES.forEach((state) => {
+		if (!roomsObject[state]) return;
 		Object.keys(roomsObject[state]).forEach((roomId) => {
 			const formatedRoom = formatRoom(roomsObject[state][roomId], state, roomId);
 
@@ -101,7 +102,7 @@ export const fixTimelineJson = (timeline, roomId) => {
 
 const fixPresenceJson = (presenceJson) => {
 	const newEvents = {};
-	const events = presenceJson.events || [];
+	const events = Array.isArray(presenceJson.events) ? presenceJson.events : [];
 
 	events.forEach((event) => {
 		newEvents[event.sender] = event;
