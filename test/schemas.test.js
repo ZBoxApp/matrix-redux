@@ -192,7 +192,7 @@ describe('Users Tests', function() {
 
 	it('2. User should have presence information', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
-		const randomUser = matrixJson.users["@pbruna:zboxapp.dev"];
+		const randomUser = matrixJson.users["@pbruna:zboxapp.dev"];		
 		expect(randomUser.presence).to.match(/(online|offline|unavailable)/);
 		expect(randomUser.lastActiveAgo).to.be.above(1);
 		expect(randomUser.currentlyActive).to.be.true;

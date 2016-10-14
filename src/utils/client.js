@@ -39,6 +39,24 @@ export default class MatrixClient {
         return this.client[name];
     }
 
+    /**
+     * Get the HTTP URL for an MXC URI.
+     * @param {string} baseUrl The base homeserver url which has a content repo.
+     * @param {string} mxc The mxc:// URI.
+     * @param {Number} width The desired width of the thumbnail.
+     * @param {Number} height The desired height of the thumbnail.
+     * @param {string} resizeMethod The thumbnail resize method to use, either
+     * "crop" or "scale".
+     * @param {Boolean} allowDirectLinks If true, return any non-mxc URLs
+     * directly. Fetching such URLs will leak information about the user to
+     * anyone they share a room with. If false, will return the emptry string
+     * for such URLs.
+     * @return {string} The complete URL to the content.
+    **/
+    static getAvatarUrl(baseUrl, mxc, width, height, resizeMethod, allowDirectLinks) {
+        return matrixSDK.ContentRepo.getHttpUriForMxc(baseUrl, mxc, width, height, resizeMethod, allowDirectLinks);
+    };
+
     static logout(callback) {
         this.client.logout((err, data) => {
             if (err) return callback(err);
@@ -90,7 +108,7 @@ export default class MatrixClient {
      * @param {Object} opts  - Options to restore the client
      * @param {Object} opts.optsForCreateClient - Object with data for `matrixSDK.createClient`
      * @param {String} opts.optsForCreateClient.baseUrl - The URL of Matrix Home Server
-     * @param {Function} [opts.optsForCreateClient.request] - Function used to make the request
+     * @param {Function} opts.optsForCreateClient.request - Function used to make the request
      * @param {String} opts.baseUrl - The URL of Matrix Home Server
      * @param {String} opts.deviceId - The Device Id returned for Home Server for this Device
      * @param {Object} opts.credentials
@@ -145,7 +163,8 @@ export default class MatrixClient {
     }
 
     static parseServerResponse() {
-        return matrixJsonParser(this.client._reduxRawResponse);
+        const json = JSON.parse(this.client._reduxRawResponse)
+        return matrixJsonParser(json);
     };
 
     static stopClient() {
@@ -172,8 +191,8 @@ export default class MatrixClient {
 
 const patchProcessSyncResponse = function(syncApiObject) {
   const oldProcessSyncResponse = syncApiObject._processSyncResponse;
-  const newProcessSyncResponse = function(syncToken, data) {
-    syncApiObject.client._reduxRawResponse = data;
+  const newProcessSyncResponse = function(syncToken, data) {    
+    syncApiObject.client._reduxRawResponse = JSON.stringify(data);
     return oldProcessSyncResponse.apply(this, arguments);
   }
   return newProcessSyncResponse;

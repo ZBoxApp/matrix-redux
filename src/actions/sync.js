@@ -8,6 +8,7 @@ import {setError} from "./error";
 export const SYNC_REQUEST = 'SYNC_REQUEST';
 export const SYNC_FAILURE = 'SYNC_FAILURE';
 export const SYNC_SUCCESS = 'SYNC_SUCCESS';
+export const SYNC_SYNCING = 'SYNC_SYNCING';
 export const SYNC_INITIAL = 'SYNC_INITIAL';
 export const SYNC_TOKEN = 'SYNC_TOKEN';
 
@@ -56,6 +57,7 @@ export const start = (opts) => {
       // Now we listen for Sync Events and Dispatch some Actions
       MatrixClient.client.on("sync", (syncState, prevState, data) => {
         let payload;
+        let response;
         switch (syncState) {
           case SYNC_STATE_FAILURE:
             dispatch(setError({key: 'sync.start', error: data}));
@@ -63,16 +65,16 @@ export const start = (opts) => {
             break;
 
           case SYNC_STATE_RUNNING:
+            response = MatrixClient.parseServerResponse();
             payload = {
-              isRunning: true,
-              syncToken: MatrixClient.client.store.syncToken,
-              filters: MatrixClient.client.store.filters,
-            }
+              data: response
+            };
             dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
+            dispatch(requestSync(SYNC_SYNCING, payload));
             break;
 
           case SYNC_INITIAL_SUCCESS:
-            const response = MatrixClient.parseServerResponse();
+            response = MatrixClient.parseServerResponse();
             payload = {
               isRunning: true, initialSyncComplete: true,
               syncToken: MatrixClient.client.store.syncToken,
@@ -81,6 +83,7 @@ export const start = (opts) => {
             };
             dispatch(requestSync(SYNC_SUCCESS, payload));
             dispatch(requestSync(SYNC_INITIAL, payload));
+
             break;
 
           case SYNC_STATE_STOPPED:

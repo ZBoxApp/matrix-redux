@@ -1,3 +1,6 @@
+"use strict";
+import _ from "lodash";
+
 import * as ActionTypes from '../actions/user';
 import * as SyncActionTypes from '../actions/sync';
 
@@ -34,6 +37,13 @@ const users = function (state = initialState, action) {
         case SyncActionTypes.SYNC_INITIAL:
             const users = action.payload.data.users;
             newState = {...state, ['byIds']: users};
+            newState.isLoading = false;
+            return newState;
+            break;
+        case SyncActionTypes.SYNC_SYNCING:
+            const resources = action.payload.data.users;
+            const newIds = _.merge({}, state.byIds, resources);
+            newState = {...state, ['byIds']: newIds};
             newState.isLoading = false;
             return newState;
             break;

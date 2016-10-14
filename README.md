@@ -13,6 +13,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 - [Login](#login)
 - [Matrix Client](#matrix-client)
 - [Store and reducers](#store-and-reducers)
+- [ETC](#etc)
 
 
 
@@ -234,3 +235,11 @@ store.dispatch(SyncActions.stop())
 ### Sync
 
 ### User
+
+## ETC
+
+### getAvatarUrl
+
+```javascript
+MatrixClient.getAvatarUrl(baseUrl, mxc, width, height, resizeMethod, allowDirectLinks);
+```
