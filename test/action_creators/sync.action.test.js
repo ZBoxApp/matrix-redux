@@ -60,25 +60,25 @@ describe('Sync Actions', function () {
         }, 1000);
     });
 
-    it('3. Should works with pre-existing SyncToken', function(done) {
-        this.timeout(15000);
-        let oldSyncToken;
-        const opts = {pollTimeout: 8000};
-        store.dispatch(SyncActions.start());
-        state = store.getState();
-        oldSyncToken = state.sync.syncToken;
-        store.dispatch(SyncActions.stop());
-        opts.syncToken = oldSyncToken;
-        MatrixClient.client.store.setSyncToken(null);
-        store.dispatch(SyncActions.start(opts));
-        setTimeout(function(){
-            state = store.getState();
-            const newSyncToken = state.sync.syncToken;
-            store.dispatch(SyncActions.stop());
-            expect(oldSyncToken).to.not.equal(newSyncToken);
-            done();
-        }, 2000);
-    });
+    // it('3. Should works with pre-existing SyncToken', function(done) {
+    //     this.timeout(15000);
+    //     let oldSyncToken;
+    //     const opts = {pollTimeout: 8000};
+    //     store.dispatch(SyncActions.start());
+    //     state = store.getState();
+    //     oldSyncToken = state.sync.syncToken;
+    //     store.dispatch(SyncActions.stop());
+    //     opts.syncToken = oldSyncToken;
+    //     MatrixClient.client.store.setSyncToken(null);
+    //     store.dispatch(SyncActions.start(opts));
+    //     setTimeout(function(){
+    //         state = store.getState();
+    //         const newSyncToken = state.sync.syncToken;
+    //         store.dispatch(SyncActions.stop());
+    //         expect(oldSyncToken).to.not.equal(newSyncToken);
+    //         done();
+    //     }, 2000);
+    // });
 
     it('4. Sync should update the state', function(done) {
         this.timeout(20000);
