@@ -31,6 +31,12 @@ const users = function (state = initialState, action) {
             newState = {...state, matrixClientData};
             return newState;
             break
+        case SyncActionTypes.SYNC_INITIAL:
+            const users = action.payload.data.users;
+            newState = {...state, ['byIds']: users};
+            newState.isLoading = false;
+            return newState;
+            break;
         default:
             return state;
             break;

@@ -24,11 +24,17 @@ const EVENTS = CONSTANTS.events;
  * @return {Object}      - Formated Json
  */
 export const matrixJsonParser = (json) => {
-	let newJson = camelizeKeys(json);
-	newJson = fixRoomJson(newJson);
+	let newJson = json;
+	newJson.nextBatch = json.next_batch;
+	delete newJson.next_batch;
+	newJson = fixRoomJson(json);
 	newJson.events = extractTimelineEvents(newJson.rooms);
 	newJson.presence = fixPresenceJson(newJson.presence);
 	newJson.users = extractUsersFromRooms(newJson.rooms, newJson.presence);
+	newJson.accountData = newJson.account_data;
+	delete newJson.account_data;
+	newJson.toDevice = newJson.to_device;
+	delete newJson.to_device;
 	return newJson;
 };
 
@@ -79,17 +85,17 @@ export const fixTimelineJson = (timeline, roomId) => {
 	timeline = timeline || { 'events': [] };
 	const newEvents = {};
 	timeline.events.forEach((event) => {
-		newEvents[event.eventId] = event;
-		newEvents[event.eventId].roomId = roomId;
-		newEvents[event.eventId].id = event.eventId;
-		newEvents[event.eventId].userId = event.sender;
-		newEvents[event.eventId].age = event.unsigned.age || null;
-		delete(newEvents[event.eventId].eventId);
+		newEvents[event.event_id] = event;
+		newEvents[event.event_id].roomId = roomId;
+		newEvents[event.event_id].id = event.event_id;
+		newEvents[event.event_id].userId = event.sender;
+		newEvents[event.event_id].age = event.unsigned.age || null;
+		delete(newEvents[event.event_id].event_id);
 	});
 	// Keep a copy for later use when we call extractTimelineEvents();
 	timeline._oldEvents = newEvents;
 
-	timeline.events = Object.keys(newEvents);
+	timeline.events = Object.keys(newEvents) || [];
 	return timeline;
 };
 
@@ -117,8 +123,10 @@ const addAttrsToRoom = (room, membershipState, roomId) => {
 	room.membershipState = membershipState;
 	room.name = setRoomName(room);
 	room.topic = setRoomTopic(room);
-	room.avatarUrl = setRoomAvatarUrl(room);
+	room = setRoomAvatarUrl(room);
 	room.members = setRoomMembers(room);
+	room.unreadNotifications = camelizeKeys(room.unread_notifications);
+	delete(room.unread_notifications);
 	if (typeof room.state === 'object') room.state.id = roomId;
 	return room;
 };
@@ -171,7 +179,7 @@ const setUserAttrs = (user, presenceState) => {
 	formatedUser.id = user.sender;
 	formatedUser.name = user.content.displayname || formatedUser.id;
 	formatedUser.displayName = user.content.displayname || formatedUser.id;
-	if (user.content.avatarUrl) formatedUser.avatarUrl = user.content.avatarUrl;
+	if (user.content.avatar_url) formatedUser.avatarUrl = user.content.avatar_url;
 	formatedUser = setUserPresence(formatedUser, presenceState);
 	return formatedUser;
 };
@@ -179,8 +187,8 @@ const setUserAttrs = (user, presenceState) => {
 const setUserPresence = (user, presenceState) => {
 	const presenceData = presenceState.events[user.id] || { "content": {} };
 	user.presence = presenceData.content.presence || "offline";
-	user.lastActiveAgo = presenceData.content.lastActiveAgo || 0;
-	user.currentlyActive = presenceData.content.currentlyActive || false;
+	user.lastActiveAgo = presenceData.content.last_active_ago || 0;
+	user.currentlyActive = presenceData.content.currently_active || false;
 
 	return user;
 };
@@ -201,7 +209,8 @@ const setRoomMembers = (room) => {
 	const memberships = {
 		[EVENTS.ROOM_MEMBER_JOIN]: [], 
 		[EVENTS.ROOM_MEMBER_LEAVE]: [],
-		[EVENTS.ROOM_MEMBER_INVITE]: []
+		[EVENTS.ROOM_MEMBER_INVITE]: [],
+		[EVENTS.ROOM_MEMBER_BAN]: []
 	};
 	const roomState = room.state;
 	const roomMemberEvents = selectEventsByType(roomState.events, EVENTS.ROOM_MEMBER);
@@ -212,7 +221,7 @@ const setRoomMembers = (room) => {
 	if (roomMemberEventsByMember.length < 1) return memberships;
 	Object.keys(roomMemberEventsByMember).forEach((member) => {
 		const event = lastEvent(roomMemberEventsByMember[member]);
-		if (!event.membership) return;
+		if (typeof event.membership === 'undefined') return;
 		memberships[event.membership].push(event.sender);
 	});
 	return memberships;
@@ -234,11 +243,12 @@ const setRoomTopic = (room) => {
 
 // TODO: Make it work withj setRoomAttr
 const setRoomAvatarUrl = (room) => {
-	if (!room.state || !room.state.events) return null;
+	if (!room.state || !room.state.events) return room;
 	const roomEvents = selectEventsByType(room.state.events, EVENTS.ROOM_AVATAR);
-	if (roomEvents.length < 1) return null;
+	if (roomEvents.length < 1) return room;
 	const event = lastEvent(roomEvents);
-	return event.content.url;
+	room.avatarUrl = event.content.url;
+	return room;
 };
 
 const lastEvent = (events) => {

@@ -16,9 +16,9 @@ import * as SyncTypes from '../actions/sync';
  * @type {Array} ids - A list of Rooms Ids
  */
 const initialState = {
-    entities: {},
+    currentRoomId: null,
     isLoading: false,
-    ids: [],
+    byIds: {},
 };
 
 const Rooms = function (state = initialState, action) {
@@ -43,8 +43,8 @@ const Rooms = function (state = initialState, action) {
             return newState;
             break;
         case SyncTypes.SYNC_INITIAL:
-            const entities = action.payload.data.rooms;
-            newState = {...state, entities};
+            const rooms = action.payload.data.rooms;
+            newState = {...state, ['byIds']: rooms};
             newState.isLoading = false;
             return newState;
             break;

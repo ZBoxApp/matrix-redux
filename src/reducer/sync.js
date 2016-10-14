@@ -19,6 +19,10 @@ const sync = function (state = initialState, action) {
             newState = {...state, ...payload };
             return newState;
             break;
+        case ActionTypes.SYNC_INITIAL:
+            newState = {...state, ['initialSyncComplete']: true };
+            return newState;
+            break;
         default:
             return state;
             break;

@@ -48,12 +48,11 @@ const requestSync = (type, payload) => {
  */
 export const start = (opts) => {
     return dispatch => {
-      if (opts.syncToken) {
+      if (opts && opts.syncToken) {
         MatrixClient.client.store.setSyncToken(opts.syncToken);
         delete opts.syncToken;
       }
-      MatrixClient.startClient(opts);
-
+      
       // Now we listen for Sync Events and Dispatch some Actions
       MatrixClient.client.on("sync", (syncState, prevState, data) => {
         let payload;
@@ -73,11 +72,12 @@ export const start = (opts) => {
             break;
 
           case SYNC_INITIAL_SUCCESS:
+            const response = MatrixClient.parseServerResponse();
             payload = {
               isRunning: true, initialSyncComplete: true,
               syncToken: MatrixClient.client.store.syncToken,
               filters: MatrixClient.client.store.filters,
-              data: MatrixClient.client.store
+              data: response
             };
             dispatch(requestSync(SYNC_SUCCESS, payload));
             dispatch(requestSync(SYNC_INITIAL, payload));
@@ -88,6 +88,7 @@ export const start = (opts) => {
             break;
         }
     });
+    MatrixClient.startClient(opts);
   };
 };
 
