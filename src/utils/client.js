@@ -41,9 +41,8 @@ export default class MatrixClient {
     static logout(callback) {
         this.client.logout((err, data) => {
             if (err) return callback(err);
-            // this.client = null;
-            callback(null, data);
-        })
+            return callback(null, data);
+        });
     }
 
     /**

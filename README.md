@@ -60,7 +60,7 @@ const opts = {
   'logLevel': 'DEBUG'
 };
 
-UserActions.loginWithPassword(userName, userPassword, opts);
+UserActions.login(userName, userPassword, opts);
 
 ```
 
@@ -99,8 +99,8 @@ const opts = {
   'request': fetchRequest,
   'baseUrl': 'https://matrixserver.com:8448'
 };
-
-UserActions.loginWithPassword(userName, userPassword, opts);
+const callback = function(){};
+UserActions.login(userName, userPassword, opts, callback);
 ```
 
 ## Login
@@ -119,13 +119,9 @@ const userName = 'testuser';
 const userPassword = 'YouSup3rP4ssw0rd';
 const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
 
-store.dispatch(UserActions.loginWithPassword(userName, userPassword, opts)).then((loginData) => {
-  const state = store.getState();
-  console.log(state.login);
-  console.log(state.currentUser);
-}).catch((err) => {
-  return console.error(err);
-});
+const callback = function(){};
+
+store.dispatch(UserActions.login(userName, userPassword, opts, callback));
 ```
 
 ### 2. Restore Session
@@ -149,6 +145,12 @@ const matrixClientData = {
 };
 
 store.dispatch(UserActions.restoreSession(matrixClientData));
+```
+
+### 3. Logout
+
+```javascript
+store.dispatch(UserActions.logout(callback));
 ```
 
 ## Matrix Client

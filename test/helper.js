@@ -17,6 +17,7 @@ export const BaseURL = process.env.BASE_URL || "https://localhost:8448";
 const testUserId = process.env.USER_ID || "@test:zboxapp.dev";
 const testUserPassword = process.env.USER_PASS || "123456";
 const testUserName = process.env.USER_NAME || "test";
+const testHomeServerName = process.env.HOMESERVER_NAME || "zboxapp.dev";
 
 export const createStoreHelper = function(preloadedState, persistOps) {
   const combinedReducers = combineReducers(rootReducer);
@@ -44,7 +45,7 @@ export const endTest = function (err) {
 };
 
 export const userFixture = {
-    homeServerName: "zboxapp.dev",
+    homeServerName: testHomeServerName,
     testUserId: testUserId,
     testUserDisplayName: "test",
     testUserName: testUserName,
