@@ -83,30 +83,6 @@ UserActions.loginWithPassword(userName, userPassword, opts);
 ### Reacting to changes
 The `Store`, `State`, `Actions` will be documented at: [Store and reducers](#store-and-reducers).
 
-## Persistence
-We are using the `redux-persist` module, so if you want to persists your data you have to initialize the `Store` with a `persistOps` Object:
-
-```javascript
-import createStore from "../src/store/store";
-
-const persistOps = {
-  callback: function(err, data){ console.log(err, data)},
-  config: {
-    storage: localStorage // AsyncStorage for React Native
-  }
-};
-const store = createStore({}, persistOps);
-```
-
-More information at the official repo: [https://github.com/rt2zz/redux-persist#storage-backends](https://github.com/rt2zz/redux-persist#storage-backends)
-
-### No Persistence
-```javascript
-import createStore from "../src/store/store";
-const store = createStore({});
-```
-
-The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) library needs a compliant `fetch()` function, so maybe you need to implement it. For example:
 
 ## Network Request Function
 This is the function that will make all the network requests, you can implement your own but with ship one: `utils.fetchRequest()`.
@@ -190,7 +166,6 @@ The MatrixClient runs until the App closes and `emits` events that are catched b
 #### 1. Starting the Client
 
 ```javascript
-// @returns {Promise}
 store.dispatch(SyncActions.start(opts))
 ```
 
