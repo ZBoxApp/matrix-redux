@@ -60,7 +60,7 @@ const opts = {
   'logLevel': 'DEBUG'
 };
 
-UserActions.loginWithPassword(userName, userPassword, opts);
+UserActions.login(userName, userPassword, opts);
 
 ```
 
@@ -83,30 +83,6 @@ UserActions.loginWithPassword(userName, userPassword, opts);
 ### Reacting to changes
 The `Store`, `State`, `Actions` will be documented at: [Store and reducers](#store-and-reducers).
 
-## Persistence
-We are using the `redux-persist` module, so if you want to persists your data you have to initialize the `Store` with a `persistOps` Object:
-
-```javascript
-import createStore from "../src/store/store";
-
-const persistOps = {
-  callback: function(err, data){ console.log(err, data)},
-  config: {
-    storage: localStorage // AsyncStorage for React Native
-  }
-};
-const store = createStore({}, persistOps);
-```
-
-More information at the official repo: [https://github.com/rt2zz/redux-persist#storage-backends](https://github.com/rt2zz/redux-persist#storage-backends)
-
-### No Persistence
-```javascript
-import createStore from "../src/store/store";
-const store = createStore({});
-```
-
-The [matrix-js-sdk](http://matrix-org.github.io/matrix-js-sdk/0.6.1/) library needs a compliant `fetch()` function, so maybe you need to implement it. For example:
 
 ## Network Request Function
 This is the function that will make all the network requests, you can implement your own but with ship one: `utils.fetchRequest()`.
@@ -123,8 +99,8 @@ const opts = {
   'request': fetchRequest,
   'baseUrl': 'https://matrixserver.com:8448'
 };
-
-UserActions.loginWithPassword(userName, userPassword, opts);
+const callback = function(){};
+UserActions.login(userName, userPassword, opts, callback);
 ```
 
 ## Login
@@ -143,13 +119,9 @@ const userName = 'testuser';
 const userPassword = 'YouSup3rP4ssw0rd';
 const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
 
-store.dispatch(UserActions.loginWithPassword(userName, userPassword, opts)).then((loginData) => {
-  const state = store.getState();
-  console.log(state.login);
-  console.log(state.currentUser);
-}).catch((err) => {
-  return console.error(err);
-});
+const callback = function(){};
+
+store.dispatch(UserActions.login(userName, userPassword, opts, callback));
 ```
 
 ### 2. Restore Session
@@ -175,6 +147,12 @@ const matrixClientData = {
 store.dispatch(UserActions.restoreSession(matrixClientData));
 ```
 
+### 3. Logout
+
+```javascript
+store.dispatch(UserActions.logout(callback));
+```
+
 ## Matrix Client
 The MatrixClient runs until the App closes and `emits` events that are catched by this library. The MatrixClient has this transition:
 
@@ -190,7 +168,6 @@ The MatrixClient runs until the App closes and `emits` events that are catched b
 #### 1. Starting the Client
 
 ```javascript
-// @returns {Promise}
 store.dispatch(SyncActions.start(opts))
 ```
 

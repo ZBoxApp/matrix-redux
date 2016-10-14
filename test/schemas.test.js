@@ -7,7 +7,7 @@ import _ from 'lodash';
 import jsonschema from 'jsonschema';
 import {
 	createStoreHelper, expect, clearMatrixClient,
-	logTestUser, userFixture
+	logTestUser, userFixture, randomElement, validateSchema
 } from "./helper";
 import MatrixClient from "../src/utils/client";
 
@@ -17,19 +17,6 @@ const jsonFixture = require('./model_schemas/initialSync.original.json');
 const machosRoomId = "!YbkEIQjnehrBrvscpm:zboxapp.dev";
 
 let apiFixture;
-
-const randomElement = function(object) {
-	if (Array.isArray(object)) return _.sample(object);
-	const key = _.sample(Object.keys(object));
-	return object[key];
-};
-
-const validateSchema = function(instance, schema) {
-	const Validator = jsonschema.Validator;
-	const v = new Validator();
-  	const schemaFile = require('../docs/schemas/' + schema + '.json');
-  	return v.validate(instance, schemaFile);
-};
 
 describe('Utils functions', function() {
 
@@ -129,7 +116,7 @@ describe('Room Tests', function() {
 		const matrixJson = matrixJsonParser(apiFixture);
 		const randomRoom = matrixJson.rooms[machosRoomId];
 		const randomMembership = randomElement(Object.keys(randomRoom.members));
-		expect(randomMembership).to.match(/(join|leave|invite)/);
+		expect(randomMembership).to.match(/(join|leave|invite|ban)/);
 	});
 
 	it('4. Room.members join be an array with user ids', function() {

@@ -35,27 +35,43 @@ export const loadUserProfile = (userId) => {
  * @param {String} userName - Matrix User Name
  * @param {String} userPassword - Matrix User Password
  * @param {Object} opts - Options to initialize Matrix Client
- * @returns {Promise}
+ * @param {Function} callback 
  */
-export const loginWithPassword = (userName, userPassword, opts) => {
+export const login = (userName, userPassword, opts, callback) => {
     return dispatch => {
         dispatch(requestUser(USER_REQUEST, { isLoading: true }));
-        return new Promise((resolve, reject) => {
-            MatrixClient.loginWithPassword(userName, userPassword, opts, (err, data) => {
-                if (err) {
-                    dispatch(setError({key: 'login.loginWithPassword', error: err}));
-                    dispatch(requestUser(USER_FAILURE, { isLogged: false }));
-                    return reject(err);
-                }
-                data.baseUrl = opts.baseUrl;
-                formatUserData(data);
-                dispatch(requestUser(USER_SUCCESS, data));
-                resolve(data);
-            });
+
+        MatrixClient.loginWithPassword(userName, userPassword, opts, (err, data) => {
+            if (err) {
+                dispatch(setError({key: 'login.loginWithPassword', error: err}));
+                dispatch(requestUser(USER_FAILURE, { isLogged: false }));
+                return callback(err);
+            }
+            data.baseUrl = opts.baseUrl;
+            formatUserData(data);
+            dispatch(requestUser(USER_SUCCESS, data));
+            callback(null, data);
         });
     };
 };
 
+export const logout = (callback) => {
+    return dispatch => {
+        dispatch(requestUser(USER_REQUEST, { isLoading: true }));
+        MatrixClient.logout((err, data) => {
+            if (err) {
+                dispatch(setError({key: 'login.loginWithPassword', error: err}));
+                dispatch(requestUser(USER_FAILURE, { isLogged: true }));
+                return callback(err);
+            }
+            const payload = {
+                isLogged: false, accessToken: undefined, matrixClientData: undefined
+            };
+            dispatch(requestUser(USER_SUCCESS, payload));
+            callback(null, data)
+        });
+    };
+};
 
 /**
  * Used for login the user wih a password
@@ -92,10 +108,7 @@ export const loginWithToken = (token, opts) => {
 export const restoreSession = (opts) => {
     return dispatch => {
         MatrixClient.restoreSession(opts);
-        const data = opts._http.opts;
-        data.baseUrl = opts.baseUrl;
-        data.isLogged = true;
-        data.credentials = {userId: data.userId};
+        const data = formatUserData(opts._http.opts);
         dispatch(requestUser(USER_SUCCESS, data));
     };
 };

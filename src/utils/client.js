@@ -7,6 +7,7 @@
 
 import matrixSDK from "matrix-js-sdk";
 import {Logger} from "./utils";
+import { matrixJsonParser, fixTimelineJson } from "./matrixJsonParser";
 import SyncApi from "matrix-js-sdk";
 import _ from "lodash";
 
@@ -41,9 +42,8 @@ export default class MatrixClient {
     static logout(callback) {
         this.client.logout((err, data) => {
             if (err) return callback(err);
-            // this.client = null;
-            callback(null, data);
-        })
+            return callback(null, data);
+        });
     }
 
     /**
@@ -144,6 +144,10 @@ export default class MatrixClient {
       this.client._syncApi._processSyncResponse = patchProcessSyncResponse(this.client._syncApi);
     }
 
+    static parseServerResponse() {
+        return matrixJsonParser(this.client._reduxRawResponse);
+    };
+
     static stopClient() {
       return new Promise((resolve) => {
         this.client.stopClient();
@@ -169,6 +173,7 @@ export default class MatrixClient {
 const patchProcessSyncResponse = function(syncApiObject) {
   const oldProcessSyncResponse = syncApiObject._processSyncResponse;
   const newProcessSyncResponse = function(syncToken, data) {
+    syncApiObject.client._reduxRawResponse = data;
     return oldProcessSyncResponse.apply(this, arguments);
   }
   return newProcessSyncResponse;

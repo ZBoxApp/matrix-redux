@@ -1,6 +1,7 @@
 'use strict';
 
 import chai from "chai";
+import jsonschema from 'jsonschema';
 import _ from 'lodash';
 import {combineReducers} from "redux";
 import MatrixClient from "../src/utils/client";
@@ -17,6 +18,7 @@ export const BaseURL = process.env.BASE_URL || "https://localhost:8448";
 const testUserId = process.env.USER_ID || "@test:zboxapp.dev";
 const testUserPassword = process.env.USER_PASS || "123456";
 const testUserName = process.env.USER_NAME || "test";
+const testHomeServerName = process.env.HOMESERVER_NAME || "zboxapp.dev";
 
 export const createStoreHelper = function(preloadedState, persistOps) {
   const combinedReducers = combineReducers(rootReducer);
@@ -37,6 +39,20 @@ export const clearMatrixClient = function () {
     MatrixClient.baseUrl = null;
 };
 
+export const randomElement = function(object) {
+    if (Array.isArray(object)) return _.sample(object);
+    if (typeof object === 'undefined') return {};
+    const key = _.sample(Object.keys(object));
+    return object[key];
+};
+
+export const validateSchema = function(instance, schema) {
+    const Validator = jsonschema.Validator;
+    const v = new Validator();
+    const schemaFile = require('../docs/schemas/' + schema + '.json');
+    return v.validate(instance, schemaFile);
+};
+
 export const endTest = function (err) {
     if (!err) return true;
     console.log('1. loginWithPassword', err);
@@ -44,7 +60,7 @@ export const endTest = function (err) {
 };
 
 export const userFixture = {
-    homeServerName: "zboxapp.dev",
+    homeServerName: testHomeServerName,
     testUserId: testUserId,
     testUserDisplayName: "test",
     testUserName: testUserName,
@@ -80,11 +96,10 @@ export const loginStore = (opts, callback) => {
         callback = opts;
         opts = clientOptions;
     }
-    store.dispatch(UserActions.loginWithPassword(testUserName, testUserPassword, opts)).then((data) => {
-        callback(null, store);
-    }).catch((e) => {
-        callback(e);
-    });
+    store.dispatch(UserActions.login(testUserName, testUserPassword, opts, function(err, data){
+        if (err) return callback(err);
+        return callback(null, store);
+    }));
 };
 
 export const randomRoomName = () => {

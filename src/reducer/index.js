@@ -7,14 +7,16 @@
 
 import error from "./error";
 import rooms from "./rooms";
-import user from "./user";
+import users from "./users";
+import events from "./events";
 import sync from "./sync";
 
 const rootReducer = {
     sync,
     error,
     rooms,
-    user
+    users,
+    events
 };
 
 export default rootReducer;

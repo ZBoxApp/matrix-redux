@@ -43,54 +43,53 @@ const requestSync = (type, payload) => {
   *
   * @param {Number=} opts.pollTimeout The number of milliseconds to wait on /events.
   * Default: 30000 (30 seconds).
+  *
+  * @param {String} opts.syncToken - The sync token to use
  */
 export const start = (opts) => {
     return dispatch => {
-        return new Promise((resolve, reject) => {
-            MatrixClient.startClient(opts);
-            let payload;
-            MatrixClient.client.on("sync", (syncState, prevState, data) => {
-              const matrixStore = MatrixClient.client.store;
-              if (matrixStore && matrixStore.syncToken) {
-                dispatch(requestSync(SYNC_TOKEN, {
-                  syncToken: matrixStore.syncToken, state: syncState
-                }));
-              }
-              resolve(data);
-              switch (syncState) {
-                case SYNC_STATE_FAILURE:
-                  dispatch(setError({key: 'sync.start', error: data}));
-                  dispatch(requestSync(SYNC_FAILURE, { isRunning: false }));
-                  return reject({state: syncState, data: data});
-                  break;
+      if (opts && opts.syncToken) {
+        MatrixClient.client.store.setSyncToken(opts.syncToken);
+        delete opts.syncToken;
+      }
+      
+      // Now we listen for Sync Events and Dispatch some Actions
+      MatrixClient.client.on("sync", (syncState, prevState, data) => {
+        let payload;
+        switch (syncState) {
+          case SYNC_STATE_FAILURE:
+            dispatch(setError({key: 'sync.start', error: data}));
+            dispatch(requestSync(SYNC_FAILURE, { isRunning: false }));
+            break;
 
-                case SYNC_STATE_RUNNING:
-                  payload = {
-                    isRunning: true,
-                    syncToken: MatrixClient.client.store.syncToken,
-                    filters: MatrixClient.client.store.filters,
-                  }
-                  dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
-                  break;
+          case SYNC_STATE_RUNNING:
+            payload = {
+              isRunning: true,
+              syncToken: MatrixClient.client.store.syncToken,
+              filters: MatrixClient.client.store.filters,
+            }
+            dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
+            break;
 
-                case SYNC_INITIAL_SUCCESS:
-                  payload = {
-                    isRunning: true, initialSyncComplete: true,
-                    syncToken: MatrixClient.client.store.syncToken,
-                    filters: MatrixClient.client.store.filters,
-                    data: MatrixClient.client.store
-                  };
-                  dispatch(requestSync(SYNC_SUCCESS, payload));
-                  dispatch(requestSync(SYNC_INITIAL, payload));
-                  break;
+          case SYNC_INITIAL_SUCCESS:
+            const response = MatrixClient.parseServerResponse();
+            payload = {
+              isRunning: true, initialSyncComplete: true,
+              syncToken: MatrixClient.client.store.syncToken,
+              filters: MatrixClient.client.store.filters,
+              data: response
+            };
+            dispatch(requestSync(SYNC_SUCCESS, payload));
+            dispatch(requestSync(SYNC_INITIAL, payload));
+            break;
 
-                case SYNC_STATE_STOPPED:
-                  dispatch(requestSync(SYNC_SUCCESS, { isRunning: false}));
-                  break;
-              }
-            });
-        });
-    };
+          case SYNC_STATE_STOPPED:
+            dispatch(requestSync(SYNC_SUCCESS, { isRunning: false}));
+            break;
+        }
+    });
+    MatrixClient.startClient(opts);
+  };
 };
 
 /**
@@ -99,9 +98,8 @@ export const start = (opts) => {
  */
 export const stop = () => {
   return dispatch => {
-    MatrixClient.stopClient().then(() => {
-      dispatch(requestSync(SYNC_SUCCESS, { isRunning: false}));
-    });
+    MatrixClient.stopClient();
+    dispatch(requestSync(SYNC_SUCCESS, { isRunning: false }));
   };
 };
 

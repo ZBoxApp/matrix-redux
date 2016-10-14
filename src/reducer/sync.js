@@ -14,8 +14,13 @@ const sync = function (state = initialState, action) {
         case ActionTypes.SYNC_REQUEST:
         case ActionTypes.SYNC_FAILURE:
         case ActionTypes.SYNC_SUCCESS:
-            const payload = action.payload;
+            const payload = {...action.payload};
+            delete payload.data;
             newState = {...state, ...payload };
+            return newState;
+            break;
+        case ActionTypes.SYNC_INITIAL:
+            newState = {...state, ['initialSyncComplete']: true };
             return newState;
             break;
         default:
