@@ -102,6 +102,10 @@ export default class MatrixClient {
         });
     }
 
+    static sendTextMessage(roomId, body, txnId, callback) {
+        return this.client.sendTextMessage(roomId, body, txnId, callback);
+    }
+
     /**
      * Method to restore the Matrix Client with credentials
      * stored offline, like `localStorage` or `DB`.
