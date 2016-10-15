@@ -6,6 +6,7 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 
 ## Table of Contents
 - [Installation](#installation)
+- [Docker](#docker)
 - [Logs](#logs)
 - [How to use this](#how-to-use-this)
 - [Persistence](#persistence)
@@ -48,6 +49,15 @@ $ npm i --save lodash matrix-js-sdk redux redux-thunk redux-persist humps uuid
 
 ### For Nodejs and Browsers
 This library uses the new [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), so you will also need a module tha implements this, like [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch).
+
+## Docker
+This repo includes the `start_docker.sh` file which starts a docker container of a **Matrix Server** for development.
+
+To use this you **must** had installed [Docker Toolbox](https://www.docker.com/products/docker-toolbox).
+
+```
+$ sh start_docker.sh
+```
 
 ## LOGS
 You can enable `DEBUG` Logs level when initializing the MatrixClient at login time, like:

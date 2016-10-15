@@ -4,3 +4,4 @@
 /logs/
 .babelrc
 .vagrant/
+/test/fixtures/matrix_data/
