@@ -1,535 +1,535 @@
 {
-  "!YbkEIQjnehrBrvscpm:zboxapp.com": {
-    "unread_notifications": {
-      "highlight_count": 0,
-      "notification_count": 0
-    },
-    "timeline": {
-      "limited": true,
-      "prev_batch": "t125-24496_475703_4111_33749_101_17_21",
-      "events": [
-        {
-          "origin_server_ts": 1475685662884,
-          "sender": "@juorder:zboxapp.com",
-          "event_id": "$1475685662734RogMB:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "join",
-              "avatar_url": null,
-              "displayname": "juorder"
-            },
-            "prev_sender": "@juorder:zboxapp.com",
-            "replaces_state": "$147465919958VXFnt:zboxapp.com",
-            "age": 17414563
-          },
-          "state_key": "@juorder:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/dKpeSvjHRVZuWyqaLAVtWaWx",
-            "displayname": "juorder"
-          },
-          "membership": "join",
-          "type": "m.room.member"
+    "!YbkEIQjnehrBrvscpm:zboxapp.com": {
+        "unread_notifications": {
+            "highlight_count": 0,
+            "notification_count": 0
         },
-        {
-          "origin_server_ts": 1475688406652,
-          "sender": "@deugenin:zboxapp.com",
-          "event_id": "$1475688406879Eqezj:zboxapp.com",
-          "unsigned": {
-            "age": 14670795
-          },
-          "content": {
-            "body": "El pronóstico del tiempo...",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475688433050,
-          "sender": "@deugenin:zboxapp.com",
-          "event_id": "$1475688433880NyPjn:zboxapp.com",
-          "unsigned": {
-            "age": 14644397
-          },
-          "content": {
-            "body": "IMG_0039.PNG",
-            "info": {
-              "mimetype": "image/png",
-              "h": 2048,
-              "w": 1536,
-              "size": 5894265
-            },
-            "msgtype": "m.image",
-            "url": "mxc://zboxapp.com/ECvbcOrIvtuUNzSOaiOCuwle"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475688583218,
-          "sender": "@ssilva:zboxapp.com",
-          "event_id": "$1475688583881UBbqG:zboxapp.com",
-          "unsigned": {
-            "age": 14494229
-          },
-          "content": {
-            "body": "jajajajja el juorder con el Gustavo no cacharon nah ",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475688698691,
-          "sender": "@gustavo:zboxapp.com",
-          "event_id": "$1475688698882rZjkG:zboxapp.com",
-          "unsigned": {
-            "age": 14378756
-          },
-          "content": {
-            "body": "Sólo puedo decir: va a llover o no?",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475688706498,
-          "sender": "@deugenin:zboxapp.com",
-          "event_id": "$1475688706883ePCuT:zboxapp.com",
-          "unsigned": {
-            "age": 14370949
-          },
-          "content": {
-            "body": "aajaja",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475688708209,
-          "sender": "@gustavo:zboxapp.com",
-          "event_id": "$1475688708884bikuo:zboxapp.com",
-          "unsigned": {
-            "age": 14369238
-          },
-          "content": {
-            "body": "Porq no entendí na",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475689143498,
-          "sender": "@juorder:zboxapp.com",
-          "event_id": "$1475689143903grrwr:zboxapp.com",
-          "unsigned": {
-            "age": 13933949
-          },
-          "content": {
-            "body": "eso merece un WTFFFF ???",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475689163679,
-          "sender": "@deugenin:zboxapp.com",
-          "event_id": "$1475689163904Sylnl:zboxapp.com",
-          "unsigned": {
-            "age": 13913768
-          },
-          "content": {
-            "body": "xD",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        },
-        {
-          "origin_server_ts": 1475689179117,
-          "sender": "@juorder:zboxapp.com",
-          "event_id": "$1475689179905dgyTt:zboxapp.com",
-          "unsigned": {
-            "age": 13898330
-          },
-          "content": {
-            "body": "norfei jajajaja",
-            "msgtype": "m.text"
-          },
-          "type": "m.room.message"
-        }
-      ]
-    },
-    "state": {
-      "events": [
-        {
-          "origin_server_ts": 1474658428569,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465842815WUJWM:zboxapp.com",
-          "unsigned": {
-            "age": 1044648878
-          },
-          "state_key": "",
-          "content": {
-            "join_rule": "invite"
-          },
-          "type": "m.room.join_rules"
-        },
-        {
-          "origin_server_ts": 1475676898765,
-          "sender": "@deugenin:zboxapp.com",
-          "event_id": "$1475676898650ZSrWm:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "invite",
-              "avatar_url": "mxc://zboxapp.com/QRZWHFKBgfoehIXsakbRQUYp",
-              "displayname": "daniel"
-            },
-            "prev_sender": "@pbruna:zboxapp.com",
-            "replaces_state": "$1475676287640zMsVE:zboxapp.com",
-            "age": 26178682
-          },
-          "state_key": "@deugenin:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/QRZWHFKBgfoehIXsakbRQUYp",
-            "displayname": "daniel"
-          },
-          "membership": "join",
-          "type": "m.room.member"
-        },
-        {
-          "origin_server_ts": 1474659636291,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465963672DWxuE:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "join",
-              "avatar_url": "mxc://zboxapp.com/CZpAioJIqKBVypxIYwrCYhZN",
-              "displayname": null
-            },
-            "prev_sender": "@pbruna:zboxapp.com",
-            "replaces_state": "$147465934464cKZqD:zboxapp.com",
-            "age": 1043441156
-          },
-          "state_key": "@pbruna:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/CZpAioJIqKBVypxIYwrCYhZN",
-            "displayname": "pbruna"
-          },
-          "membership": "join",
-          "type": "m.room.member"
-        },
-        {
-          "origin_server_ts": 1474658526314,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465852619fbfkP:zboxapp.com",
-          "unsigned": {
-            "age": 1044551133
-          },
-          "state_key": "",
-          "content": {
-            "url": "mxc://zboxapp.com/INgKbqNGUGDxhJwIYxXUfnhZ"
-          },
-          "type": "m.room.avatar"
-        },
-        {
-          "origin_server_ts": 1474726580067,
-          "sender": "@agallardo:zboxapp.com",
-          "event_id": "$1474726580329fbBhl:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "join",
-              "avatar_url": null,
-              "displayname": "agallardo"
-            },
-            "prev_sender": "@agallardo:zboxapp.com",
-            "replaces_state": "$1474661328122Ssqjh:zboxapp.com",
-            "age": 976497380
-          },
-          "state_key": "@agallardo:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/ZrCYldHszyxabnlrJamxRrqv",
-            "displayname": "agallardo"
-          },
-          "membership": "join",
-          "type": "m.room.member"
-        },
-        {
-          "origin_server_ts": 1474658564668,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465856422MKDyl:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "name": "Los Machos"
-            },
-            "prev_sender": "@pbruna:zboxapp.com",
-            "replaces_state": "$147465842818ecZKZ:zboxapp.com",
-            "age": 1044512779
-          },
-          "state_key": "",
-          "content": {
-            "name": "Machos"
-          },
-          "type": "m.room.name"
-        },
-        {
-          "origin_server_ts": 1474668375539,
-          "sender": "@gustavo:zboxapp.com",
-          "event_id": "$1474668375281OgaTe:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "join",
-              "avatar_url": null,
-              "displayname": "Gustavo"
-            },
-            "prev_sender": "@gustavo:zboxapp.com",
-            "replaces_state": "$147465918756BIPIF:zboxapp.com",
-            "age": 1034701908
-          },
-          "state_key": "@gustavo:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/cPeGMxTEiBqxTcKWePeitpjf",
-            "displayname": "Gustavo"
-          },
-          "membership": "join",
-          "type": "m.room.member"
-        },
-        {
-          "origin_server_ts": 1474658428764,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465842817RAmmU:zboxapp.com",
-          "unsigned": {
-            "age": 1044648683
-          },
-          "state_key": "",
-          "content": {
-            "guest_access": "can_join"
-          },
-          "type": "m.room.guest_access"
-        },
-        {
-          "origin_server_ts": 1474658428668,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465842816kIiej:zboxapp.com",
-          "unsigned": {
-            "age": 1044648779
-          },
-          "state_key": "",
-          "content": {
-            "history_visibility": "shared"
-          },
-          "type": "m.room.history_visibility"
-        },
-        {
-          "origin_server_ts": 1474658428474,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465842812UjFTE:zboxapp.com",
-          "unsigned": {
-            "age": 1044648973
-          },
-          "state_key": "",
-          "content": {
-            "creator": "@pbruna:zboxapp.com"
-          },
-          "type": "m.room.create"
-        },
-        {
-          "origin_server_ts": 1474658564661,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465856421aefZh:zboxapp.com",
-          "unsigned": {
-            "age": 1044512786
-          },
-          "state_key": "",
-          "content": {
-            "topic": "Temas para solo Hombres"
-          },
-          "type": "m.room.topic"
-        },
-        {
-          "origin_server_ts": 1474658428536,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465842814dCOes:zboxapp.com",
-          "unsigned": {
-            "age": 1044648911
-          },
-          "state_key": "",
-          "content": {
-            "events_default": 0,
-            "invite": 0,
-            "state_default": 50,
-            "redact": 50,
-            "ban": 50,
-            "users_default": 0,
-            "events": {
-              "m.room.avatar": 50,
-              "m.room.name": 50,
-              "m.room.canonical_alias": 50,
-              "m.room.history_visibility": 100,
-              "m.room.power_levels": 100
-            },
-            "kick": 50,
-            "users": {
-              "@pbruna:zboxapp.com": 100
-            }
-          },
-          "type": "m.room.power_levels"
-        },
-        {
-          "origin_server_ts": 1474658564640,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465856420DiyjI:zboxapp.com",
-          "unsigned": {
-            "age": 1044512807
-          },
-          "state_key": "",
-          "content": {
-            "alias": "#machos:zboxapp.com"
-          },
-          "type": "m.room.canonical_alias"
-        },
-        {
-          "origin_server_ts": 1474665228921,
-          "sender": "@david:zboxapp.com",
-          "event_id": "$1474665228247wDSzF:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "join",
-              "avatar_url": null,
-              "displayname": "david"
-            },
-            "prev_sender": "@david:zboxapp.com",
-            "replaces_state": "$147465920159hFwDU:zboxapp.com",
-            "age": 1037848526
-          },
-          "state_key": "@david:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/CocbyezFYwvukkpaMtPVwlZM",
-            "displayname": "david"
-          },
-          "membership": "join",
-          "type": "m.room.member"
-        },
-        {
-          "origin_server_ts": 1475676316399,
-          "sender": "@ssilva:zboxapp.com",
-          "event_id": "$1475676316643jyrzN:zboxapp.com",
-          "unsigned": {
-            "prev_content": {
-              "membership": "invite",
-              "avatar_url": "mxc://zboxapp.com/iyLufhSZkyxhcVDAPxuwGMMw",
-              "displayname": "ssilva"
-            },
-            "prev_sender": "@pbruna:zboxapp.com",
-            "replaces_state": "$1475676287641XGXyV:zboxapp.com",
-            "age": 26761048
-          },
-          "state_key": "@ssilva:zboxapp.com",
-          "content": {
-            "membership": "join",
-            "avatar_url": "mxc://zboxapp.com/iyLufhSZkyxhcVDAPxuwGMMw",
-            "displayname": "ssilva"
-          },
-          "membership": "join",
-          "type": "m.room.member"
-        },
-        {
-          "origin_server_ts": 1474658564674,
-          "sender": "@pbruna:zboxapp.com",
-          "event_id": "$147465856423JJpaj:zboxapp.com",
-          "unsigned": {
-            "age": 1044512773
-          },
-          "state_key": "zboxapp.com",
-          "content": {
-            "aliases": [
-              "#machos:zboxapp.com"
+        "timeline": {
+            "limited": true,
+            "prev_batch": "t125-24496_475703_4111_33749_101_17_21",
+            "events": [
+                {
+                    "origin_server_ts": 1475685662884,
+                    "sender": "@juorder:zboxapp.com",
+                    "event_id": "$1475685662734RogMB:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "join",
+                            "avatar_url": null,
+                            "displayname": "juorder"
+                        },
+                        "prev_sender": "@juorder:zboxapp.com",
+                        "replaces_state": "$147465919958VXFnt:zboxapp.com",
+                        "age": 17414563
+                    },
+                    "state_key": "@juorder:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/dKpeSvjHRVZuWyqaLAVtWaWx",
+                        "displayname": "juorder"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1475688406652,
+                    "sender": "@deugenin:zboxapp.com",
+                    "event_id": "$1475688406879Eqezj:zboxapp.com",
+                    "unsigned": {
+                        "age": 14670795
+                    },
+                    "content": {
+                        "body": "El pronóstico del tiempo...",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475688433050,
+                    "sender": "@deugenin:zboxapp.com",
+                    "event_id": "$1475688433880NyPjn:zboxapp.com",
+                    "unsigned": {
+                        "age": 14644397
+                    },
+                    "content": {
+                        "body": "IMG_0039.PNG",
+                        "info": {
+                            "mimetype": "image/png",
+                            "h": 2048,
+                            "w": 1536,
+                            "size": 5894265
+                        },
+                        "msgtype": "m.image",
+                        "url": "mxc://zboxapp.com/ECvbcOrIvtuUNzSOaiOCuwle"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475688583218,
+                    "sender": "@ssilva:zboxapp.com",
+                    "event_id": "$1475688583881UBbqG:zboxapp.com",
+                    "unsigned": {
+                        "age": 14494229
+                    },
+                    "content": {
+                        "body": "jajajajja el juorder con el Gustavo no cacharon nah ",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475688698691,
+                    "sender": "@gustavo:zboxapp.com",
+                    "event_id": "$1475688698882rZjkG:zboxapp.com",
+                    "unsigned": {
+                        "age": 14378756
+                    },
+                    "content": {
+                        "body": "Sólo puedo decir: va a llover o no?",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475688706498,
+                    "sender": "@deugenin:zboxapp.com",
+                    "event_id": "$1475688706883ePCuT:zboxapp.com",
+                    "unsigned": {
+                        "age": 14370949
+                    },
+                    "content": {
+                        "body": "aajaja",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475688708209,
+                    "sender": "@gustavo:zboxapp.com",
+                    "event_id": "$1475688708884bikuo:zboxapp.com",
+                    "unsigned": {
+                        "age": 14369238
+                    },
+                    "content": {
+                        "body": "Porq no entendí na",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475689143498,
+                    "sender": "@juorder:zboxapp.com",
+                    "event_id": "$1475689143903grrwr:zboxapp.com",
+                    "unsigned": {
+                        "age": 13933949
+                    },
+                    "content": {
+                        "body": "eso merece un WTFFFF ???",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475689163679,
+                    "sender": "@deugenin:zboxapp.com",
+                    "event_id": "$1475689163904Sylnl:zboxapp.com",
+                    "unsigned": {
+                        "age": 13913768
+                    },
+                    "content": {
+                        "body": "xD",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                },
+                {
+                    "origin_server_ts": 1475689179117,
+                    "sender": "@juorder:zboxapp.com",
+                    "event_id": "$1475689179905dgyTt:zboxapp.com",
+                    "unsigned": {
+                        "age": 13898330
+                    },
+                    "content": {
+                        "body": "norfei jajajaja",
+                        "msgtype": "m.text"
+                    },
+                    "type": "m.room.message"
+                }
             ]
-          },
-          "type": "m.room.aliases"
         },
-        {
-          "origin_server_ts": 1474665159308,
-          "sender": "@fs_IVlia0VJUWpuZWhyQnJ2c2NwbTp6Ym94YXBwLmNvbQ:matrix.org",
-          "event_id": "$1474665159370294FmoIC:matrix.org",
-          "unsigned": {
-            "prev_content": {
-              "membership": "join",
-              "avatar_url": null,
-              "displayname": "VoIP Conference"
-            },
-            "prev_sender": "@fs_IVlia0VJUWpuZWhyQnJ2c2NwbTp6Ym94YXBwLmNvbQ:matrix.org",
-            "replaces_state": "$1474665036369797rTFkh:matrix.org",
-            "age": 1037918139
-          },
-          "state_key": "@fs_IVlia0VJUWpuZWhyQnJ2c2NwbTp6Ym94YXBwLmNvbQ:matrix.org",
-          "content": {
-            "membership": "leave"
-          },
-          "membership": "leave",
-          "type": "m.room.member"
-        }
-      ]
-    },
-    "ephemeral": {
-      "events": [
-        {
-          "content": {
-            "user_ids": []
-          },
-          "type": "m.typing"
+        "state": {
+            "events": [
+                {
+                    "origin_server_ts": 1474658428569,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465842815WUJWM:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044648878
+                    },
+                    "state_key": "",
+                    "content": {
+                        "join_rule": "invite"
+                    },
+                    "type": "m.room.join_rules"
+                },
+                {
+                    "origin_server_ts": 1475676898765,
+                    "sender": "@deugenin:zboxapp.com",
+                    "event_id": "$1475676898650ZSrWm:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "invite",
+                            "avatar_url": "mxc://zboxapp.com/QRZWHFKBgfoehIXsakbRQUYp",
+                            "displayname": "daniel"
+                        },
+                        "prev_sender": "@pbruna:zboxapp.com",
+                        "replaces_state": "$1475676287640zMsVE:zboxapp.com",
+                        "age": 26178682
+                    },
+                    "state_key": "@deugenin:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/QRZWHFKBgfoehIXsakbRQUYp",
+                        "displayname": "daniel"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1474659636291,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465963672DWxuE:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "join",
+                            "avatar_url": "mxc://zboxapp.com/CZpAioJIqKBVypxIYwrCYhZN",
+                            "displayname": null
+                        },
+                        "prev_sender": "@pbruna:zboxapp.com",
+                        "replaces_state": "$147465934464cKZqD:zboxapp.com",
+                        "age": 1043441156
+                    },
+                    "state_key": "@pbruna:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/CZpAioJIqKBVypxIYwrCYhZN",
+                        "displayname": "pbruna"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1474658526314,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465852619fbfkP:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044551133
+                    },
+                    "state_key": "",
+                    "content": {
+                        "url": "mxc://zboxapp.com/INgKbqNGUGDxhJwIYxXUfnhZ"
+                    },
+                    "type": "m.room.avatar"
+                },
+                {
+                    "origin_server_ts": 1474726580067,
+                    "sender": "@agallardo:zboxapp.com",
+                    "event_id": "$1474726580329fbBhl:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "join",
+                            "avatar_url": null,
+                            "displayname": "agallardo"
+                        },
+                        "prev_sender": "@agallardo:zboxapp.com",
+                        "replaces_state": "$1474661328122Ssqjh:zboxapp.com",
+                        "age": 976497380
+                    },
+                    "state_key": "@agallardo:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/ZrCYldHszyxabnlrJamxRrqv",
+                        "displayname": "agallardo"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1474658564668,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465856422MKDyl:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "name": "Los Machos"
+                        },
+                        "prev_sender": "@pbruna:zboxapp.com",
+                        "replaces_state": "$147465842818ecZKZ:zboxapp.com",
+                        "age": 1044512779
+                    },
+                    "state_key": "",
+                    "content": {
+                        "name": "Machos"
+                    },
+                    "type": "m.room.name"
+                },
+                {
+                    "origin_server_ts": 1474668375539,
+                    "sender": "@gustavo:zboxapp.com",
+                    "event_id": "$1474668375281OgaTe:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "join",
+                            "avatar_url": null,
+                            "displayname": "Gustavo"
+                        },
+                        "prev_sender": "@gustavo:zboxapp.com",
+                        "replaces_state": "$147465918756BIPIF:zboxapp.com",
+                        "age": 1034701908
+                    },
+                    "state_key": "@gustavo:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/cPeGMxTEiBqxTcKWePeitpjf",
+                        "displayname": "Gustavo"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1474658428764,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465842817RAmmU:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044648683
+                    },
+                    "state_key": "",
+                    "content": {
+                        "guest_access": "can_join"
+                    },
+                    "type": "m.room.guest_access"
+                },
+                {
+                    "origin_server_ts": 1474658428668,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465842816kIiej:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044648779
+                    },
+                    "state_key": "",
+                    "content": {
+                        "history_visibility": "shared"
+                    },
+                    "type": "m.room.history_visibility"
+                },
+                {
+                    "origin_server_ts": 1474658428474,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465842812UjFTE:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044648973
+                    },
+                    "state_key": "",
+                    "content": {
+                        "creator": "@pbruna:zboxapp.com"
+                    },
+                    "type": "m.room.create"
+                },
+                {
+                    "origin_server_ts": 1474658564661,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465856421aefZh:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044512786
+                    },
+                    "state_key": "",
+                    "content": {
+                        "topic": "Temas para solo Hombres"
+                    },
+                    "type": "m.room.topic"
+                },
+                {
+                    "origin_server_ts": 1474658428536,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465842814dCOes:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044648911
+                    },
+                    "state_key": "",
+                    "content": {
+                        "events_default": 0,
+                        "invite": 0,
+                        "state_default": 50,
+                        "redact": 50,
+                        "ban": 50,
+                        "users_default": 0,
+                        "events": {
+                            "m.room.avatar": 50,
+                            "m.room.name": 50,
+                            "m.room.canonical_alias": 50,
+                            "m.room.history_visibility": 100,
+                            "m.room.power_levels": 100
+                        },
+                        "kick": 50,
+                        "users": {
+                            "@pbruna:zboxapp.com": 100
+                        }
+                    },
+                    "type": "m.room.power_levels"
+                },
+                {
+                    "origin_server_ts": 1474658564640,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465856420DiyjI:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044512807
+                    },
+                    "state_key": "",
+                    "content": {
+                        "alias": "#machos:zboxapp.com"
+                    },
+                    "type": "m.room.canonical_alias"
+                },
+                {
+                    "origin_server_ts": 1474665228921,
+                    "sender": "@david:zboxapp.com",
+                    "event_id": "$1474665228247wDSzF:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "join",
+                            "avatar_url": null,
+                            "displayname": "david"
+                        },
+                        "prev_sender": "@david:zboxapp.com",
+                        "replaces_state": "$147465920159hFwDU:zboxapp.com",
+                        "age": 1037848526
+                    },
+                    "state_key": "@david:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/CocbyezFYwvukkpaMtPVwlZM",
+                        "displayname": "david"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1475676316399,
+                    "sender": "@ssilva:zboxapp.com",
+                    "event_id": "$1475676316643jyrzN:zboxapp.com",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "invite",
+                            "avatar_url": "mxc://zboxapp.com/iyLufhSZkyxhcVDAPxuwGMMw",
+                            "displayname": "ssilva"
+                        },
+                        "prev_sender": "@pbruna:zboxapp.com",
+                        "replaces_state": "$1475676287641XGXyV:zboxapp.com",
+                        "age": 26761048
+                    },
+                    "state_key": "@ssilva:zboxapp.com",
+                    "content": {
+                        "membership": "join",
+                        "avatar_url": "mxc://zboxapp.com/iyLufhSZkyxhcVDAPxuwGMMw",
+                        "displayname": "ssilva"
+                    },
+                    "membership": "join",
+                    "type": "m.room.member"
+                },
+                {
+                    "origin_server_ts": 1474658564674,
+                    "sender": "@pbruna:zboxapp.com",
+                    "event_id": "$147465856423JJpaj:zboxapp.com",
+                    "unsigned": {
+                        "age": 1044512773
+                    },
+                    "state_key": "zboxapp.com",
+                    "content": {
+                        "aliases": [
+                            "#machos:zboxapp.com"
+                        ]
+                    },
+                    "type": "m.room.aliases"
+                },
+                {
+                    "origin_server_ts": 1474665159308,
+                    "sender": "@fs_IVlia0VJUWpuZWhyQnJ2c2NwbTp6Ym94YXBwLmNvbQ:matrix.org",
+                    "event_id": "$1474665159370294FmoIC:matrix.org",
+                    "unsigned": {
+                        "prev_content": {
+                            "membership": "join",
+                            "avatar_url": null,
+                            "displayname": "VoIP Conference"
+                        },
+                        "prev_sender": "@fs_IVlia0VJUWpuZWhyQnJ2c2NwbTp6Ym94YXBwLmNvbQ:matrix.org",
+                        "replaces_state": "$1474665036369797rTFkh:matrix.org",
+                        "age": 1037918139
+                    },
+                    "state_key": "@fs_IVlia0VJUWpuZWhyQnJ2c2NwbTp6Ym94YXBwLmNvbQ:matrix.org",
+                    "content": {
+                        "membership": "leave"
+                    },
+                    "membership": "leave",
+                    "type": "m.room.member"
+                }
+            ]
         },
-        {
-          "content": {
-            "$1475689163904Sylnl:zboxapp.com": {
-              "m.read": {
-                "@juorder:zboxapp.com": {
-                  "ts": 1475689167890
+        "ephemeral": {
+            "events": [
+                {
+                    "content": {
+                        "user_ids": []
+                    },
+                    "type": "m.typing"
+                },
+                {
+                    "content": {
+                        "$1475689163904Sylnl:zboxapp.com": {
+                            "m.read": {
+                                "@juorder:zboxapp.com": {
+                                    "ts": 1475689167890
+                                }
+                            }
+                        },
+                        "$1475689179905dgyTt:zboxapp.com": {
+                            "m.read": {
+                                "@ssilva:zboxapp.com": {
+                                    "ts": 1475692714493
+                                },
+                                "@agallardo:zboxapp.com": {
+                                    "ts": 1475689902584
+                                },
+                                "@gustavo:zboxapp.com": {
+                                    "ts": 1475697287515
+                                },
+                                "@deugenin:zboxapp.com": {
+                                    "ts": 1475689537334
+                                },
+                                "@david:zboxapp.com": {
+                                    "ts": 1475689307786
+                                },
+                                "@pbruna:zboxapp.com": {
+                                    "ts": 1475697046184
+                                }
+                            }
+                        }
+                    },
+                    "type": "m.receipt"
                 }
-              }
-            },
-            "$1475689179905dgyTt:zboxapp.com": {
-              "m.read": {
-                "@ssilva:zboxapp.com": {
-                  "ts": 1475692714493
-                },
-                "@agallardo:zboxapp.com": {
-                  "ts": 1475689902584
-                },
-                "@gustavo:zboxapp.com": {
-                  "ts": 1475697287515
-                },
-                "@deugenin:zboxapp.com": {
-                  "ts": 1475689537334
-                },
-                "@david:zboxapp.com": {
-                  "ts": 1475689307786
-                },
-                "@pbruna:zboxapp.com": {
-                  "ts": 1475697046184
+            ]
+        },
+        "account_data": {
+            "events": [
+                {
+                    "content": {
+                        "tags": {
+                            "m.favourite": {
+                                "order": 0.75
+                            }
+                        }
+                    },
+                    "type": "m.tag"
                 }
-              }
-            }
-          },
-          "type": "m.receipt"
+            ]
         }
-      ]
-    },
-    "account_data": {
-      "events": [
-        {
-          "content": {
-            "tags": {
-              "m.favourite": {
-                "order": 0.75
-              }
-            }
-          },
-          "type": "m.tag"
-        }
-      ]
     }
-  }
 }

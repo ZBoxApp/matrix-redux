@@ -15,7 +15,11 @@
         "byIds": {
             "description": "Object with all the rooms",
             "type": "object",
-            "oneOf": [{ "$ref": "file:./room.json" }]
+            "oneOf": [
+                {
+                    "$ref": "file:./room.json"
+                }
+            ]
         }
     }
 }

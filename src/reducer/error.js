@@ -1,4 +1,5 @@
 import {SET_ERROR, REMOVE_ERROR} from "../actions/error";
+import {REHYDRATE} from "redux-persist/constants";
 
 const initialState = {
     error: {}
@@ -21,6 +22,13 @@ const Errors = function (state = initialState, action) {
             newState = {...state};
             delete newState.error[action.payload.id];
             return newState;
+            break;
+
+        case REHYDRATE:
+            const savedData = action.payload.error || state;
+            return {
+                ...savedData,
+            };
             break;
 
         default:

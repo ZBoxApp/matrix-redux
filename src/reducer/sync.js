@@ -1,6 +1,7 @@
 'use strict';
 
-import * as ActionTypes from '../actions/sync';
+import * as ActionTypes from "../actions/sync";
+import {REHYDRATE} from "redux-persist/constants";
 
 const initialState = {
     isRunning: false,
@@ -16,13 +17,20 @@ const sync = function (state = initialState, action) {
         case ActionTypes.SYNC_SUCCESS:
             const payload = {...action.payload};
             delete payload.data;
-            newState = {...state, ...payload };
+            newState = {...state, ...payload};
             return newState;
             break;
+
         case ActionTypes.SYNC_INITIAL:
-            newState = {...state, ['initialSyncComplete']: true };
+            newState = {...state, ['initialSyncComplete']: true};
             return newState;
             break;
+
+        case REHYDRATE:
+            const savedData = action.payload.sync || state;
+            return {...savedData,};
+            break;
+
         default:
             return state;
             break;

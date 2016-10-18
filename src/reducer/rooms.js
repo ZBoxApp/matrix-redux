@@ -1,10 +1,9 @@
 "use strict";
 
 import _ from "lodash";
-
-
-import * as ActionTypes from '../actions/rooms';
-import * as SyncTypes from '../actions/sync';
+import * as ActionTypes from "../actions/rooms";
+import * as SyncTypes from "../actions/sync";
+import {REHYDRATE} from "redux-persist/constants";
 
 /**
  * @type {Object} items
@@ -35,10 +34,12 @@ const Rooms = function (state = initialState, action) {
             newState = {...state, ...payload};
             return newState;
             break;
+
         case ActionTypes.ROOMS_SUCCESS:
             newState = {...state, ...payload};
             return newState;
             break;
+
         case ActionTypes.ROOMS_REMOVE:
             newState = {...state};
             delete newState.items[payload.roomId];
@@ -47,12 +48,14 @@ const Rooms = function (state = initialState, action) {
             newState.isLoading = false;
             return newState;
             break;
+
         case SyncTypes.SYNC_INITIAL:
             const rooms = action.payload.data.rooms;
             newState = {...state, ['byIds']: rooms};
             newState.isLoading = false;
             return newState;
             break;
+
         case SyncTypes.SYNC_SYNCING:
             const resources = action.payload.data.rooms;
             const newIds = _.merge({}, state.byIds, resources);
@@ -60,6 +63,12 @@ const Rooms = function (state = initialState, action) {
             newState.isLoading = false;
             return newState;
             break;
+
+        case REHYDRATE:
+            const savedData = action.payload.rooms || state;
+            return {...savedData,};
+            break;
+
         default:
             return state;
             break;

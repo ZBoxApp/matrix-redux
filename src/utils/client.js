@@ -7,8 +7,7 @@
 
 import matrixSDK from "matrix-js-sdk";
 import {Logger} from "./utils";
-import { matrixJsonParser, fixTimelineJson } from "./matrixJsonParser";
-import SyncApi from "matrix-js-sdk";
+import {matrixJsonParser} from "./matrixJsonParser";
 import _ from "lodash";
 
 export default class MatrixClient {
@@ -25,9 +24,9 @@ export default class MatrixClient {
     static createClient(options) {
         this.LOGGER = Logger(options.loggerObject, options.logLevel);
         if (typeof fetch === 'function' || typeof options.request === 'function') {
-          this.LOGGER.debug("Creating Matrix Client with opts: " + options);
-          this.client = matrixSDK.createClient(options);
-          return this.client;
+            this.LOGGER.debug("Creating Matrix Client with opts: " + options);
+            this.client = matrixSDK.createClient(options);
+            return this.client;
         }
         throw new Error("You need a fetch Pollify, or initialze MatrixClient with opts.request function")
     }
@@ -52,7 +51,7 @@ export default class MatrixClient {
      * anyone they share a room with. If false, will return the emptry string
      * for such URLs.
      * @return {string} The complete URL to the content.
-    **/
+     **/
     static getAvatarUrl(baseUrl, mxc, width, height, resizeMethod, allowDirectLinks) {
         return matrixSDK.ContentRepo.getHttpUriForMxc(baseUrl, mxc, width, height, resizeMethod, allowDirectLinks);
     };
@@ -162,8 +161,8 @@ export default class MatrixClient {
     }
 
     static startClient(opts) {
-      this.client.startClient(opts);
-      this.client._syncApi._processSyncResponse = patchProcessSyncResponse(this.client._syncApi);
+        this.client.startClient(opts);
+        this.client._syncApi._processSyncResponse = patchProcessSyncResponse(this.client._syncApi);
     }
 
     static parseServerResponse() {
@@ -172,10 +171,10 @@ export default class MatrixClient {
     };
 
     static stopClient() {
-      return new Promise((resolve) => {
-        this.client.stopClient();
-        resolve();
-      });
+        return new Promise((resolve) => {
+            this.client.stopClient();
+            resolve();
+        });
     }
 
     /**
@@ -193,11 +192,11 @@ export default class MatrixClient {
     }
 };
 
-const patchProcessSyncResponse = function(syncApiObject) {
-  const oldProcessSyncResponse = syncApiObject._processSyncResponse;
-  const newProcessSyncResponse = function(syncToken, data) {    
-    syncApiObject.client._reduxRawResponse = JSON.stringify(data);
-    return oldProcessSyncResponse.apply(this, arguments);
-  }
-  return newProcessSyncResponse;
+const patchProcessSyncResponse = function (syncApiObject) {
+    const oldProcessSyncResponse = syncApiObject._processSyncResponse;
+    const newProcessSyncResponse = function (syncToken, data) {
+        syncApiObject.client._reduxRawResponse = JSON.stringify(data);
+        return oldProcessSyncResponse.apply(this, arguments);
+    }
+    return newProcessSyncResponse;
 }

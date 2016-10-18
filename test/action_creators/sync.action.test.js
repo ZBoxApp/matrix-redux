@@ -1,10 +1,6 @@
 "use strict";
 
-import _ from 'lodash';
-import jsonschema from 'jsonschema';
-import {createStoreHelper, expect, clearMatrixClient,
-  logTestUser, userFixture, loginStore, randomElement, validateSchema
-} from "../helper";
+import {expect, userFixture, loginStore, randomElement, validateSchema} from "../helper";
 import * as SyncActions from "../../src/actions/sync";
 import MatrixClient from "../../src/utils/client";
 
@@ -18,26 +14,26 @@ const clientOptions = userFixture.clientOptions;
 const homeServerName = userFixture.homeServerName;
 
 describe('Sync Actions', function () {
-  this.timeout(10000);
-    beforeEach(function(done){
-        loginStore(function(err, data){
+    this.timeout(10000);
+    beforeEach(function (done) {
+        loginStore(function (err, data) {
             if (err) console.error(err);
             store = data;
             done();
         });
     });
 
-    afterEach(function(done) {
-      MatrixClient.client.stopClient();
-      MatrixClient.client.store.setSyncToken(null);
-      MatrixClient.client.store.rooms = {};
-      done();
+    afterEach(function (done) {
+        MatrixClient.client.stopClient();
+        MatrixClient.client.store.setSyncToken(null);
+        MatrixClient.client.store.rooms = {};
+        done();
     });
 
     it('1. Sync Start Should Update Sync State', function (done) {
         this.timeout(20000);
         store.dispatch(SyncActions.start());
-        setTimeout(function() {
+        setTimeout(function () {
             state = store.getState();
             expect(state.sync.isRunning).to.be.true;
             expect(state.sync.initialSyncComplete).to.be.true;
@@ -53,23 +49,22 @@ describe('Sync Actions', function () {
         const opts = {pollTimeout: 1000};
         store.dispatch(SyncActions.start(opts));
         store.dispatch(SyncActions.stop());
-        setTimeout(function(){
-          state = store.getState();
-          expect(state.sync.isRunning).to.be.false;
-          done();
+        setTimeout(function () {
+            state = store.getState();
+            expect(state.sync.isRunning).to.be.false;
+            done();
         }, 1000);
     });
 
-    
 
-    it('4. Sync should update the state', function(done) {
+    it('4. Sync should update the state', function (done) {
         this.timeout(20000);
-        MatrixClient.client.on("sync", function(syncState, prevState, data) {
+        MatrixClient.client.on("sync", function (syncState, prevState, data) {
             state = store.getState();
             const syncStatus = MatrixClient.getSyncState();
             if (state.sync && state.sync.initialSyncComplete && syncStatus) {
                 MatrixClient.client.stopClient();
-                ['room', 'user', 'event'].forEach(function(resource) {
+                ['room', 'user', 'event'].forEach(function (resource) {
                     const reducer = resource + 's';
                     const randomResource = randomElement(state[reducer].byIds);
                     let validationResult = validateSchema(randomResource, resource);

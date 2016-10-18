@@ -1,15 +1,13 @@
 'use strict';
 
 import chai from "chai";
-import jsonschema from 'jsonschema';
-import _ from 'lodash';
+import jsonschema from "jsonschema";
+import _ from "lodash";
 import {combineReducers} from "redux";
 import MatrixClient from "../src/utils/client";
-import {fetchRequest} from "../src/utils/utils";
 import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
 import createStore from "../src/store/store";
-import fetch from "isomorphic-fetch";
 import rootReducer from "../src/reducer";
 
 export const expect = chai.expect;
@@ -20,9 +18,9 @@ const testUserPassword = process.env.USER_PASS || "123456";
 const testUserName = process.env.USER_NAME || "test";
 const testHomeServerName = process.env.HOMESERVER_NAME || "zboxapp.dev";
 
-export const createStoreHelper = function(preloadedState, persistOps) {
-  const combinedReducers = combineReducers(rootReducer);
-  return createStore(combinedReducers, preloadedState, persistOps)
+export const createStoreHelper = function (preloadedState, persistOps) {
+    const combinedReducers = combineReducers(rootReducer);
+    return createStore(combinedReducers, preloadedState, persistOps)
 }
 
 const store = createStoreHelper({user: null, sync: null});
@@ -39,14 +37,14 @@ export const clearMatrixClient = function () {
     MatrixClient.baseUrl = null;
 };
 
-export const randomElement = function(object) {
+export const randomElement = function (object) {
     if (Array.isArray(object)) return _.sample(object);
     if (typeof object === 'undefined') return {};
     const key = _.sample(Object.keys(object));
     return object[key];
 };
 
-export const validateSchema = function(instance, schema) {
+export const validateSchema = function (instance, schema) {
     const Validator = jsonschema.Validator;
     const v = new Validator();
     const schemaFile = require('../docs/schemas/' + schema + '.json');
@@ -96,23 +94,23 @@ export const loginStore = (opts, callback) => {
         callback = opts;
         opts = clientOptions;
     }
-    store.dispatch(UserActions.login(testUserName, testUserPassword, opts, function(err, data){
+    store.dispatch(UserActions.login(testUserName, testUserPassword, opts, function (err, data) {
         if (err) return callback(err);
         return callback(null, store);
     }));
 };
 
 export const randomRoomName = () => {
-  const chars = "abcdefghijklmnopqrstufwxyz";
-  let result = "";
-  for (let i = 15; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
+    const chars = "abcdefghijklmnopqrstufwxyz";
+    let result = "";
+    for (let i = 15; i > 0; --i) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
 }
 
 export const createPublicRoom = (callback) => {
-    logTestUser(function(err, data){
+    logTestUser(function (err, data) {
         const roomAliasName = randomRoomName();
         const newRoomOptions = {
             "visibility": "public",

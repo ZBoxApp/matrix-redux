@@ -1,6 +1,6 @@
 "use strict";
 
-import {createStoreHelper,expect, clearMatrixClient, userFixture} from "../helper";
+import {createStoreHelper, expect, clearMatrixClient, userFixture} from "../helper";
 import * as UserActions from "../../src/actions/user";
 import MatrixClient from "../../src/utils/client";
 
@@ -25,8 +25,8 @@ describe('User Action Creators Tests', () => {
         state = {};
     });
 
-    it('1. login should Update MatrixClient info', function(done) {
-        const callback = function(err, data) {
+    it('1. login should Update MatrixClient info', function (done) {
+        const callback = function (err, data) {
             if (err) returnError(err, done);
 
             ['userId', 'refreshToken', 'deviceId'].forEach((opt) => {
@@ -40,8 +40,8 @@ describe('User Action Creators Tests', () => {
         store.dispatch(UserActions.login(testUserName, testUserPassword, clientOptions, callback));
     });
 
-    it('2. loginWithPassword should Update error state', function(done) {
-        const callback = function(err, data) {
+    it('2. loginWithPassword should Update error state', function (done) {
+        const callback = function (err, data) {
             state = store.getState();
             expect(state.users.currentUser.isLogged).to.be.false;
             expect(state.error['login.loginWithPassword']).to.not.be.undefined;
@@ -50,8 +50,8 @@ describe('User Action Creators Tests', () => {
         store.dispatch(UserActions.login(testUserName, 'badPassword', clientOptions, callback));
     });
 
-    it('3. login should Update user', function(done) {
-        const callback = function(err, data) {
+    it('3. login should Update user', function (done) {
+        const callback = function (err, data) {
             if (err) returnError(err, done);
             state = store.getState();
             expect(state.users.currentUser.isLogged).to.be.true;
@@ -64,9 +64,9 @@ describe('User Action Creators Tests', () => {
         store.dispatch(UserActions.login(testUserName, testUserPassword, clientOptions, callback));
     });
 
-    it('4. LoginReducer must have the Auth Data for MatrixClient Constructor', function(done) {
+    it('4. LoginReducer must have the Auth Data for MatrixClient Constructor', function (done) {
         this.timeout(5000);
-        const callback = function(err, data) {
+        const callback = function (err, data) {
             if (err) returnError(err, done);
             state = store.getState();
             expect(state.users.currentUser.isLogged).to.be.true;
@@ -85,9 +85,9 @@ describe('User Action Creators Tests', () => {
         store.dispatch(UserActions.login(testUserName, testUserPassword, clientOptions, callback));
     });
 
-    it('5. restoreSession should update user reducers', function(done) {
+    it('5. restoreSession should update user reducers', function (done) {
         this.timeout(5000);
-        const callback = function(err, data) {
+        const callback = function (err, data) {
             if (err) returnError(err, done);
             state = store.getState();
             const matrixClientData = state.users.currentUser.matrixClientData;
@@ -104,11 +104,11 @@ describe('User Action Creators Tests', () => {
         store.dispatch(UserActions.login(testUserName, testUserPassword, clientOptions, callback));
     });
 
-    it('6. logout should update user reducers', function(done) {
+    it('6. logout should update user reducers', function (done) {
         this.timeout(5000);
-        store.dispatch(UserActions.login(testUserName, testUserPassword, clientOptions, function(err, data){
+        store.dispatch(UserActions.login(testUserName, testUserPassword, clientOptions, function (err, data) {
             if (err) returnError(err, done);
-            store.dispatch(UserActions.logout(function(err, data){
+            store.dispatch(UserActions.logout(function (err, data) {
                 if (err) returnError(err, done);
                 state = store.getState();
                 expect(state.users.currentUser.isLogged).to.be.false;

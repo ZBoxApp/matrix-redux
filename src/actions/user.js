@@ -10,7 +10,7 @@ export const USER_FAILURE = 'USER_FAILURE';
 export const USER_SUCCESS = 'USER_SUCCESS';
 
 const requestUser = (type, payload) => {
-  return { type, payload }
+    return {type, payload}
 };
 
 export const loadUserProfile = (userId) => {
@@ -35,16 +35,16 @@ export const loadUserProfile = (userId) => {
  * @param {String} userName - Matrix User Name
  * @param {String} userPassword - Matrix User Password
  * @param {Object} opts - Options to initialize Matrix Client
- * @param {Function} callback 
+ * @param {Function} callback
  */
 export const login = (userName, userPassword, opts, callback) => {
     return dispatch => {
-        dispatch(requestUser(USER_REQUEST, { isLoading: true }));
+        dispatch(requestUser(USER_REQUEST, {isLoading: true}));
 
         MatrixClient.loginWithPassword(userName, userPassword, opts, (err, data) => {
             if (err) {
                 dispatch(setError({key: 'login.loginWithPassword', error: err}));
-                dispatch(requestUser(USER_FAILURE, { isLogged: false }));
+                dispatch(requestUser(USER_FAILURE, {isLogged: false}));
                 return callback(err);
             }
             data.baseUrl = opts.baseUrl;
@@ -57,11 +57,11 @@ export const login = (userName, userPassword, opts, callback) => {
 
 export const logout = (callback) => {
     return dispatch => {
-        dispatch(requestUser(USER_REQUEST, { isLoading: true }));
+        dispatch(requestUser(USER_REQUEST, {isLoading: true}));
         MatrixClient.logout((err, data) => {
             if (err) {
                 dispatch(setError({key: 'login.loginWithPassword', error: err}));
-                dispatch(requestUser(USER_FAILURE, { isLogged: true }));
+                dispatch(requestUser(USER_FAILURE, {isLogged: true}));
                 return callback(err);
             }
             const payload = {
@@ -82,14 +82,14 @@ export const logout = (callback) => {
  */
 export const loginWithToken = (token, opts) => {
     return dispatch => {
-        dispatch(requestUser(USER_REQUEST, { isLoading: true }));
+        dispatch(requestUser(USER_REQUEST, {isLoading: true}));
 
         return new Promise((resolve, reject) => {
             MatrixClient.loginWithToken(token, opts, (err, data) => {
                 if (err) {
-                  dispatch(setError({key: 'login.loginWithToken', error: err}));
-                  dispatch(requestUser(USER_FAILURE, { isLogged: false }));
-                  return reject(err);
+                    dispatch(setError({key: 'login.loginWithToken', error: err}));
+                    dispatch(requestUser(USER_FAILURE, {isLogged: false}));
+                    return reject(err);
                 }
                 data.baseUrl = opts.baseUrl;
                 formatUserData(data);
@@ -113,23 +113,24 @@ export const restoreSession = (opts) => {
     };
 };
 
-const formatUserData = function(data) {
-  data.isLogged = true;
-  data.credentials = {userId: data.userId};
-  data.matrixClientData = {
-    baseUrl: data.baseUrl,
-    deviceId: data.deviceId,
-    credentials: data.credentials,
-    _http: {
-      opts: {
-        userId: data.userId,
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
+const formatUserData = (data) => {
+    data.isLogged = true;
+    data.credentials = {userId: data.userId};
+    data.matrixClientData = {
+        baseUrl: data.baseUrl,
         deviceId: data.deviceId,
-        homeServer: data.homeServer
-      }
-    },
-    store: { syncToken: null}
-  }
-  return data;
-}
+        credentials: data.credentials,
+        _http: {
+            opts: {
+                userId: data.userId,
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+                deviceId: data.deviceId,
+                homeServer: data.homeServer
+            }
+        },
+        store: {syncToken: null}
+    };
+
+    return data;
+};

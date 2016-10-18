@@ -27,7 +27,7 @@
     "lodash": "^4.16.2",
     "matrix-js-sdk": "^0.6.1",
     "redux": "^3.6.0",
-    "redux-persist": "^4.0.0-alpha6",
+    "redux-persist": "^3.5.0",
     "redux-thunk": "^2.1.0",
     "uuid": "^2.0.3"
   },

@@ -33,17 +33,26 @@
                 "join": {
                     "description": "Array of users ids that are members",
                     "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
+                    "items": {
+                        "type": "string",
+                        "pattern": "^@.*:"
+                    }
                 },
                 "leave": {
                     "description": "Array of users that leave the rooms",
                     "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
+                    "items": {
+                        "type": "string",
+                        "pattern": "^@.*:"
+                    }
                 },
                 "invite": {
                     "description": "Array of invited users ids, who are not joined the room",
                     "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
+                    "items": {
+                        "type": "string",
+                        "pattern": "^@.*:"
+                    }
                 }
             }
         },
@@ -62,7 +71,9 @@
                 "events": {
                     "description": "Array of events ids, sorted by date",
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -81,5 +92,8 @@
             }
         }
     },
-    "required": [ "id", "timeline" ]
+    "required": [
+        "id",
+        "timeline"
+    ]
 }

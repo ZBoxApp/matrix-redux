@@ -22,77 +22,77 @@ export const SYNC_STATE_RUNNING = 'SYNCING';
 export const SYNC_STATE_STOPPED = 'STOPPED';
 
 const requestSync = (type, payload) => {
-  return { type, payload }
+    return {type, payload}
 };
 
 /**
-  * @param {Object=} opts Options to apply when syncing.
-  * @param {Number=} opts.initialSyncLimit The event <code>limit=</code> to apply
-  * to initial sync. Default: 8.
-  * @param {Boolean=} opts.includeArchivedRooms True to put <code>archived=true</code>
-  * on the <code>/initialSync</code> request. Default: false.
-  * @param {Boolean=} opts.resolveInvitesToProfiles True to do /profile requests
-  * on every invite event if the displayname/avatar_url is not known for this user ID.
-  * Default: false.
-  *
-  * @param {String=} opts.pendingEventOrdering Controls where pending messages
-  * appear in a room's timeline. If "<b>chronological</b>", messages will appear
-  * in the timeline when the call to <code>sendEvent</code> was made. If
-  * "<b>detached</b>", pending messages will appear in a separate list,
-  * accessbile via {@link module:models/room#getPendingEvents}. Default:
-  * "chronological".
-  *
-  * @param {Number=} opts.pollTimeout The number of milliseconds to wait on /events.
-  * Default: 30000 (30 seconds).
-  *
-  * @param {String} opts.syncToken - The sync token to use
+ * @param {Object=} opts Options to apply when syncing.
+ * @param {Number=} opts.initialSyncLimit The event <code>limit=</code> to apply
+ * to initial sync. Default: 8.
+ * @param {Boolean=} opts.includeArchivedRooms True to put <code>archived=true</code>
+ * on the <code>/initialSync</code> request. Default: false.
+ * @param {Boolean=} opts.resolveInvitesToProfiles True to do /profile requests
+ * on every invite event if the displayname/avatar_url is not known for this user ID.
+ * Default: false.
+ *
+ * @param {String=} opts.pendingEventOrdering Controls where pending messages
+ * appear in a room's timeline. If "<b>chronological</b>", messages will appear
+ * in the timeline when the call to <code>sendEvent</code> was made. If
+ * "<b>detached</b>", pending messages will appear in a separate list,
+ * accessbile via {@link module:models/room#getPendingEvents}. Default:
+ * "chronological".
+ *
+ * @param {Number=} opts.pollTimeout The number of milliseconds to wait on /events.
+ * Default: 30000 (30 seconds).
+ *
+ * @param {String} opts.syncToken - The sync token to use
  */
 export const start = (opts) => {
     return dispatch => {
-      if (opts && opts.syncToken) {
-        MatrixClient.client.store.setSyncToken(opts.syncToken);
-        delete opts.syncToken;
-      }
-      
-      // Now we listen for Sync Events and Dispatch some Actions
-      MatrixClient.client.on("sync", (syncState, prevState, data) => {
-        let payload;
-        let response;
-        switch (syncState) {
-          case SYNC_STATE_FAILURE:
-            dispatch(setError({key: 'sync.start', error: data}));
-            dispatch(requestSync(SYNC_FAILURE, { isRunning: false }));
-            break;
-
-          case SYNC_STATE_RUNNING:
-            response = MatrixClient.parseServerResponse();
-            payload = {
-              data: response
-            };
-            dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
-            dispatch(requestSync(SYNC_SYNCING, payload));
-            break;
-
-          case SYNC_INITIAL_SUCCESS:
-            response = MatrixClient.parseServerResponse();
-            payload = {
-              isRunning: true, initialSyncComplete: true,
-              syncToken: MatrixClient.client.store.syncToken,
-              filters: MatrixClient.client.store.filters,
-              data: response
-            };
-            dispatch(requestSync(SYNC_SUCCESS, payload));
-            dispatch(requestSync(SYNC_INITIAL, payload));
-
-            break;
-
-          case SYNC_STATE_STOPPED:
-            dispatch(requestSync(SYNC_SUCCESS, { isRunning: false}));
-            break;
+        if (opts && opts.syncToken) {
+            MatrixClient.client.store.setSyncToken(opts.syncToken);
+            delete opts.syncToken;
         }
-    });
-    MatrixClient.startClient(opts);
-  };
+
+        // Now we listen for Sync Events and Dispatch some Actions
+        MatrixClient.client.on("sync", (syncState, prevState, data) => {
+            let payload;
+            let response;
+            switch (syncState) {
+                case SYNC_STATE_FAILURE:
+                    dispatch(setError({key: 'sync.start', error: data}));
+                    dispatch(requestSync(SYNC_FAILURE, {isRunning: false}));
+                    break;
+
+                case SYNC_STATE_RUNNING:
+                    response = MatrixClient.parseServerResponse();
+                    payload = {
+                        data: response
+                    };
+                    dispatch(requestSync(SYNC_SUCCESS, {isRunning: true}));
+                    dispatch(requestSync(SYNC_SYNCING, payload));
+                    break;
+
+                case SYNC_INITIAL_SUCCESS:
+                    response = MatrixClient.parseServerResponse();
+                    payload = {
+                        isRunning: true, initialSyncComplete: true,
+                        syncToken: MatrixClient.client.store.syncToken,
+                        filters: MatrixClient.client.store.filters,
+                        data: response
+                    };
+                    dispatch(requestSync(SYNC_SUCCESS, payload));
+                    dispatch(requestSync(SYNC_INITIAL, payload));
+
+                    break;
+
+                case SYNC_STATE_STOPPED:
+                    dispatch(requestSync(SYNC_SUCCESS, {isRunning: false}));
+                    break;
+            }
+        });
+        MatrixClient.startClient(opts);
+    };
 };
 
 /**
@@ -100,10 +100,10 @@ export const start = (opts) => {
  * clean shutdown.
  */
 export const stop = () => {
-  return dispatch => {
-    MatrixClient.stopClient();
-    dispatch(requestSync(SYNC_SUCCESS, { isRunning: false }));
-  };
+    return dispatch => {
+        MatrixClient.stopClient();
+        dispatch(requestSync(SYNC_SUCCESS, {isRunning: false}));
+    };
 };
 
 /**
@@ -115,22 +115,22 @@ export const getSyncState = () => {
         const syncState = MatrixClient.getSyncState();
         let isRunnning;
         switch (syncState) {
-          case SYNC_STATE_RUNNING:
-            isRunning = true;
-            break;
+            case SYNC_STATE_RUNNING:
+                isRunning = true;
+                break;
 
-          case SYNC_STATE_SUCCESS:
-            isRunning = true;
-            break;
+            case SYNC_STATE_SUCCESS:
+                isRunning = true;
+                break;
 
-          case SYNC_STATE_STOPPED:
-            isRunning = false;
-            break;
+            case SYNC_STATE_STOPPED:
+                isRunning = false;
+                break;
 
-          default:
-            isRunning = false;
-            break;
-        };
-        dispatch(requestSync(SYNC_SUCCESS, { isRunning: isRunning}));
+            default:
+                isRunning = false;
+                break;
+        }
+        dispatch(requestSync(SYNC_SUCCESS, {isRunning: isRunning}));
     };
-}
+};

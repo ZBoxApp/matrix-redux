@@ -6,7 +6,7 @@
 "use strict";
 
 import {createStore, applyMiddleware, compose} from "redux";
-import {persistStore, autoRehydrate} from 'redux-persist'
+import {persistStore, autoRehydrate} from "redux-persist";
 import thunk from "redux-thunk";
 
 
@@ -15,8 +15,8 @@ const enhancer = compose(
 );
 
 const enhancerWithRehydrate = compose(
-  autoRehydrate(),
-  applyMiddleware(thunk)
+    autoRehydrate(),
+    applyMiddleware(thunk)
 );
 
 /**
@@ -35,10 +35,10 @@ const enhancerWithRehydrate = compose(
  * @return {Object}                - Store
  */
 export default function createAppStore(combinedReducers, preloadedState, persistOps) {
-    if (persistOps && typeof persistOps === 'object'){
-      const store = createStore(combinedReducers, preloadedState, enhancerWithRehydrate);
-      persistStore(store);
-      return store;
+    if (persistOps && typeof persistOps === 'object') {
+        const store = createStore(combinedReducers, preloadedState, enhancerWithRehydrate);
+        persistStore(store);
+        return store;
     }
     return createStore(combinedReducers, preloadedState, enhancer);
 }
