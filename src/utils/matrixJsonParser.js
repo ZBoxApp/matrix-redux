@@ -23,7 +23,7 @@ const EVENTS = CONSTANTS.events;
  * @param  {Object} json - The original JSON as returned by the Matrix Server
  * @return {Object}      - Formated Json
  */
-export const matrixJsonParser = (json) => {
+export const processJson = (json) => {
 	let newJson = json;
 	newJson.nextBatch = json.next_batch;
 	delete newJson.next_batch;
@@ -37,6 +37,153 @@ export const matrixJsonParser = (json) => {
 	delete newJson.to_device;
 	return newJson;
 };
+
+export const processRooms = (roomsJson, userId) => {
+	let result = [];
+	CONSTANTS.roomTypes.forEach((roomType) => {
+		if (!roomsJson[roomType]) return;
+		const roomsIds = Object.keys(roomsJson[roomType]);
+		roomsIds.forEach((roomId) => {
+			const roomJson = roomsJson[roomType][roomId];
+			const resultJson = processRoom(roomJson, roomId, roomType, userId);
+			result = _.concat(result, resultJson);
+		});
+	});
+
+	return result;
+}
+
+export const processRoom = (roomJson, roomId, roomType, userId) => {
+	const result = [];
+	CONSTANTS.roomEventTypes.forEach((eventType) => {
+		if (!roomJson[eventType] || !Array.isArray(roomJson[eventType].events)) return;
+		roomJson[eventType].events.forEach((roomEvent) => {
+			const resultJson = processRoomEvent(roomEvent, eventType, roomId, roomType, userId);
+			result.push(resultJson);
+		});
+	});
+	return result;
+};
+
+/**
+ * Return a processed Event with all the data we need
+ * @param  {Object} eventJson - The original Event Json
+ * @param  {String} rootEventTypes - a Root Event Type as defined in CONSTANTS.rootEventTypes
+ * @return {Object}
+ */
+export const processEvent = (eventJson, rootEventType) => {
+	if (typeof eventJson !== 'object') {
+    	throw new Error('eventJson is not an Object: ');
+  	}
+	const resultJson = {...eventJson};
+	resultJson.rootType = rootEventType;
+	resultJson.matrixCode = setMatrixCode(resultJson);
+	resultJson.age = setAge(resultJson);
+	resultJson.id = setEventId(resultJson);
+	return resultJson;
+};
+
+/**
+ * Return a processed Event with all the data we need
+ * @param  {Object} eventJson - The original Event Json
+ * @param {String} [userId] - Matrix User Id
+ * @return {Object}
+ */
+export const processAccountDataEvent = (eventJson, userId) => {
+	if (typeof userId !== 'string') {
+  		throw new Error('userId undefined: ' + userId);
+  	}
+	const resultJson = processEvent(eventJson, CONSTANTS.rootEventTypes.account_data);
+	resultJson.ownerType = CONSTANTS.eventOwnerTypes.account_data;
+	resultJson.ownerId = setOwnerId(resultJson, userId);
+	return resultJson;
+};
+
+/**
+ * Return a processed Event with all the data we need
+ * @param  {Object} eventJson - The original Event Json
+ * @return {Object}
+ */
+export const processPresenceEvent = (eventJson) => {
+	const resultJson = processEvent(eventJson, CONSTANTS.rootEventTypes.presence);
+	resultJson.ownerType = CONSTANTS.eventOwnerTypes.presence;
+	resultJson.ownerId = setOwnerId(resultJson);
+	return resultJson;
+};
+
+/**
+ * Return a processed Event with all the data we need
+ * @param  {Object} eventJson - The original Event Json
+ * @param {String} roomEventType
+ * @param {String} roomId
+ * @param {String} userId
+ * @return {Object}
+ */
+export const processRoomEvent = (eventJson, roomEventType, roomId, userId, roomType) => {
+	[roomId, roomEventType, userId, roomType].forEach((variable, index) => {
+		if (typeof variable !== 'string') {
+			throw new Error(index + ' undefined: ');
+		}
+	});
+	let resultJson = processEvent(eventJson, CONSTANTS.rootEventTypes.rooms);
+	roomEventType = (roomEventType === CONSTANTS.roomEventTypes.account_data) ? "room_" + roomEventType : roomEventType;
+	resultJson.ownerType = CONSTANTS.eventOwnerTypes[roomEventType];
+	resultJson.ownerId = setOwnerId(resultJson, userId) || roomId;
+	resultJson.roomType = roomType;
+	resultJson.roomEventType = roomEventType;
+	resultJson = setExtraEventAttrs(resultJson);
+	return resultJson;
+};
+
+const setAge = (eventJson) => {
+	let age = 0;
+	if (eventJson.unsigned && eventJson.unsigned.age) {
+		age = eventJson.unsigned.age;
+	}
+	return age;
+};
+
+const setExtraEventAttrs = (eventJson) => {
+	if (eventJson.matrixCode === CONSTANTS.eventTypes.message) {
+		eventJson.msgType = eventJson.content.msgtype;
+		eventJson.userId = eventJson.sender;
+	}
+	return eventJson;
+};
+
+const setEventId = (eventJson) => {
+	let eventId;
+	if (eventJson.event_id) eventId = eventJson.event_id;
+	if (!eventJson.event_id) eventId = uuid.v4();
+	return eventId;
+};
+
+const setMatrixCode = (eventJson) => {
+	let eventType;
+	eventType = (/^m\./).test(eventJson.type) ? eventJson.type : 'z.nomatrix';
+	return eventType;
+};
+
+const setOwnerId = (eventJson, userId, roomId) => {
+	let ownerId;
+	switch (eventJson.ownerType) {
+        case CONSTANTS.ownerTypes.room:
+        	ownerId = roomId;
+        	break;
+        case CONSTANTS.ownerTypes.user:
+        	ownerId = (typeof userId !== 'undefined') ? userId : eventJson[CONSTANTS.eventOwnerAttribute.user];
+        	break;
+        default:
+        	break;
+	}
+	return ownerId;
+};
+
+const setOwnerType = (eventJson) => {
+
+	CONSTANTS.eventOwnerTypes[rootEventType];
+};
+
 
 /**
  * Convert the original JSON for room from 
