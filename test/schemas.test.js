@@ -256,7 +256,7 @@ describe('Schema Tests', function () {
 		const roomId = _.sample(Object.keys(apiFixture.rooms.join));
 		const room = apiFixture.rooms.join[roomId];
 		let resultEvents = MatrixJsonParser.processRoom(room, roomId, 'join', testUserId);
-		const filtered = resultEvents.filter((event) => { return event.roomEventType === 'unreadNotification' });
+		const filtered = resultEvents.filter((event) => { return (event.roomEventType === 'state' && event.content.unread_notification) });
 		expect(filtered.length).to.be.above(0);
 		const event = _.sample(filtered);
 		expect(event.ownerType).to.be.equal('room');

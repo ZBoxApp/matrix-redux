@@ -65,15 +65,18 @@ describe('Sync Actions', function () {
     it('4. Sync should update the state', function(done) {
         this.timeout(20000);
         MatrixClient.client.on("sync", function(syncState, prevState, data) {
-            state = store.getState();
             const syncStatus = MatrixClient.getSyncState();
             if (state.sync && state.sync.initialSyncComplete && syncStatus) {
+                state = store.getState();
+                // console.log(state);
                 MatrixClient.client.stopClient();
                 ['room', 'user', 'event'].forEach(function(resource) {
                     const reducer = resource + 's';
-                    const randomResource = randomElement(state[reducer].byIds);
+                    const randomId = _.sample(state[reducer].byIds)
+                    const randomResource = state[reducer].byIds[randomId];
                     let validationResult = validateSchema(randomResource, resource);
                     if (validationResult.errors.length > 0) {
+                        console.log(randomResource);
                         console.log(validationResult.errors);
                         console.log(validationResult.instance);
                     }

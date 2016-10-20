@@ -5,6 +5,7 @@ import _ from "lodash";
 
 import * as ActionTypes from '../actions/rooms';
 import * as SyncTypes from '../actions/sync';
+import { calculateState } from '../middleware'
 
 /**
  * @type {Object} items
@@ -28,6 +29,8 @@ const initialState = {
 
 const Rooms = function (state = initialState, action) {
     let newState = null;
+    let tmpState;
+    let itemId;
     const payload = action.payload;
     switch (action.type) {
         case ActionTypes.ROOMS_REQUEST:
@@ -47,17 +50,18 @@ const Rooms = function (state = initialState, action) {
             newState.isLoading = false;
             return newState;
             break;
-        case SyncTypes.SYNC_INITIAL:
-            const rooms = action.payload.data.rooms;
-            newState = {...state, ['byIds']: rooms};
-            newState.isLoading = false;
-            return newState;
-            break;
         case SyncTypes.SYNC_SYNCING:
             const resources = action.payload.data.rooms;
             const newIds = _.merge({}, state.byIds, resources);
             newState = {...state, ['byIds']: newIds};
             newState.isLoading = false;
+            return newState;
+            break;
+        case "STATE_EVENT":
+            itemId = action.payload.ownerId;
+            tmpState = calculateState("room", state.byIds[itemId], action.payload);
+            newState = {...state};
+            newState.byIds[itemId] = tmpState;
             return newState;
             break;
         default:

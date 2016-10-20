@@ -58,6 +58,7 @@ export const start = (opts) => {
       MatrixClient.client.on("sync", (syncState, prevState, data) => {
         let payload;
         let response;
+        let newEvents;
         switch (syncState) {
           case SYNC_STATE_FAILURE:
             dispatch(setError({key: 'sync.start', error: data}));
@@ -65,21 +66,21 @@ export const start = (opts) => {
             break;
 
           case SYNC_STATE_RUNNING:
-            response = MatrixClient.parseServerResponse();
-            payload = {
-              data: response
-            };
             dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
-            dispatch(requestSync(SYNC_SYNCING, payload));
+            newEvents = MatrixClient.newEvents();
+            newEvents.events.forEach((event) => {
+              dispatchRouter(event, dispatch);
+            });
             break;
-
           case SYNC_INITIAL_SUCCESS:
-            response = MatrixClient.parseServerResponse();
+            newEvents = MatrixClient.newEvents();
+            newEvents.events.forEach((event) => {
+              dispatchRouter(event, dispatch);
+            });
             payload = {
               isRunning: true, initialSyncComplete: true,
               syncToken: MatrixClient.client.store.syncToken,
               filters: MatrixClient.client.store.filters,
-              data: response
             };
             dispatch(requestSync(SYNC_SUCCESS, payload));
             dispatch(requestSync(SYNC_INITIAL, payload));
@@ -104,6 +105,38 @@ export const stop = () => {
     MatrixClient.stopClient();
     dispatch(requestSync(SYNC_SUCCESS, { isRunning: false }));
   };
+};
+
+
+const dispatchAction = {
+  "rooms": (event, dispatch) => {
+    if (event.roomEventType === 'timeline')
+      return roomTimelineEvent(event, dispatch);
+    if (event.roomEventType === 'state')
+      return roomStateEvent(event, dispatch);
+  }
+}
+
+const dispatchRouter = (event, dispatch) => {
+  const rootType = event.rootType;
+  const distpatcher = dispatchAction[rootType];
+  if(!distpatcher) {
+    // console.error(rootType + " aun no implementado");
+    return;
+  } else {
+    distpatcher(event, dispatch);
+  }
+};
+
+
+const roomTimelineEvent = (event, dispatch) => {
+  const action = { type: "TIME_LINE_EVENT", payload: event };
+  dispatch(action);
+};
+
+const roomStateEvent = (event, dispatch) => {
+  const action = { type: "STATE_EVENT", payload: event };
+  dispatch(action);
 };
 
 /**

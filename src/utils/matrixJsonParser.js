@@ -192,9 +192,13 @@ export const processRoomUnreadNotifications = (roomJson, roomId, roomType, userI
 	const homeServer = roomId.split(/:/)[1];
 	if (!roomJson.unread_notifications) return false;
 	unreadNotificationEvent = {
-		"roomEventType": "unreadNotification",
-		"highlightCount": roomJson.unread_notifications.highlight_count,
-		"notificationCount": roomJson.unread_notifications.notification_count,
+		"roomEventType": "state",
+		content: {
+			"unread_notification": {
+				"highlightCount": roomJson.unread_notifications.highlight_count,
+				"notificationCount": roomJson.unread_notifications.notification_count,
+			}
+		},
 		"ownerType": "room",
 		"ownerId": roomId,
 		"id": buildEventId(homeServer),
