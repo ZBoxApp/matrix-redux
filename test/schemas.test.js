@@ -49,7 +49,7 @@ const randomEventByType = (eventRootType, roomEventType, roomType, roomId, matri
 			event = false;
 		}
 	}
-	if (typeof event !== 'undefined') {
+	if (event) {
 		if (typeof matrixCode === 'undefined') return event;
 		if (event.type === matrixCode) return event;
 	} 
@@ -73,9 +73,10 @@ describe('Master functions', function() {
 	});
 
 	it('1. Should take an event an return a processed one', function() {
-		for (var i = 0; i <= 10; i++) {
+		for (var i = 0; i <= 9; i++) {
 			["rooms", "account_data", "presence"].forEach((rootEventType) => {
 				testEvent = randomEventByType(rootEventType);
+				if(!testEvent) return;
 				const resultEvent = MatrixJsonParser.processEvent(testEvent, rootEventType);
 				expect(Object.keys(CONSTANTS.rootEventTypes)).to.include(resultEvent.rootType);
 				expect(Object.keys(CONSTANTS.eventCodes)).to.include(resultEvent.matrixCode);
@@ -198,7 +199,7 @@ describe('Schema Tests', function () {
 		room.ephemeral.events = [];
 		let resultEvents = MatrixJsonParser.processRoom(room, roomId, 'join', testUserId);
 		expect(Array.isArray(resultEvents)).to.be.true;
-		expect(resultEvents.length).to.be.below(1);		
+		expect(resultEvents.length).to.be.below(2);		
 	});
 
 	it('4. processRooms should return and Array of Events from Room', function(){
@@ -218,6 +219,26 @@ describe('Schema Tests', function () {
 	});
 
 	it('6. each event of processRooms should have and unreadNotification Event', function(){
+		const roomId = _.sample(Object.keys(apiFixture.rooms.join));
+		const room = apiFixture.rooms.join[roomId];
+		let resultEvents = MatrixJsonParser.processRoom(room, roomId, 'join', testUserId);
+		const filtered = resultEvents.filter((event) => { return event.roomEventType === 'unreadNotification' });
+		// console.log(resultEvents)
+		expect(filtered.length).to.be.above(0);
+		const event = _.sample(filtered);
+		expect(event.ownerType).to.be.equal('room');
+		expect(event.id).to.match(/^\$[0-9]{10}[0-9a-zA-Z]{5}:.*/);
+	});
+
+	it('7. processAccountDataEvents should return an array of events', function() {
+		expect(false).to.be.true;
+	});
+
+	it('8. processPresenceEvents should return an array of events', function() {
+		expect(false).to.be.true;
+	});
+
+	it('9. processToDeviceEvents should return an array of events', function() {
 		expect(false).to.be.true;
 	});
 

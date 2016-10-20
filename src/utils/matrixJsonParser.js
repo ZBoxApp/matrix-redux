@@ -54,6 +54,42 @@ export const processRooms = (roomsJson, userId) => {
 }
 
 export const processRoom = (roomJson, roomId, roomType, userId) => {
+	let result = [];
+	const processedRoomEvents = processRoomEvents(roomJson, roomId, roomType, userId);
+	const unreadNotificationEvent = processRoomUnreadNotifications(roomJson, roomId, roomType, userId);
+	if (unreadNotificationEvent) result.push(unreadNotificationEvent);
+	result = _.concat(result, processedRoomEvents);
+	return result;
+};
+
+
+export const processRoomUnreadNotifications = (roomJson, roomId, roomType, userId) => {
+	let unreadNotificationEvent;
+	const homeServer = roomId.split(/:/)[1];
+	if (!roomJson.unread_notifications) return false;
+	unreadNotificationEvent = {
+		"roomEventType": "unreadNotification",
+		"highlightCount": roomJson.unread_notifications.highlight_count,
+		"notificationCount": roomJson.unread_notifications.notification_count,
+		"ownerType": "room",
+		"ownerId": roomId,
+		"id": buildEventId(homeServer)
+	};
+	return unreadNotificationEvent;
+};
+
+const buildEventId = (homeServer) => {
+	const timeStamp = new Date(2010, 6, 26).getTime() / 1000;
+	const chars = randomString(5);
+	const id = "$" + timeStamp + chars + ":" + homeServer;
+	return id;
+};
+
+const randomString = (length) => {
+    return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+};
+
+export const processRoomEvents = (roomJson, roomId, roomType, userId) => {
 	const result = [];
 	CONSTANTS.roomEventTypes.forEach((eventType) => {
 		if (!roomJson[eventType] || !Array.isArray(roomJson[eventType].events)) return;
@@ -62,6 +98,7 @@ export const processRoom = (roomJson, roomId, roomType, userId) => {
 			result.push(resultJson);
 		});
 	});
+
 	return result;
 };
 
@@ -73,6 +110,7 @@ export const processRoom = (roomJson, roomId, roomType, userId) => {
  */
 export const processEvent = (eventJson, rootEventType) => {
 	if (typeof eventJson !== 'object') {
+		console.error(eventJson);
     	throw new Error('eventJson is not an Object: ');
   	}
 	const resultJson = {...eventJson};
