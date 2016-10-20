@@ -79,7 +79,11 @@
                     "type": "integer"
                 }
             }
+        },
+        "currentUserConfig": {
+            "description": "The user preferences for this Room",
+            "type": "object"
         }
     },
-    "required": [ "id", "timeline" ]
+    "required": [ "id", "timeline", "currentUserConfig" ]
 }

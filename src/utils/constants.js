@@ -72,7 +72,8 @@ export const CONSTANTS = {
         "m.location": "m.location",
         "m.notice": "m.notice",
         "m.video": "m.video",
-        "m.text": "m.text"
+        "m.text": "m.text",
+        "m.room.redaction": "m.room.redaction"
     },
     ownerTypes: {
         "user": "user",
