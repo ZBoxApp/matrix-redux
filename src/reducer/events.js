@@ -2,6 +2,7 @@
 import _ from "lodash";
 
 import * as SyncActionTypes from '../actions/sync';
+import { calculateState } from '../middleware'
 
 const initialState = {
     isLoading: false,
@@ -9,12 +10,16 @@ const initialState = {
 };
 
 const Events = function (state = initialState, action) {
-    let newState = null;
+    let newState;
+    let tmpState;
+    let itemId;
     switch (action.type) {
-        case SyncActionTypes.SYNC_INITIAL:
-            const events = action.payload.data.events;
-            newState = {...state, ['byIds']: events};
-            newState.isLoading = false;
+        case "STATE_EVENT":
+            itemId = action.payload.ownerId;
+            if(!itemId) console.log(action.payload)
+            tmpState = calculateState("event", state.byIds[itemId], action.payload);
+            newState = {...state};
+            newState.byIds[itemId] = tmpState;
             return newState;
             break;
         case SyncActionTypes.SYNC_SYNCING:
