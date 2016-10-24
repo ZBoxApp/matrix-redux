@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import * as ActionTypes from '../actions/rooms';
 import * as SyncTypes from '../actions/sync';
-import { calculateState } from '../middleware'
+import { calculateState } from '../middleware/api'
 
 /**
  * @type {Object} items

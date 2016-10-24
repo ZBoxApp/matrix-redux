@@ -35,6 +35,26 @@
             "description": "The room id of the event",
             "type": "string",
             "pattern": "^![a-zA-Z].*:.*"
+        },
+        "readedBy": {
+            "description": "Who has readed the event",
+            "type": "array"
+        },
+        "redacted": {
+            "description": "If the events has been redacted",
+            "type": "boolean"
+        },
+        "redactedBy": {
+            "description": "Id of the user that redacted the event",
+            "type": "string"  
+        },
+        "redactedEvent": {
+            "description": "Id of the redaction event",
+            "type": "string"  
+        },
+        "targetEventId": {
+            "description": "Id of the affected event",
+            "type": "string"    
         }
     },
     "required": [ "roomId", "userId", "age", "type", "id" ]

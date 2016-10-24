@@ -90,6 +90,10 @@ describe('Master functions', function() {
 		}
 	});
 
+	if('2. it should not create the resource if it already exists', function() {
+		expect(false, "Create an existing user should do nothing").to.be.true;
+	});
+
 	it('2. processAccountDataEvent should have an ownerType and an ownerId', function() {
 		testEvent = randomEventByType("account_data");
 		const resultEvent = MatrixJsonParser.processAccountDataEvent(testEvent, testUserId);
@@ -134,7 +138,7 @@ describe('Master functions', function() {
 			const eventType = (roomType === 'invite') ? 'invite_state' : _.sample(["ephemeral", "state", "timeline", "account_data"]);
 			testEvent = randomEventByType("rooms", eventType, roomType, roomId);
 			if(!testEvent) return;
-			resultEvent = MatrixJsonParser.processRoomEvent(testEvent, eventType, roomId, testUserId, roomType);
+			resultEvent = MatrixJsonParser.processRoomEvent(testEvent, eventType, roomId, roomType, testUserId);
 			expect(resultEvent.roomType, "roomType").to.match(/(join|leave|invite|ban)/);
 			expect(resultEvent.roomEventType, "roomEventType").to.match(/(timeline|state|account_data|ephemeral)/);
 		}
@@ -168,26 +172,30 @@ describe('Master functions', function() {
 		const roomId = "!FLzLGzbgSygIxVWBEo:zboxapp.dev";
 		const timelineEvents = jsonFixture.rooms.join[roomId].timeline.events;
 		testEvent = timelineEvents.filter((event) => {return event.event_id === '$14757016681139OxWId:zboxapp.dev'})[0];
-		const resultEvent = MatrixJsonParser.processRoomEvent(testEvent, "timeline", roomId, testUserId, "join");
+		const resultEvent = MatrixJsonParser.processRoomEvent(testEvent, "timeline", roomId, "join", testUserId);
 		expect(Object.keys(CONSTANTS.messageTypes)).to.include(resultEvent.msgType);
 		expect(resultEvent.userId).to.match(ownerTypeRgxp["account_data"]);
 		expect(resultEvent.id).to.equal(resultEvent.event_id);
 		expect(resultEvent.ownerId).to.equal(roomId);
 	});	
 
-	// it('8. should parse Invite Rooms', function() {
-	// 	expect(false).to.be.true;
-	// });
-	// 
-	// it('9. should parse Leave Rooms', function() {
-	// 	expect(false).to.be.true;
-	// });
-	// 
-	// it('10. should parse ban Rooms', function() {
-	// 	expect(false).to.be.true;
-	// });
-	// 
+	it('10. Correct process of ephemeral events', function() {
+		const roomId = "!FLzLGzbgSygIxVWBEo:zboxapp.dev";
+		const events = jsonFixture.rooms.join[roomId].ephemeral.events;
+		events.forEach((testEvent) => {
+			const resultEvent = MatrixJsonParser.processRoomEvent(testEvent, "ephemeral", roomId, "join", testUserId);
+			
+			expect(resultEvent.roomType, "roomType").to.match(/(join|leave|invite|ban)/);
+			expect(resultEvent.roomEventType, "roomEventType").to.match(/(timeline|state|account_data|ephemeral)/);
+			expect(resultEvent.rootType).to.equal("rooms");
+			expect(resultEvent.id).to.match(/^\$.*/);
+			expect(resultEvent.ownerId).to.equal(roomId);
+		})
+	});
 
+	it('11. accountData Events should have a currentUserId attr', function() {
+		expect(false).to.be.true;
+	});
 
 	it('14. should return a empty object if timeline has no events', function() {
 		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
@@ -237,9 +245,12 @@ describe('Schema Tests', function () {
 		const rooms = apiFixture.rooms;
 		const resultEvents = MatrixJsonParser.processRoomsEvents(rooms, testUserId);
 		expect(Array.isArray(resultEvents)).to.be.true;
-		const randomEvent = randomElement(resultEvents);
-		expect(randomEvent.ownerType).to.be.equal(CONSTANTS.eventOwnerTypes.rooms);
-		expect(randomEvent.id).to.not.be.undefined;
+		for (var i = 0; i <= 200; i++) {
+			const randomEvent = randomElement(resultEvents);
+			expect(randomEvent.ownerType).to.be.equal(CONSTANTS.eventOwnerTypes.rooms);
+			expect(randomEvent.ownerId).to.not.match(/^@/);
+			expect(randomEvent.id).to.not.be.undefined;
+		}
 	});
 
 	it('5. processRoomsEvents should return an empty Array of Events from Room', function(){
@@ -261,6 +272,7 @@ describe('Schema Tests', function () {
 		const event = _.sample(filtered);
 		expect(event.ownerType).to.be.equal('room');
 		expect(event.rootType).to.equal('rooms');
+		expect(event.roomType).to.equal('join');
 		expect(event.id).to.match(/^\$[0-9]{10}[0-9a-zA-Z]{5}:.*/);
 	});
 
@@ -332,172 +344,5 @@ describe('Schema Tests', function () {
 	});
 });
 
-
-
-// 	it('2. should reformat rooms object with rooms ids as firsts keys', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		expect(typeof matrixJson.rooms).to.equal("object");
-// 		expect(Array.isArray(matrixJson.rooms)).to.be.false;
-// 		const ids = Object.keys(matrixJson.rooms);
-// 		expect(_.sample(ids)).to.match(/^![a-zA-Z].*:zboxapp.dev$/);
-// 	});
-
-
-// 	it('3. should return events object with eventId as first key', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		expect(typeof matrixJson.events).to.equal("object");
-
-// 		const ids = Object.keys(matrixJson.events);
-// 		expect(_.sample(ids)).to.match(/^\$[0-9].*[a-zA-Z]{5}:.*/);
-// 	});
-
-// 	it('4. should return the accountData object', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		expect(typeof matrixJson.accountData).to.equal("object");
-// 	});
-
-// 	it('5. should return the toDevice object', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		expect(typeof matrixJson.toDevice).to.equal("object");
-// 	});
-
-// 	it('6. should return the presence object with events as an object with keys of userIds', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		expect(typeof matrixJson.presence.events).to.equal("object");
-// 		const ids = Object.keys(matrixJson.presence.events);
-// 		const randomId = randomElement(ids);
-// 		expect(randomId).to.equal(matrixJson.presence.events[randomId].sender);
-// 	});
-
-// 	it('7. should return user object with users ids as firsts keys', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		expect(typeof matrixJson.users).to.equal("object");
-// 		expect(Array.isArray(matrixJson.users)).to.be.false;
-// 		const randomUserId = randomElement(Object.keys(matrixJson.users));
-// 		const randomUser = matrixJson.users[randomUserId];
-// 		expect(randomUser.id).to.match(/^@[_a-zA-Z].*:.*/);
-// 	});
-
-// });
-
-// describe('Room Tests', function() {
-
-// 	beforeEach(function() {
-// 		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
-// 	});
-
-// 	it('1. Room should have the expected attributes', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = randomElement(matrixJson.rooms);
-// 		expect(randomRoom.id).to.not.be.undefined;
-// 		expect(randomRoom.membershipState).to.match(/(join|leave|invite)/);
-// 	});
-
-// 	it('2. Room should have info attributes added', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = matrixJson.rooms[machosRoomId];
-// 		expect(randomRoom.name).to.equal('Machos');
-// 		expect(randomRoom.topic).to.equal('Temas para solo Hombres');
-// 		expect(randomRoom.avatarUrl).to.equal('mxc://zboxapp.com/INgKbqNGUGDxhJwIYxXUfnhZ');
-// 		expect(randomRoom.unreadNotifications.highlightCount).to.be.above(-1);
-// 		expect(randomRoom.unreadNotifications.notificationCount).to.be.above(-1);
-// 	});
-
-// 	it('3. Room.members should be an Object with membershipState as keys', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = matrixJson.rooms[machosRoomId];
-// 		const randomMembership = randomElement(Object.keys(randomRoom.members));
-// 		expect(randomMembership).to.match(/(join|leave|invite|ban)/);
-// 	});
-
-// 	it('4. Room.members join be an array with user ids', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = matrixJson.rooms[machosRoomId];
-// 		const randomMember = randomElement(randomRoom.members.join);
-// 		expect(randomMember).to.match(/^@[a-zA-Z].*:zboxapp.dev$/);
-// 	});
-
-// 	it('5. Room.timeline.events should be an array with Events Ids', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = randomElement(matrixJson.rooms);
-// 		expect(Array.isArray(randomRoom.timeline.events)).to.be.true;
-// 		const randomEvent = randomElement(randomRoom.timeline.events);
-// 		if (!matrixJson.events[randomEvent].roomId) {
-// 			console.error(randomRoom);
-// 		}
-// 		expect(matrixJson.events[randomEvent].roomId).to.equal(randomRoom.id);
-// 	});
-
-// 	it('6. Room.timeline.events should sorted by age', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = randomElement(matrixJson.rooms);
-// 		const events = randomRoom.timeline.events;
-// 		if (randomRoom.membershipState !== 'invite')
-// 			expect(matrixJson.events[events[0]].age).to.be.above(matrixJson.events[events[4]].age);
-// 	});
-
-// 	it('7. room should validate against the schema', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomRoom = matrixJson.rooms[machosRoomId];
-// 		const validationResult = validateSchema(randomRoom, "room");
-// 		expect(validationResult.errors).to.be.empty;
-// 	});
-
-// });
-
-// describe('Event Tests', function() {
-
-// 	beforeEach(function() {
-// 		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
-// 	});
-
-// 	it('1. Event should have the expected attributes', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomEvent = randomElement(matrixJson.events);
-// 		expect(randomEvent.id).to.match(/^\$[0-9].*[a-zA-Z]{5}:.*/);
-// 		expect(randomEvent.userId).to.match(/^@[_a-zA-Z].*:.*/);
-// 	});
-
-// 	it('2. event should validate against the schema', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomEvent = randomElement(matrixJson.events);
-// 		const validationResult = validateSchema(randomEvent, "event");
-// 		expect(validationResult.errors).to.be.empty;
-// 	});
-// });
-
-// describe('Users Tests', function() {
-
-// 	beforeEach(function() {
-// 		apiFixture = JSON.parse(JSON.stringify(jsonFixture));
-// 	});
-
-// 	it('1. User should have the expected attributes', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomUser = matrixJson.users["@pbruna:zboxapp.dev"];
-// 		expect(randomUser.id).to.match(/^@[a-zA-Z].*:.*/);
-// 		expect(randomUser.avatarUrl).to.match(/^mxc:\/\/.*/);
-// 		expect(randomUser.name).to.exists;
-// 		expect(randomUser.displayName).to.exists;
-// 	});
-
-// 	it('2. User should have presence information', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomUser = matrixJson.users["@pbruna:zboxapp.dev"];		
-// 		expect(randomUser.presence).to.match(/(online|offline|unavailable)/);
-// 		expect(randomUser.lastActiveAgo).to.be.above(1);
-// 		expect(randomUser.currentlyActive).to.be.true;
-// 	});
-
-// 	it('3. User should validate against the schema', function() {
-// 		const matrixJson = matrixJsonParser(apiFixture);
-// 		const randomUser = randomElement(matrixJson.users);
-// 		const validationResult = validateSchema(randomUser, "user");
-// 		if (validationResult.errors.length > 0) {
-// 			console.error(randomUser);
-// 			console.error(validationResult.errors);
-// 		}
-// 		expect(validationResult.errors).to.be.empty;
-// 	});
 
 

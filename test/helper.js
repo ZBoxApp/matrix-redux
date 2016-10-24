@@ -25,7 +25,7 @@ export const createStoreHelper = function(preloadedState, persistOps) {
   return createStore(combinedReducers, preloadedState, persistOps)
 }
 
-const store = createStoreHelper({user: null, sync: null});
+const store = createStoreHelper({users: null, sync: null});
 
 /**
  * Just a function to clean some values of the

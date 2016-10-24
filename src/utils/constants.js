@@ -35,7 +35,8 @@ export const CONSTANTS = {
         "m.room.topic": "m.room.topic",
         "m.tag": "m.tag",
         "m.typing": "m.typing",
-        "z.nomatrix": "z.nomatrix"
+        "z.nomatrix": "z.nomatrix",
+        'z.unread_notification': 'z.unread_notification'
     },
     eventTypes: {
         "message": "m.room.message"
@@ -49,6 +50,7 @@ export const CONSTANTS = {
         'ROOM_MEMBER_BAN': 'ban',
     	'ROOM_TOPIC': 'm.room.topic',
     	'ROOM_AVATAR': 'm.room.avatar',
+        'ROOM_UNREAD_NOTIFICATION': 'z.unread_notification'
     },
     eventOwnerTypes: {
         "account_data": "user",
@@ -78,5 +80,6 @@ export const CONSTANTS = {
     ownerTypes: {
         "user": "user",
         "room": "room"
-    }
+    },
+    userExtraEvents: { 'm.room.member': 'm.room.member' }
 };

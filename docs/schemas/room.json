@@ -4,9 +4,48 @@
     "description": "The room Object",
     "type": "object",
     "properties": {
+        "aliases": {
+            "description": "The room address aliases",
+            "type": "array"
+        },
+        "canonical_alias": {
+            "description": "The room principal alias",
+            "type": "string"
+        },
+        "creatorId": {
+            "description": "The id of the user who created the room",
+            "type": "string",
+            "pattern": "^@.*:"
+        },
+        "events": {
+            "description": "Array of events ids for this room",
+            "type": "array",
+        },
+        "guestAccess": {
+            "description": "If the rooms has guest access enabled",
+            "type": "boolean"
+        },
+        "historyVisibilty": {
+            "description": "The ACL of the room history",
+            "type": "string",
+            "pattern": "(invited|joined|shared|world_readable)"
+        },
+        "joinRule": {
+            "description": "The type of rules used for users wishing to join this room",
+            "type": "string",
+            "pattern": "(public|knock|invite|private)"
+        },
         "id": {
             "description": "The room id",
             "type": "string"
+        },
+        "isLoading": {
+            "description": "The loaded status",
+            "type": "boolean"
+        },
+        "messages": {
+            "description": "Array of messages Ids events",
+            "type": "array"
         },
         "membershipState": {
             "description": "The current user membership state",
@@ -42,6 +81,11 @@
                 },
                 "invite": {
                     "description": "Array of invited users ids, who are not joined the room",
+                    "type": "array",
+                    "items": { "type": "string", "pattern": "^@.*:" }
+                },
+                "banned": {
+                    "description": "Array of banned users ids, who are not joined the room",
                     "type": "array",
                     "items": { "type": "string", "pattern": "^@.*:" }
                 }
@@ -80,10 +124,10 @@
                 }
             }
         },
-        "currentUserConfig": {
+        "currentUserPreferences": {
             "description": "The user preferences for this Room",
             "type": "object"
         }
     },
-    "required": [ "id", "timeline", "currentUserConfig" ]
+    "required": [ "id", "timeline", "currentUserPreferences", "membershipState" ]
 }

@@ -2,7 +2,7 @@
 import _ from "lodash";
 
 import * as SyncActionTypes from '../actions/sync';
-import { calculateState } from '../middleware'
+import { calculateState } from '../middleware/api'
 
 const initialState = {
     isLoading: false,

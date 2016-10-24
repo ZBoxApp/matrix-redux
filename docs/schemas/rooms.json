@@ -8,14 +8,27 @@
             "description": "Status of the server requests",
             "type": "boolean"
         },
-        "currentRoomId": {
-            "description": "The ID of the current room",
-            "type": "string"
+        "banned": {
+            "description": "The banned from rooms",
+            "type": "array"
+        },
+        "joined": {
+            "description": "The joined rooms",
+            "type": "array"
+        },
+        "invited": {
+            "description": "The invited rooms",
+            "type": "array"
+        },
+        "leaved": {
+            "description": "The leaved rooms",
+            "type": "array"
         },
         "byIds": {
             "description": "Object with all the rooms",
             "type": "object",
             "oneOf": [{ "$ref": "file:./room.json" }]
         }
-    }
+    },
+    "required": [ "isLoading"]
 }

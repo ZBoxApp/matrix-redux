@@ -7,7 +7,6 @@
 
 import { camelizeKeys } from 'humps';
 import { CONSTANTS } from '../utils/constants';
-import uuid from 'uuid';
 import _ from 'lodash';
 
 /**
@@ -71,6 +70,7 @@ export const processAccountDataEvent = (eventJson, userId) => {
 	const resultJson = processEvent(eventJson, CONSTANTS.rootEventTypes.account_data);
 	resultJson.ownerType = CONSTANTS.eventOwnerTypes.account_data;
 	resultJson.ownerId = setOwnerId(resultJson, userId);
+	resultJson.id = setEventId(resultJson);
 	return resultJson;
 };
 
@@ -159,7 +159,7 @@ export const processRoomEvents = (roomJson, roomId, roomType, userId) => {
  * @param {String} userId
  * @return {Object}
  */
-export const processRoomEvent = (eventJson, roomEventType, roomId, userId, roomType) => {
+export const processRoomEvent = (eventJson, roomEventType, roomId, roomType, userId) => {
 	if (typeof eventJson !== 'object'){
 		throw new Error('roomEvent Json undefined');
 	}
@@ -169,12 +169,12 @@ export const processRoomEvent = (eventJson, roomEventType, roomId, userId, roomT
 		}
 	});
 	let resultJson = processEvent(eventJson, CONSTANTS.rootEventTypes.rooms);
-	roomEventType = (roomEventType === CONSTANTS.roomEventTypes.account_data) ? "room_" + roomEventType : roomEventType;
 	resultJson.ownerType = "room";
 	resultJson.ownerId = roomId;
 	resultJson.roomType = roomType;
 	resultJson.roomEventType = roomEventType;
 	resultJson = setExtraEventAttrs(resultJson);
+	resultJson.id = setEventId(resultJson);
 	return resultJson;
 };
 
@@ -203,8 +203,10 @@ export const processRoomUnreadNotifications = (roomJson, roomId, roomType, userI
 		"ownerId": roomId,
 		"id": buildEventId(homeServer),
 		"rootType": "rooms",
-		"matrixCode": "z.nomatrix",
-		"age": 0
+		"matrixCode": "z.unread_notification",
+		"age": 0,
+		"type": "z.unread_notification",
+		"roomType": roomType
 	};
 	return unreadNotificationEvent;
 };
@@ -236,6 +238,7 @@ export const processEvent = (eventJson, rootEventType) => {
 	resultJson.matrixCode = setMatrixCode(resultJson);
 	resultJson.age = setAge(resultJson);
 	resultJson.id = setEventId(resultJson);
+	if (eventJson.sender) resultJson.userId = eventJson.sender;
 	return resultJson;
 };
 
@@ -281,7 +284,11 @@ const setMessageAttributes = (eventJson) => {
 const setEventId = (eventJson) => {
 	let eventId;
 	if (eventJson.event_id) eventId = eventJson.event_id;
-	if (!eventJson.event_id) eventId = uuid.v4();
+	if (!eventJson.event_id) {
+		const timeStamp = new Date() * 1;
+		const text = randomString(5);
+		eventId = "$" + timeStamp + text;
+	}
 	return eventId;
 };
 
@@ -386,25 +393,6 @@ const fixPresenceJson = (presenceJson) => {
 	return presenceJson;
 };
 
-/**
- * Adds the membershipState and roomId attributes to a room json
- * @param  {Object} room            - Room JSON
- * @param  {String} membershipState - The state
- * @param  {String} roomId          - The roomId
- * @return {Object}                 - The updated Room JSON
- */
-const addAttrsToRoom = (room, membershipState, roomId) => {
-	room.id = roomId;
-	room.membershipState = membershipState;
-	room.name = setRoomName(room);
-	room.topic = setRoomTopic(room);
-	room = setRoomAvatarUrl(room);
-	room.members = setRoomMembers(room);
-	room.unreadNotifications = camelizeKeys(room.unread_notifications);
-	delete(room.unread_notifications);
-	if (typeof room.state === 'object') room.state.id = roomId;
-	return room;
-};
 
 
 const extractTimelineEvents = (rooms) => {
@@ -468,15 +456,7 @@ const setUserPresence = (user, presenceState) => {
 	return user;
 };
 
-export const setRoomAttr = (room, attrName, defaultValue) => {
-	defaultValue = defaultValue || '';
-	const eventName = EVENTS['ROOM_' + attrName.toUpperCase()];
-	if (!room.state || !room.state.events) return defaultValue;
-	const roomEvents = selectEventsByType(room.state.events, eventName);
-	if (roomEvents.length < 1) return defaultValue;
-	const event = lastEvent(roomEvents);
-	return event.content[attrName];
-};
+
 
 
 const setRoomMembers = (room) => {
@@ -502,49 +482,9 @@ const setRoomMembers = (room) => {
 	return memberships;
 };
 
-/**
- * Set the name for the Room
- * if no name, then returns the Id
- * @param  {Object} room - the room Object
- * @return {String}           - The Room Name
- */
-const setRoomName = (room) => {
-	return setRoomAttr(room, "name", room.id);
-};
 
-const setRoomTopic = (room) => {
-	return setRoomAttr(room, "topic");
-};
 
-// TODO: Make it work withj setRoomAttr
-const setRoomAvatarUrl = (room) => {
-	if (!room.state || !room.state.events) return room;
-	const roomEvents = selectEventsByType(room.state.events, EVENTS.ROOM_AVATAR);
-	if (roomEvents.length < 1) return room;
-	const event = lastEvent(roomEvents);
-	room.avatarUrl = event.content.url;
-	return room;
-};
 
-const lastEvent = (events) => {
-	events.sort((a,b) => {
-		return a.unsigned.age - b.unsigned.age;
-	});
-	return events[0];
-};
-
-/**
- * Returns an array of events by type
- * @param  {Array} events
- * @param  {String} type
- * @return {Array}        
- */
-const selectEventsByType = (events, type) => {
-	const selectedEvents = events.filter((event) => { 
-		return event.type === type; 
-	});
-	return selectedEvents;
-};
 
 
 
