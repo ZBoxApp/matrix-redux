@@ -7,7 +7,7 @@
 
 import matrixSDK from "matrix-js-sdk";
 import {Logger} from "./utils";
-import * as MatrixJsonParser from "./matrixJsonParser";
+import * as MatrixJsonParser from "./matrix_json_parser";
 import SyncApi from "matrix-js-sdk";
 import _ from "lodash";
 

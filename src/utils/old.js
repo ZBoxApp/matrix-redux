@@ -1,15 +1,4 @@
 /**
-* Copyright 2015-present, ZBox Spa.
-* All rights reserved.
-**/
-
-'use strict';
-
-import { camelizeKeys } from 'humps';
-import { CONSTANTS } from '../utils/constants';
-import _ from 'lodash';
-
-/**
  * This are the room memberships returnerd by the server
  * @type {Array}
  */
