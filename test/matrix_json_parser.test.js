@@ -143,18 +143,15 @@ describe('Especific functions', function() {
 			const result = _.sample(MatrixJsonParser.processEvent(testEvent, testUserId, homeServer));
 			expect(result.currentUserId).to.equal(testUserId);
 			expect(result.homeServer).to.equal(homeServer);
-			// expect(result.roomType, "roomType").to.equal(roomEvent.roomType);
-			// expect(result.roomId, "roomId").to.equal(roomEvent.roomId);
-			// expect(result.ownerId, "ownerId").to.match(rgxp.ownerIdByReducer[result.reducer]);
 		}
 	});
 
-	it('6. processRoomEvent should set roomType and roomId', function() {
+	it('6. setRoomEventMetadata should set roomType and roomId', function() {
 		for (var i = 0; i <= 500; i++) {
 			const roomEvent = randomRoomEvent();
 			if (!roomEvent || !roomEvent.event) {continue;}
 			if (!EVENTS[roomEvent.event.type]) {continue;}
-			const resultEvent = MatrixJsonParser.processRoomEvent(roomEvent.event, roomEvent.roomType, roomEvent.roomId);
+			const resultEvent = MatrixJsonParser.setRoomEventMetadata(roomEvent.event, roomEvent.roomType, roomEvent.roomId);
 			expect(resultEvent.roomType, "roomType").to.match(rgxp.roomTypes);
 			expect(resultEvent.roomId, "roomId").to.match(rgxp.roomId);
 		}
@@ -176,7 +173,7 @@ describe('Especific functions', function() {
 		const rooms = jsonFixture.rooms;
 		let jsonStore = {};
 		jsonStore = MatrixJsonParser.processRoomEvents(rooms, jsonStore, testUserId, homeServer);
-		["users", "events", "rooms"].forEach((reducer) => {
+		["users", "rooms"].forEach((reducer) => {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
 			const randomId = _.sample(Object.keys(jsonStore[reducer]));
 			const reducerEvents = jsonStore[reducer][randomId].events
@@ -186,7 +183,8 @@ describe('Especific functions', function() {
 
 	it('9. processMatrixJson should return an Object with events by reducers', function() {
 		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
-		["users", "events", "rooms"].forEach((reducer) => {
+		expect(jsonStore.nextBatch).to.match(/^s[0-9]+/);
+		["users", "rooms"].forEach((reducer) => {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
 			const randomId = _.sample(Object.keys(jsonStore[reducer]));
 			const reducerEvents = jsonStore[reducer][randomId].events
@@ -195,23 +193,6 @@ describe('Especific functions', function() {
 			expect(event.ownerId).to.match(rgxp.ownerIdByReducer[event.reducer]);
 		});
 	});
-
-	// it('5. processEvent should set the correct ownerId', function() {
-	// 	for (var i = 0; i <= 500; i++) {
-	// 		testEvent = randomEvent();
-	// 		if (!testEvent) {continue;}
-	// 		if (!EVENTS[testEvent.type]) {continue;}
-	// 		const reducers = EVENTS[testEvent.type].reducers;
-	// 		const resultEvents = MatrixJsonParser.processEvent(testEvent);
-	// 		resultEvents.forEach((event) => {
-	// 			expect(event.ownerId).to.match(rgxp.ownerIdByReducer[event.reducer]);
-	// 		});
-	// 	}
-	// });
-
-	
-
-
 
 
 	// it('1. Should take an event an return a processed one', function() {

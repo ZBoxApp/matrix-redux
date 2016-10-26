@@ -296,6 +296,17 @@ const EVENTS = {
 		},
 		"contentKeys": { "user_ids": "membersTyping" }
 	},
+	"org.matrix.room.color_scheme": {
+		"rootType": "rooms",
+		"ephemeral": true,
+		"state": true,
+		"reducers": {
+			"rooms": {
+				"ownerId": "attr.roomId",
+				"actions": ["replace.attr.color"]
+			}
+		}
+	}
 };
 
 export default EVENTS;
