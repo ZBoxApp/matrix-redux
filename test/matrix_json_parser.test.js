@@ -71,7 +71,8 @@ const rgxp = {
     "roomTypes": /(join|leave|invite|ban)/,
     "ownerIdByReducer": {
     	"rooms": /^![-_0-9a-zA-Z]*:[-_0-9a-zA-Z]*/,
-    	"users": /^@[-_0-9a-zA-Z]*:[-_0-9a-zA-Z]*/
+    	"users": /^@[-_0-9a-zA-Z]*:[-_0-9a-zA-Z]*/,
+    	"events": /^\$[0-9]{10,}\w{5}/,
     }
 };
 
@@ -180,6 +181,18 @@ describe('Especific functions', function() {
 			const randomId = _.sample(Object.keys(jsonStore[reducer]));
 			const reducerEvents = jsonStore[reducer][randomId].events
 			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
+		});
+	});
+
+	it('9. processMatrixJson should return an Object with events by reducers', function() {
+		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
+		["users", "events", "rooms"].forEach((reducer) => {
+			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
+			const randomId = _.sample(Object.keys(jsonStore[reducer]));
+			const reducerEvents = jsonStore[reducer][randomId].events
+			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
+			const event = _.sample(reducerEvents);
+			expect(event.ownerId).to.match(rgxp.ownerIdByReducer[event.reducer]);
 		});
 	});
 

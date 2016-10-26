@@ -45,7 +45,7 @@ const getReducersName = (eventType) => {
 };
 
 export const processMatrixJson = (matrixJson, currentUserId, homeServer) => {
-	checkArguments([events, currentUserId, homeServer]);
+	checkArguments([matrixJson, currentUserId, homeServer]);
 	let jsonStore = { "rooms": {}, "users": {}, "events": {}, "sync": {} };
 	jsonStore.nextBatch = matrixJson.next_batch;
 	const events = concatEvents(matrixJson);
