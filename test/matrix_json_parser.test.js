@@ -45,21 +45,23 @@ const randomEventByType = (eventRootType, roomEventType, roomType, roomId, matri
 
 const randomRoomEvent = (roomType, roomId) => {
 	let event;
+	let roomEventType;
 	const rooms = jsonFixture.rooms;
 	roomType = roomType || _.sample(Object.keys(rooms));
 	roomId = roomId || _.sample(Object.keys(rooms[roomType]));
 	const room = rooms[roomType][roomId];
 	if (!room) return event;
 	if (roomType === "invite")
-		event = _.sample(room.invite_state.events);
+		roomEventType = "invite_state";
 	else {
-		const roomEventType = _.sample(Object.keys(room));
-		event = _.sample(room[roomEventType].events);
+		roomEventType = _.sample(Object.keys(room));
 	}
+	event = _.sample(room[roomEventType].events);
 	return {
 		event: event,
 		roomType: roomType,
-		roomId: roomId
+		roomId: roomId,
+		roomEventType: roomEventType
 	}
 }
 
@@ -99,11 +101,9 @@ describe('Especific functions', function() {
 			const idAttrRule = EVENTS[testEvent.type].idAttr;
 			const resultEvents = MatrixJsonParser.processEvent(testEvent, testUserId, homeServer);
 			const resultEvent = _.sample(resultEvents);
-			if (idAttrRule) {
-				expect(resultEvent.id, resultEvent.type).to.match(rgxp.eventId);
-			} else {
-				expect(resultEvent.id, resultEvent.type).to.be.undefined;
-			}
+			
+			expect(resultEvent.id, resultEvent.type).to.match(rgxp.eventId);
+			
 		}
 	});
 
@@ -133,14 +133,16 @@ describe('Especific functions', function() {
 		}
 	});
 
-	it('6. setRoomEventMetadata should set roomType and roomId', function() {
+	it('6. setRoomEventMetadata should set roomType, roomId and roomEventType', function() {
 		for (var i = 0; i <= 500; i++) {
 			const roomEvent = randomRoomEvent();
 			if (!roomEvent || !roomEvent.event) {continue;}
 			if (!EVENTS[roomEvent.event.type]) {continue;}
-			const resultEvent = MatrixJsonParser.setRoomEventMetadata(roomEvent.event, roomEvent.roomType, roomEvent.roomId);
+			const resultEvent = MatrixJsonParser.setRoomEventMetadata(roomEvent.event, roomEvent.roomType, roomEvent.roomId, roomEvent.roomEventType);
 			expect(resultEvent.roomType, "roomType").to.match(rgxp.roomTypes);
 			expect(resultEvent.roomId, "roomId").to.match(rgxp.roomId);
+			expect(resultEvent.roomEventType, "roomEventType undefined").to.not.be.undefined;
+			expect(resultEvent.roomEventType, "roomEventType").to.match(/(timeline|state|account_data|ephemeral|unread_notifications)/);
 		}
 	});
 

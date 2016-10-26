@@ -142,12 +142,15 @@ export const processEvent = (event, currentUserId, homeServer) => {
  * @param  {Object} event    - The room's event
  * @param  {String} roomType - The type of room: join, leave, invite
  * @param  {String} roomId   
+ * @param  {String} roomEventType - One of: unread_notifications, state,
+ *                                	timeline, ephemeral, account_data   
  * @return {Object}          - The event with the metadata
  */
-export const setRoomEventMetadata = (event, roomType, roomId) => {
-	checkArguments([event, roomType, roomId]);
+export const setRoomEventMetadata = (event, roomType, roomId, roomEventType) => {
+	checkArguments([event, roomType, roomId, roomEventType]);
 	event.roomType = roomType;
 	event.roomId = roomId;
+	event.roomEventType = roomEventType;
 
 	return event;
 };
@@ -222,7 +225,7 @@ const getEventsFromRoom = (room, roomId, roomType) => {
 		if (room[roomEventType].events.length < 1) return;
 
 		room[roomEventType].events.forEach((event) => {
-			events.push(setRoomEventMetadata(event, roomType, roomId));
+			events.push(setRoomEventMetadata(event, roomType, roomId, roomEventType));
 		});
 	});
 
