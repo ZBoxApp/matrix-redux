@@ -19,11 +19,22 @@ import _ from 'lodash';
  */
 export const processMatrixJson = (matrixJson, currentUserId, homeServer) => {
 	checkArguments([matrixJson, currentUserId, homeServer]);
-	let jsonStore = { "rooms": {}, "users": {}, "events": {}, "sync": {} };
+	const jsonStore = newJsonStore();
 	const events = concatEvents(matrixJson);
 	jsonStore.nextBatch = matrixJson.next_batch;
-	jsonStore = processEvents(events, jsonStore, currentUserId, homeServer);
-	jsonStore = processEvents(matrixJson.rooms, jsonStore, currentUserId, homeServer, "rooms");
+	processEvents(events, jsonStore, currentUserId, homeServer);
+	processEvents(matrixJson.rooms, jsonStore, currentUserId, homeServer, "rooms");
+	return jsonStore;
+};
+
+/**
+ * Build an return a new Object to store the events
+ * @return {Object}
+ */
+const newJsonStore = () => {
+	const jsonStore = { "rooms": {}, "users": {}, "events": {}, "sync": {} };
+	jsonStore.events.events = {};
+	jsonStore.events.byType = {};
 
 	return jsonStore;
 };
@@ -43,9 +54,8 @@ export const processEvents = (events, jsonStore, currentUserId, homeServer, room
 	if (rooms) return processRoomEvents(events, jsonStore, currentUserId, homeServer);
 	events.forEach((event) => {
 		results = processEvent(event, currentUserId, homeServer);
+		addEventsToJsonStore(results, jsonStore);
 	});
-
-	jsonStore = addEventsToJsonStore(results, jsonStore);
 
 	return jsonStore;
 };
@@ -62,11 +72,29 @@ const addEventsToJsonStore = (events, jsonStore) => {
 		const ownerId = event.ownerId;
 		if (!jsonStore[reducer]) jsonStore[reducer] = {};
 		if (!jsonStore[reducer][ownerId]) jsonStore[reducer][ownerId] = { "events": [] };
+		
 		jsonStore[reducer][ownerId].events.push(event);
-	});
+		addToEventsReducer(event, jsonStore);
 
+	});
 	return jsonStore;
 };
+
+const addToEventsReducer = (event, jsonStore) => {
+	checkArguments([event, jsonStore]);
+	if (EVENTS[event.type].ephemeral) return;
+	if (!jsonStore.events)
+		jsonStore.events = { "events": {}, "byType": {} };
+	
+	jsonStore.events.events[event.id] = event;
+
+	if (!jsonStore.events.byType[event.type])
+		jsonStore.events.byType[event.type] = [];
+
+	jsonStore.events.byType[event.type].push(event.id);
+
+	return jsonStore;
+}
 
 /**
  * Process rooms event of the original server response
@@ -81,8 +109,8 @@ export const processRoomEvents = (rooms, jsonStore, currentUserId, homeServer) =
 	events = events.concat(getEventsFromRoomsByType(rooms, "join"));
 	events = events.concat(getEventsFromRoomsByType(rooms, "leave"));
 	events = events.concat(getEventsFromRoomsByType(rooms, "invite"));
-
-	jsonStore = processEvents(events, jsonStore, currentUserId, homeServer);
+	
+	processEvents(events, jsonStore, currentUserId, homeServer);
 	return jsonStore;
 };
 
@@ -131,24 +159,12 @@ export const getEventsByReducer = (event) => {
 	reducersName.forEach((reducerName) => {
 		const newEvent = {...event};
 		newEvent.reducer = reducerName;
-		newEvent.reducerActions = getReducerActions(event.type, reducerName);
 		newEvent.ownerId = setOwnerId(newEvent);
 		events.push(newEvent);
 	});
 	return events;
 };
 
-/**
- * Get the actions for the event's reducer.
- * @param  {String} eventType - The event.type
- * @param  {String} reducer   - The reducer name
- * @return {Array}
- */
-const getReducerActions = (eventType, reducer) => {
-	checkArguments([eventType, reducer]);
-	const actions = EVENTS[eventType].reducers[reducer].actions;
-	return actions;
-};
 
 /**
  * Get the reducers names given the event type

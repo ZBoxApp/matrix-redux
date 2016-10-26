@@ -121,19 +121,6 @@ describe('Especific functions', function() {
 		}
 	});
 
-	it('4. processEvent should set the correct reducerActions', function() {
-		for (var i = 0; i <= 500; i++) {
-			testEvent = randomEvent();
-			if (!testEvent) {continue;}
-			if (!EVENTS[testEvent.type]) {continue;}
-			const reducers = EVENTS[testEvent.type].reducers;
-			const resultEvents = MatrixJsonParser.processEvent(testEvent, testUserId, homeServer);
-			resultEvents.forEach((event) => {
-				const actions = reducers[event.reducer].actions;
-				expect(actions).to.equal(event.reducerActions);
-			});
-		}
-	});
 
 	it('5. processEvent set currentUserId and homeServer', function() {
 		for (var i = 0; i <= 100; i++) {
@@ -184,6 +171,7 @@ describe('Especific functions', function() {
 	it('9. processMatrixJson should return an Object with events by reducers', function() {
 		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
 		expect(jsonStore.nextBatch).to.match(/^s[0-9]+/);
+		expect(Object.keys(jsonStore.rooms, "no all rooms processed").length).to.be.above(Object.keys(jsonFixture.rooms.join).length);
 		["users", "rooms"].forEach((reducer) => {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
 			const randomId = _.sample(Object.keys(jsonStore[reducer]));
@@ -192,6 +180,31 @@ describe('Especific functions', function() {
 			const event = _.sample(reducerEvents);
 			expect(event.ownerId).to.match(rgxp.ownerIdByReducer[event.reducer]);
 		});
+	});
+
+	it('10. processMatrixJson should return the events object', function() {
+		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
+		expect(jsonStore.nextBatch).to.match(/^s[0-9]+/);
+		const eventsReducer = jsonStore.events;
+		expect(typeof eventsReducer === 'object', 'not an object').to.be.true;
+		const randomId = _.sample(Object.keys(eventsReducer.events));
+		expect(randomId, 'not an event id').to.match(rgxp.eventId);
+		expect(eventsReducer.events[randomId].ephemeral).to.be.undefined;
+	});
+
+	it('11. The events reducer should have byType Object', function() {
+		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
+		const eventsByType = jsonStore.events.byType;
+		expect(typeof eventsByType === 'object', 'eventsByType not an object').to.be.true;
+		const eventTypes = Object.keys(EVENTS);
+		
+		for (var i = 0; i <= 100; i++) {
+			const randomEventType = _.sample(Object.keys(eventsByType));
+			const randomId = _.sample(eventsByType[randomEventType]);
+			expect(eventTypes, 'type not included').to.include(randomEventType);
+			expect(jsonStore.events.events[randomId]).to.not.be.undefined;
+		}
+		
 	});
 
 

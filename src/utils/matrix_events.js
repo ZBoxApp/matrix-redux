@@ -276,12 +276,7 @@ const EVENTS = {
 			"users": {
 				"ownerId": "attr.sender",
 				"actions": ["add.attr.tags"]
-			},
-			"events": { 
-				"ownerId": "attr.id",
-				"actions": ["new"],
-				"attrs": ["userId"]
-			},
+			}
 		}
 	},
 	"m.typing": {
