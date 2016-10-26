@@ -152,7 +152,8 @@ describe('Especific functions', function() {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
 			const randomId = _.sample(Object.keys(jsonStore[reducer].byIds));
 			const reducerEvents = jsonStore[reducer].byIds[randomId].events;
-			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
+			expect(!Array.isArray(reducerEvents), reducer + " events").to.be.true;
+			expect((typeof reducerEvents === 'object'), reducer + " not object events").to.be.true;
 		});
 	});
 
@@ -164,7 +165,9 @@ describe('Especific functions', function() {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
 			const randomId = _.sample(Object.keys(jsonStore[reducer].byIds));
 			const reducerEvents = jsonStore[reducer].byIds[randomId].events;
-			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
+			expect(!Array.isArray(reducerEvents), reducer + " events").to.be.true;
+			const eventId = _.sample(Object.keys(reducerEvents));
+			expect(eventId).to.match(rgxp.eventId);
 		});
 	});
 
@@ -177,8 +180,8 @@ describe('Especific functions', function() {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
 			const randomId = _.sample(Object.keys(jsonStore[reducer].byIds));
 			const reducerEvents = jsonStore[reducer].byIds[randomId].events
-			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
-			const event = _.sample(reducerEvents);
+			const eventId = _.sample(Object.keys(reducerEvents));
+			const event = reducerEvents[eventId];
 			expect(event.ownerId).to.match(rgxp.ownerIdByReducer[event.reducer]);
 		});
 	});

@@ -194,6 +194,7 @@ const EVENTS = {
 	"m.room.message": {
 		"rootType": "rooms",
 		"idAttr": "attr.event_id",
+		"ageSorted": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
@@ -331,7 +332,6 @@ const EVENTS = {
 	"m.typing": {
 		"rootType": "rooms",
 		"ephemeral": true,
-		"state": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",

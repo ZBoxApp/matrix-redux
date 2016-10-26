@@ -33,45 +33,6 @@ let randomUserId;
 
 const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
 
-// const randomEvent = () => {
-// 	const eventRootType = _.sample(CONSTANTS.rootEventTypes);
-// 	const event = randomEventByType(eventRootType);
-// 	if (typeof event !== 'undefined') return event;
-// 	randomEvent();
-// };
-
-// const randomEventByType = (eventRootType, roomEventType, roomType, roomId, matrixCode) => {
-// 	let event;
-// 	if (eventRootType === "rooms") {
-// 		const ramdonEvent = randomRoomEvent(roomType, roomId);
-// 		if (randomEvent) event = randomEvent.event;
-// 	} else {
-// 		const reducer = jsonFixture[eventRootType];
-// 		event = _.sample(reducer.events);
-// 	}
-// 	return event;
-// };
-
-// const randomRoomEvent = (roomType, roomId) => {
-// 	let event;
-// 	const rooms = jsonFixture.rooms;
-// 	roomType = roomType || _.sample(Object.keys(rooms));
-// 	roomId = roomId || _.sample(Object.keys(rooms[roomType]));
-// 	const room = rooms[roomType][roomId];
-// 	if (!room) return event;
-// 	if (roomType === "invite")
-// 		event = _.sample(room.invite_state.events);
-// 	else {
-// 		const roomEventType = _.sample(Object.keys(room));
-// 		event = _.sample(room[roomEventType].events);
-// 	}
-// 	return {
-// 		event: event,
-// 		roomType: roomType,
-// 		roomId: roomId
-// 	}
-// }
-
 
 const rgxp = {
 	"eventId": /^\$[0-9]{10,}\w{5}/,
@@ -110,5 +71,25 @@ describe("Reducer Helper Functions", () => {
 		expect(Object.keys(groupByType).length).to.be.above(2);
 	});
 
+	it('2. sortByAge should return an sorted array of Ids', function() {
+		const groupByType = ReducerHelper.groupByType(randomRoom.events);
+		for (var i = 0; i <= 50; i++) {
+			const type = "state";		
+			const sortedIds = ReducerHelper.sortByAge(groupByType[type], randomRoom.events)
+			const lastEvent = randomRoom.events[sortedIds[sortedIds.length - 1]];
+			const firstEvent = randomRoom.events[sortedIds[0]];
+			
+			expect(firstEvent.unsigned.age).to.be.at.least(lastEvent.unsigned.age);
+		}
+	});
+
+	it('3. groupByType should return sorted Arrays if it must', function() {
+		const groupByType = ReducerHelper.groupByType(jsonStore.events.byIds);
+		const m_room_message = groupByType["m.room.message"];
+		expect(jsonStore.events.byIds[m_room_message[0]].unsigned.age).to.be.at.least(jsonStore.events.byIds[m_room_message[m_room_message.length - 1]].unsigned.age);
+
+	});
+
+	
 
 });

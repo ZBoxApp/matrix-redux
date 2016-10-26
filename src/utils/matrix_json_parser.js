@@ -74,13 +74,13 @@ const addEventsToJsonStore = (events, jsonStore) => {
 		const ownerId = event.ownerId;
 		if (!jsonStore[reducer]) jsonStore[reducer] = { "byIds": {} };
 		if (!jsonStore[reducer].byIds[ownerId])
-			jsonStore[reducer].byIds[ownerId] = { "events": [] };
+			jsonStore[reducer].byIds[ownerId] = { "events": {} };
 		
 		if (reducer === 'events')
 			addToEventsReducer(event, jsonStore);
 
 		else
-			jsonStore[reducer].byIds[ownerId].events.push(event);
+			jsonStore[reducer].byIds[ownerId].events[event.id] = event;
 	});
 	return jsonStore;
 };
@@ -265,9 +265,12 @@ const setEventId = (event) => {
 		console.log(event.type + " is not defined int matrix_events.json");
 	}
 	
-	if (!idRule) return event;
-	if (idRule === 'attr.event_id') event.id = event.event_id;
-	if (idRule === 'calculate.generateId') event.id = generateId();
+	if (idRule === 'attr.event_id')
+		event.id = event.event_id;
+
+	else
+		event.id = generateId();
+	
 	return event;
 };
 
