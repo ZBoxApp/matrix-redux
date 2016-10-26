@@ -31,10 +31,12 @@ export const processMatrixJson = (matrixJson, currentUserId, homeServer) => {
  * Build an return a new Object to store the events
  * @return {Object}
  */
-const newJsonStore = () => {
-	const jsonStore = { "rooms": {}, "users": {}, "events": {}, "sync": {} };
-	jsonStore.events.events = {};
-	jsonStore.events.byType = {};
+export const newJsonStore = () => {
+	const jsonStore = { 
+		"rooms": { "byIds": {} },
+		"users": { "byIds": {} },
+		"events": { "byIds": {}, "byType": {} } 
+	};
 
 	return jsonStore;
 };
@@ -70,12 +72,15 @@ const addEventsToJsonStore = (events, jsonStore) => {
 	events.forEach((event) => {
 		const reducer = event.reducer;
 		const ownerId = event.ownerId;
-		if (!jsonStore[reducer]) jsonStore[reducer] = {};
-		if (!jsonStore[reducer][ownerId]) jsonStore[reducer][ownerId] = { "events": [] };
+		if (!jsonStore[reducer]) jsonStore[reducer] = { "byIds": {} };
+		if (!jsonStore[reducer].byIds[ownerId])
+			jsonStore[reducer].byIds[ownerId] = { "events": [] };
 		
-		jsonStore[reducer][ownerId].events.push(event);
-		addToEventsReducer(event, jsonStore);
+		if (reducer === 'events')
+			addToEventsReducer(event, jsonStore);
 
+		else
+			jsonStore[reducer].byIds[ownerId].events.push(event);
 	});
 	return jsonStore;
 };
@@ -84,9 +89,9 @@ const addToEventsReducer = (event, jsonStore) => {
 	checkArguments([event, jsonStore]);
 	if (EVENTS[event.type].ephemeral) return;
 	if (!jsonStore.events)
-		jsonStore.events = { "events": {}, "byType": {} };
+		jsonStore.events = { "byIds": {}, "byType": {} };
 	
-	jsonStore.events.events[event.id] = event;
+	jsonStore.events.byIds[event.id] = event;
 
 	if (!jsonStore.events.byType[event.type])
 		jsonStore.events.byType[event.type] = [];
@@ -292,7 +297,7 @@ const setOwnerId = (event) => {
 		ownerAttribute = ownerAttribute.split('.');
 		const type = ownerAttribute[0];
 		const attrName = ownerAttribute[1];
-		if (type !== 'attr') return event;
+		if (type !== 'attr') return event.type;
 		ownerId = event[attrName];
 	} catch (e) {
 		console.log(ownerAttribute + " is not defined with reducers in matrix_events.json");

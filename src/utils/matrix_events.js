@@ -9,11 +9,11 @@
 // reducers.reducerName: The name of the reducer
 // reducers.reducerName.ownerId: How we set the Id of the resource
 // reducers.reducerName.actions:
-//  - new: Add a new resource to the reducer
-//  - add.attr.attrName: add the value to this attr,
-//  - remove.attr.attrName: the value to this attr,
-//  - replace.attr.attrName: replace the value of this attr,
-//  - set.attr.attrName: set the value. Inmutable
+//  - calculate.new: Add a new resource to the reducer
+//  - add.attrName: add the value to this attr,
+//  - remove.attrName: the value to this attr,
+//  - update.attrName: replace the value of this attr,
+//  - set.attrName: set the value. Inmutable
 //  - calculate.reducerFunctionName: calls this reducer function to process the event
 // reducers.attrs: Attrs to set when creating a new resource
 // embedded: If this is an Object with embeddes events
@@ -34,9 +34,12 @@ const EVENTS = {
 		"reducers": {
 			"users": { 
 				"ownerId": "attr.sender",
-				"actions": ["replace.attr.presence"]
+				"actions": ["update.content.presence"]
 			}
 		},
+		"actionsValues": { 
+			"content": { "presence": "presence" }
+		}
 	},
 	"m.push_rules": {
 		"rootType": "account_data",
@@ -48,13 +51,14 @@ const EVENTS = {
 	},
 	"m.receipt": {
 		"rootType": "rooms",
+		"ownerId": "calculate.ownerId",
 		"ephemeral": true,
 		"embedded": true,
 		"embeddedTypes": ["m.read"],
 		"reducers": {
 			"events": { 
-				"ownerId": "calculate.objectKeys",
-				"actions": ["add.attr.readedBy"]
+				"ownerId": "calculate.ownerId",
+				"actions": ["calculate.eventRead"]
 			}
 		}
 	},
@@ -66,10 +70,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.aliases"]
+				"actions": ["update.content.aliases"]
 			}
 		},
-		"contentKeys": { "aliases": "aliases" }
+		"actionsValues": { 
+			"content": { "aliases": "aliases" }
+		}
 	},
 	"m.room.avatar": {
 		"rootType": "rooms",
@@ -79,10 +85,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.avatarUrl"]
+				"actions": ["update.content.avatarUrl"]
 			}
 		},
-		"contentKeys": { "url": "avatarUrl" }
+		"actionsValues": { 
+			"content": { "avatarUrl": "url" }
+		}
 	},
 	"m.room.canonical_alias": {
 		"rootType": "rooms",
@@ -92,10 +100,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.canonical_alias"]
+				"actions": ["update.content.canonical_alias"]
 			}
 		},
-		"contentKeys": { "alias": "canonical_alias" }
+		"actionsValues": { 
+			"content": { "canonical_alias": "canonical_alias" }
+		}
 	},
 	"m.room.create": {
 		"rootType": "rooms",
@@ -105,11 +115,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": {
 				"ownerId": "attr.roomId",
-				"actions": ["new"],
-				"attrs": ["creatorId"]
+				"actions": [ "calculate.new", "set.content.creatorId" ],
 			}
 		},
-		"contentKeys": { "creator": "creatorId" }
+		"actionsValues": { 
+			"content": { "creatorId": "creator" }
+		}
 	},
 	"m.room.guest_access": {
 		"rootType": "rooms",
@@ -119,10 +130,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.guestAccess"]
+				"actions": ["update.content.guestAccess"]
 			}
 		},
-		"contentKeys": { "guest_access": "guestAccess" }
+		"actionsValues": { 
+			"content": { "guestAccess": "guest_access" }
+		}
 	},
 	"m.room.history_visibility": {
 		"rootType": "rooms",
@@ -132,10 +145,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.guestAccess"]
+				"actions": ["update.content.historyVisibility"]
 			}
 		},
-		"contentKeys": { "history_visibilty": "historyVisibility" }
+		"actionsValues": { 
+			"content": { "historyVisibility": "history_visibilty" }
+		}
 	},
 	"m.room.join_rules": {
 		"rootType": "rooms",
@@ -145,10 +160,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.joinRule"]
+				"actions": ["update.content.joinRule"]
 			}
 		},
-		"contentKeys": { "join_rule": "joinRule" }
+		"actionsValues": {
+			"content": { "joinRule": "join_rule" }
+		}
 	},
 	"m.room.member": {
 		"rootType": "rooms",
@@ -162,10 +179,17 @@ const EVENTS = {
 			},
 			"users": {
 				"ownerId": "attr.sender",
-				"actions": ["new", "calculate.updateMemberships", "update.attr.name", "update.attr.avatarUrl"]
+				"actions": [
+					"calculate.new",
+					"update.content.name",
+					"update.content.avatarUrl",
+					"calculate.updateMemberships" 
+				]
 			}
 		},
-		"contentKeys": { "url": "avatarUrl", "displayname": "name" }
+		"actionsValues": { 
+			"content": { "avatarUrl": "url", "name": "displayname" }
+		}
 	},
 	"m.room.message": {
 		"rootType": "rooms",
@@ -174,19 +198,28 @@ const EVENTS = {
 			"rooms": { 
 				"ownerId": "attr.roomId",
 				"actions": [ 
-					"add.attr.messages", "add.attr.events", 
-					"calculate.updateEventsByType", "calculate.updateMessagesByType"
+					"add.messages", "add.events", 
+					"calculate.updateEventsByType",
+					"calculate.updateMessagesByType"
 				]
 			},
 			"events": {
 				"ownerId": "attr.id",
-				"actions": ["new", "calculate.updateByType", "calculate.updateMessagesByType" ],
-				"attrs": ["roomId", "userId"]
+				"actions": [ 
+					"new", 
+					"set.attr.userId",
+					"set.attr.roomId",
+					"calculate.updateByType",
+					"calculate.updateMessagesByType"
+				]
 			},
 			"users": {
 				"ownerId": "attr.sender",
-				"actions": ["add.attr.messages"]
+				"actions": ["add.messages"]
 			}
+		},
+		"actionsValues": {
+			"attr": { "userId": "sender", "roomId": "roomId" }
 		}
 	},
 	"m.room.name": {
@@ -197,10 +230,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.name"]
+				"actions": ["update.content.name"]
 			}
 		},
-		"contentKeys": { "name": "name" }
+		"actionsValues": { 
+			"content": { "name": "name" }
+		}
 	},
 	"m.room.power_levels": {
 		"rootType": "rooms",
@@ -222,21 +257,27 @@ const EVENTS = {
 		"reducers": {
 			"events": {
 				"ownerId": "attr.id",
-				"actions": ["new", "calculate.updateRedactedEvent"],
-				"attrs": ["targetEventId", "userId", "roomId"]
+				"actions": [ 
+					"new", "set.attr.targetEventId",
+					"set.attr.userId", "set.attr.roomId",
+					"calculate.updateRedactedEvent"
+					],
 			},
 			"users": {
 				"ownerId": "attr.sender",
-				"actions": ["add.attr.messages"]
+				"actions": ["add.messages"]
 			},
 			"rooms": { 
 				"ownerId": "attr.roomId",
 				"actions": [ 
-					"add.attr.messages", "add.attr.events", 
+					"add.messages", "add.events", 
 					"calculate.updateEventsByType"
 				]
 			},
 		},
+		"actionsValues": { 
+			"attr": { "userId": "sender", "targetEventId": "event_id" },
+		}
 	},
 	"m.room.third_party_invite": {
 		"rootType": "rooms",
@@ -246,13 +287,19 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": [ "add.attr.events", "calculate.updateEventsByType" ]
+				"actions": [ "add.events", "calculate.updateEventsByType" ]
 			},
 			"events": {
 				"ownerId": "attr.id",
-				"actions": ["new", "calculate.updateByType"],
-				"attrs": ["roomId"]
+				"actions": [
+					"calculate.new",
+					"set.attr.roomId",
+					"calculate.updateByType"
+				],
 			},
+		},
+		"actionsValues": {
+			"attr": { "roomId": "roomId" }
 		}
 	},
 	"m.room.topic": {
@@ -263,10 +310,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.topic"]
+				"actions": ["update.content.topic"]
 			}
 		},
-		"contentKeys": { "topic": "topic" }
+		"actionsValues": { 
+			"attr": { "topic": "topic" }
+		}
 	},
 	"m.tag": {
 		"rootType": "rooms",
@@ -275,7 +324,7 @@ const EVENTS = {
 		"reducers": {
 			"users": {
 				"ownerId": "attr.sender",
-				"actions": ["add.attr.tags"]
+				"actions": ["calculate.tags"]
 			}
 		}
 	},
@@ -286,10 +335,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.membersTyping"]
+				"actions": ["update.content.membersTyping"]
 			}
 		},
-		"contentKeys": { "user_ids": "membersTyping" }
+		"actionsValues": { 
+			"content": { "user_ids": "membersTyping" }
+		}
 	},
 	"org.matrix.room.color_scheme": {
 		"rootType": "rooms",
@@ -298,8 +349,16 @@ const EVENTS = {
 		"reducers": {
 			"rooms": {
 				"ownerId": "attr.roomId",
-				"actions": ["replace.attr.color"]
+				"actions": [ 
+					"update.content.primaryColor",
+					"update.content.secondaryColor"
+				]
 			}
+		},
+		"actionsValues": {
+			"content": { 
+				"primaryColor": "primary_color",
+				"secondaryColor": "secondary_color" }
 		}
 	}
 };

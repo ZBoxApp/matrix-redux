@@ -150,20 +150,20 @@ describe('Especific functions', function() {
 		jsonStore = MatrixJsonParser.processEvents(events, jsonStore, testUserId, homeServer);
 		["users"].forEach((reducer) => {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
-			const randomId = _.sample(Object.keys(jsonStore[reducer]));
-			const reducerEvents = jsonStore[reducer][randomId].events
+			const randomId = _.sample(Object.keys(jsonStore[reducer].byIds));
+			const reducerEvents = jsonStore[reducer].byIds[randomId].events;
 			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
 		});
 	});
 
 	it('8. processRoomEvents should return an Object with events by reducers', function() {
 		const rooms = jsonFixture.rooms;
-		let jsonStore = {};
+		let jsonStore = MatrixJsonParser.newJsonStore();
 		jsonStore = MatrixJsonParser.processRoomEvents(rooms, jsonStore, testUserId, homeServer);
 		["users", "rooms"].forEach((reducer) => {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
-			const randomId = _.sample(Object.keys(jsonStore[reducer]));
-			const reducerEvents = jsonStore[reducer][randomId].events
+			const randomId = _.sample(Object.keys(jsonStore[reducer].byIds));
+			const reducerEvents = jsonStore[reducer].byIds[randomId].events;
 			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
 		});
 	});
@@ -171,11 +171,12 @@ describe('Especific functions', function() {
 	it('9. processMatrixJson should return an Object with events by reducers', function() {
 		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
 		expect(jsonStore.nextBatch).to.match(/^s[0-9]+/);
-		expect(Object.keys(jsonStore.rooms, "no all rooms processed").length).to.be.above(Object.keys(jsonFixture.rooms.join).length);
+		const keys = Object.keys(jsonStore.rooms.byIds);
+		expect(keys.length, "no all rooms processed").to.be.above(Object.keys(jsonFixture.rooms.join).length);
 		["users", "rooms"].forEach((reducer) => {
 			expect(jsonStore[reducer], reducer + " reducer").to.not.be.undefined;
-			const randomId = _.sample(Object.keys(jsonStore[reducer]));
-			const reducerEvents = jsonStore[reducer][randomId].events
+			const randomId = _.sample(Object.keys(jsonStore[reducer].byIds));
+			const reducerEvents = jsonStore[reducer].byIds[randomId].events
 			expect(Array.isArray(reducerEvents), reducer + " events").to.be.true;
 			const event = _.sample(reducerEvents);
 			expect(event.ownerId).to.match(rgxp.ownerIdByReducer[event.reducer]);
@@ -187,9 +188,9 @@ describe('Especific functions', function() {
 		expect(jsonStore.nextBatch).to.match(/^s[0-9]+/);
 		const eventsReducer = jsonStore.events;
 		expect(typeof eventsReducer === 'object', 'not an object').to.be.true;
-		const randomId = _.sample(Object.keys(eventsReducer.events));
+		const randomId = _.sample(Object.keys(eventsReducer.byIds));
 		expect(randomId, 'not an event id').to.match(rgxp.eventId);
-		expect(eventsReducer.events[randomId].ephemeral).to.be.undefined;
+		expect(eventsReducer.byIds[randomId].ephemeral).to.be.undefined;
 	});
 
 	it('11. The events reducer should have byType Object', function() {
@@ -202,7 +203,7 @@ describe('Especific functions', function() {
 			const randomEventType = _.sample(Object.keys(eventsByType));
 			const randomId = _.sample(eventsByType[randomEventType]);
 			expect(eventTypes, 'type not included').to.include(randomEventType);
-			expect(jsonStore.events.events[randomId]).to.not.be.undefined;
+			expect(jsonStore.events.byIds[randomId]).to.not.be.undefined;
 		}
 		
 	});
