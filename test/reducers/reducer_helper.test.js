@@ -24,45 +24,53 @@ let testEvent;
 let recursiveCount = 0;
 const testUserId = userFixture.testUserId;
 const homeServer = userFixture.homeServerName;
+let randomEvent;
+let randomRoom;
+let randomUser;
+let randomEventId;
+let randomRoomId;
+let randomUserId;
 
-const randomEvent = () => {
-	const eventRootType = _.sample(CONSTANTS.rootEventTypes);
-	const event = randomEventByType(eventRootType);
-	if (typeof event !== 'undefined') return event;
-	randomEvent();
-};
+const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
 
-const randomEventByType = (eventRootType, roomEventType, roomType, roomId, matrixCode) => {
-	let event;
-	if (eventRootType === "rooms") {
-		const ramdonEvent = randomRoomEvent(roomType, roomId);
-		if (randomEvent) event = randomEvent.event;
-	} else {
-		const reducer = jsonFixture[eventRootType];
-		event = _.sample(reducer.events);
-	}
-	return event;
-};
+// const randomEvent = () => {
+// 	const eventRootType = _.sample(CONSTANTS.rootEventTypes);
+// 	const event = randomEventByType(eventRootType);
+// 	if (typeof event !== 'undefined') return event;
+// 	randomEvent();
+// };
 
-const randomRoomEvent = (roomType, roomId) => {
-	let event;
-	const rooms = jsonFixture.rooms;
-	roomType = roomType || _.sample(Object.keys(rooms));
-	roomId = roomId || _.sample(Object.keys(rooms[roomType]));
-	const room = rooms[roomType][roomId];
-	if (!room) return event;
-	if (roomType === "invite")
-		event = _.sample(room.invite_state.events);
-	else {
-		const roomEventType = _.sample(Object.keys(room));
-		event = _.sample(room[roomEventType].events);
-	}
-	return {
-		event: event,
-		roomType: roomType,
-		roomId: roomId
-	}
-}
+// const randomEventByType = (eventRootType, roomEventType, roomType, roomId, matrixCode) => {
+// 	let event;
+// 	if (eventRootType === "rooms") {
+// 		const ramdonEvent = randomRoomEvent(roomType, roomId);
+// 		if (randomEvent) event = randomEvent.event;
+// 	} else {
+// 		const reducer = jsonFixture[eventRootType];
+// 		event = _.sample(reducer.events);
+// 	}
+// 	return event;
+// };
+
+// const randomRoomEvent = (roomType, roomId) => {
+// 	let event;
+// 	const rooms = jsonFixture.rooms;
+// 	roomType = roomType || _.sample(Object.keys(rooms));
+// 	roomId = roomId || _.sample(Object.keys(rooms[roomType]));
+// 	const room = rooms[roomType][roomId];
+// 	if (!room) return event;
+// 	if (roomType === "invite")
+// 		event = _.sample(room.invite_state.events);
+// 	else {
+// 		const roomEventType = _.sample(Object.keys(room));
+// 		event = _.sample(room[roomEventType].events);
+// 	}
+// 	return {
+// 		event: event,
+// 		roomType: roomType,
+// 		roomId: roomId
+// 	}
+// }
 
 
 const rgxp = {
@@ -80,23 +88,26 @@ const rgxp = {
 describe("Reducer Helper Functions", () => {
 
 	beforeEach(() => {
-		const jsonStore = MatrixJsonParser.processMatrixJson(jsonFixture, testUserId, homeServer);
-		console.log(jsonStore.rooms.events)
-		const randomRoomId = _.sample(Object.keys(jsonStore.rooms.events));
-		const randomEventId = _.sample(Object.keys(jsonStore.events.events));
-		const randomUserId = _.sample(Object.keys(jsonStore.users.events));
-		const randomRoom = jsonStore.rooms.events[randomRoomId];
-		const randomEvent = jsonStore.events.events[randomEventId];
-		const randomUser = jsonStore.users.events[randomUserId];
+		randomRoomId = _.sample(Object.keys(jsonStore.rooms.byIds));
+		randomEventId = _.sample(Object.keys(jsonStore.events.byIds));
+		randomUserId = _.sample(Object.keys(jsonStore.users.byIds));
+		randomRoom = jsonStore.rooms.byIds[randomRoomId];
+		randomEvent = jsonStore.events.byIds[randomEventId];
+		randomUser = jsonStore.users.byIds[randomUserId];
 	});
 
 	it('1. groupByType should return an Object with types as keys', function() {
-		[randomRoom, randomEvent, randomUser].forEach((resource) => {
-			const groupByType = ReducerHelper.groupByType(resource);
+		[randomRoom, randomUser].forEach((resource) => {
+			const groupByType = ReducerHelper.groupByType(resource.events);
 			expect(Array.isArray(groupByType.state), 'state not an array').to.be.true;
 			expect(Array.isArray(groupByType.ephemeral), 'ephemera not an array').to.be.true;
 			expect(Object.keys(groupByType).length).to.be.above(2);
 		});
+
+		const groupByType = ReducerHelper.groupByType(jsonStore.events.byIds);
+		expect(Array.isArray(groupByType.state), 'state not an array').to.be.true;
+		expect(Array.isArray(groupByType.ephemeral), 'ephemeral not an array').to.be.true;
+		expect(Object.keys(groupByType).length).to.be.above(2);
 	});
 
 
