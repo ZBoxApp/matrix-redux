@@ -9,11 +9,8 @@
 // reducers.reducerName: The name of the reducer
 // reducers.reducerName.ownerId: How we set the Id of the resource
 // reducers.reducerName.actions:
-//  - calculate.new: Add a new resource to the reducer
 //  - add.attrName: add the value to this attr,
-//  - remove.attrName: the value to this attr,
 //  - update.attrName: replace the value of this attr,
-//  - set.attrName: set the value. Inmutable
 //  - calculate.reducerFunctionName: calls this reducer function to process the event
 // reducers.attrs: Attrs to set when creating a new resource
 // embedded: If this is an Object with embeddes events
@@ -23,6 +20,7 @@ const EVENTS = {
 	"m.direct": {
 		"rootType": "account_data",
 		"idAttr": "calculate.generateId",
+		"ephemeral": true,
 		"reducers": {
 			"users": { "ownerId": "attr.currentUserId" }
 		},
@@ -30,7 +28,6 @@ const EVENTS = {
 	"m.presence": {
 		"rootType": "presence",
 		"ephemeral": true,
-		"state": true,
 		"reducers": {
 			"users": { 
 				"ownerId": "attr.sender",
@@ -44,20 +41,18 @@ const EVENTS = {
 	"m.push_rules": {
 		"rootType": "account_data",
 		"ephemeral": true,
-		"state": true,
 		"reducers": {
 			"users": { "ownerId": "attr.currentUserId" }
 		}
 	},
 	"m.receipt": {
 		"rootType": "rooms",
-		"ownerId": "calculate.ownerId",
 		"ephemeral": true,
 		"embedded": true,
 		"embeddedTypes": ["m.read"],
 		"reducers": {
-			"events": { 
-				"ownerId": "calculate.ownerId",
+			"rooms": { 
+				"ownerId": "attr.roomId",
 				"actions": ["calculate.eventRead"]
 			}
 		}
@@ -104,7 +99,7 @@ const EVENTS = {
 			}
 		},
 		"actionsValues": { 
-			"content": { "canonical_alias": "canonical_alias" }
+			"content": { "canonical_alias": "alias" }
 		}
 	},
 	"m.room.create": {
@@ -115,7 +110,7 @@ const EVENTS = {
 		"reducers": {
 			"rooms": {
 				"ownerId": "attr.roomId",
-				"actions": [ "calculate.new", "set.content.creatorId" ],
+				"actions": [ "calculate.new", "update.content.creatorId" ],
 			}
 		},
 		"actionsValues": { 
@@ -127,6 +122,7 @@ const EVENTS = {
 		"idAttr": "attr.event_id",
 		"ephemeral": true,
 		"state": true,
+		"timeline": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
@@ -142,6 +138,7 @@ const EVENTS = {
 		"idAttr": "attr.event_id",
 		"ephemeral": true,
 		"state": true,
+		"timeline": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
@@ -149,7 +146,7 @@ const EVENTS = {
 			}
 		},
 		"actionsValues": { 
-			"content": { "historyVisibility": "history_visibilty" }
+			"content": { "historyVisibility": "history_visibility" }
 		}
 	},
 	"m.room.join_rules": {
@@ -172,13 +169,14 @@ const EVENTS = {
 		"idAttr": "attr.event_id",
 		"ephemeral": true,
 		"state": true,
+		"timeline": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
 				"actions": ["calculate.updateMembers"]
 			},
 			"users": {
-				"ownerId": "attr.sender",
+				"ownerId": "attr.state_key",
 				"actions": [
 					"calculate.new",
 					"update.content.name",
@@ -188,13 +186,14 @@ const EVENTS = {
 			}
 		},
 		"actionsValues": { 
-			"content": { "avatarUrl": "url", "name": "displayname" }
+			"content": { "avatarUrl": "avatar_url", "name": "displayname" }
 		}
 	},
 	"m.room.message": {
 		"rootType": "rooms",
 		"idAttr": "attr.event_id",
 		"ageSorted": true,
+		"timeline": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
@@ -207,9 +206,9 @@ const EVENTS = {
 			"events": {
 				"ownerId": "attr.id",
 				"actions": [ 
-					"new", 
-					"set.attr.userId",
-					"set.attr.roomId",
+					"calculate.new", 
+					"update.attr.userId",
+					"update.attr.roomId",
 					"calculate.updateByType",
 					"calculate.updateMessagesByType"
 				]
@@ -220,7 +219,10 @@ const EVENTS = {
 			}
 		},
 		"actionsValues": {
-			"attr": { "userId": "sender", "roomId": "roomId" }
+			"attr": { 
+				"userId": "sender", "roomId": "roomId", 
+				"messages": "event_id", "events": "event_id"
+			}
 		}
 	},
 	"m.room.name": {
@@ -259,8 +261,8 @@ const EVENTS = {
 			"events": {
 				"ownerId": "attr.id",
 				"actions": [ 
-					"new", "set.attr.targetEventId",
-					"set.attr.userId", "set.attr.roomId",
+					"new", "update.attr.targetEventId",
+					"update.attr.userId", "update.attr.roomId",
 					"calculate.updateRedactedEvent"
 					],
 			},
@@ -277,7 +279,10 @@ const EVENTS = {
 			},
 		},
 		"actionsValues": { 
-			"attr": { "userId": "sender", "targetEventId": "event_id" },
+			"attr": { 
+				"userId": "sender", "targetEventId": "event_id", 
+				"messages": "event_id", "events": "event_id"
+			},
 		}
 	},
 	"m.room.third_party_invite": {
@@ -294,13 +299,13 @@ const EVENTS = {
 				"ownerId": "attr.id",
 				"actions": [
 					"calculate.new",
-					"set.attr.roomId",
+					"update.attr.roomId",
 					"calculate.updateByType"
 				],
 			},
 		},
 		"actionsValues": {
-			"attr": { "roomId": "roomId" }
+			"attr": { "roomId": "roomId", "events": "event_id" }
 		}
 	},
 	"m.room.topic": {
@@ -315,7 +320,7 @@ const EVENTS = {
 			}
 		},
 		"actionsValues": { 
-			"attr": { "topic": "topic" }
+			"content": { "topic": "topic" }
 		}
 	},
 	"m.tag": {
@@ -339,7 +344,7 @@ const EVENTS = {
 			}
 		},
 		"actionsValues": { 
-			"content": { "user_ids": "membersTyping" }
+			"content": { "membersTyping": "user_ids" }
 		}
 	},
 	"org.matrix.room.color_scheme": {
