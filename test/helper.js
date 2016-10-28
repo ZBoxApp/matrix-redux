@@ -3,14 +3,14 @@
 import chai from "chai";
 import jsonschema from 'jsonschema';
 import _ from 'lodash';
-import {combineReducers} from "redux";
+import {createStore, applyMiddleware, compose} from "redux";
+import thunk from "redux-thunk";
 import MatrixClient from "../src/utils/client";
 import {fetchRequest} from "../src/utils/utils";
 import * as UserActions from "../src/actions/user";
-import {leaveRoom} from "../src/actions/rooms";
-import createStore from "../src/store/store";
 import fetch from "isomorphic-fetch";
-import rootReducer from "../src/reducers";
+import ReducerHelper from "../src/reducers/reducer_helper";
+import MatrixReducer from "../src/reducers";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
@@ -20,12 +20,7 @@ const testUserPassword = process.env.USER_PASS || "123456";
 const testUserName = process.env.USER_NAME || "test";
 const testHomeServerName = process.env.HOMESERVER_NAME || "zboxapp.dev";
 
-export const createStoreHelper = function(preloadedState, persistOps) {
-  const combinedReducers = combineReducers(rootReducer);
-  return createStore(combinedReducers, preloadedState, persistOps)
-}
-
-const store = createStoreHelper({users: null, sync: null});
+const store = createStore(MatrixReducer, applyMiddleware(thunk));
 
 /**
  * Just a function to clean some values of the

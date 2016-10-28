@@ -2,50 +2,60 @@
  * Copyright 2015-present, ZBox Spa.
  * All rights reserved.
  */
+"use strict";
 
 import _ from 'lodash';
 import EVENTS from '../utils/matrix_events';
-import ReducerHelper './reducer_helper';
-
-"use strict";
+import ReducerHelper from './reducer_helper';
 
 const initialState = {
     "sync": {},
-    "rooms": {},
-    "users": {},
-    "events": {},
+    "rooms": { 'byIds': {} },
+    "users": {'byIds': {}},
+    "events": {'byIds': {}},
     "_testing": {}
 };
 
 const MatrixReducer = (state = initialState, action = {}) => {
 
+	let newState = {...state};
+	
+
 	const eventsToState = (events) => {
-		let result = {};
-		const rooms = processByReducer('rooms', events);
-		const users = processByReducer('users', events);
-		// const events = processByReducer('events', events.events);
+		processByReducer('rooms', events);
+		processByReducer('users', events);
+		
+		Object.keys(newState).forEach((reducerName) => {
+			if (newState[reducerName].byIds && newState[reducerName].byIds.byIds)
+				delete newState[reducerName].byIds.byIds;
+		});
+		return newState;
 	};
 
 	const processByReducer = (reducerName, events) => {
 		const reducerObject = events[reducerName];
 		const reducerNames = Object.keys(reducerObject) || [];
-		reducerNames.forEach((reducerName) => {
-			const resource = reducerObject[reducerName];
-			const eventsByType = ReducerHelper.groupByType(resource.events);
 
-			let newState = processEventsByType(eventsByType.state, resource, 'state');
-			newState = processEventsByType(eventsByType.timeline, resource);
-			newState = processEventsByType(eventsByType.ephemeral, resource);
+		reducerNames.forEach((reducerName) => {
+			const resourcesIds = Object.keys(reducerObject[reducerName]) || [];
+			resourcesIds.forEach((resourceId) => {
+				const resource = reducerObject[reducerName][resourceId];
+				const eventsByType = ReducerHelper.groupByType(resource.events);
+				['state', 'timeline', 'ephemeral'].forEach((eventType) => {
+					processEventsByType(eventsByType[eventType], resource, eventType);
+				});
+			});
 		});
+		return newState;
 	};
 
-	const processEventsByType = (idsArray, resource, state) => {
-		const events = getEventsFromIds(idsArray, resource);
-		if (state)
-			return runStateEventsActions(events);
+	const processEventsByType = (idsArray, resource, eventType) => {
+		const events = getEventsFromIds(idsArray, resource.events);
+		// if (eventType === 'state')
+		// 	return runStateEventsActions(events);
 
-		else
-			return runEventsActions(events);
+		// else
+		return runEventsActions(events);
 	};
 
 	const runStateEventsActions = (events) => {
@@ -53,34 +63,31 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		const eventsByType = ReducerHelper.groupByType(events);
 		const eventsTypes = Object.keys(EVENTS);
 
-		eventsTypes.forEach((evenType) => {
+		eventsTypes.forEach((eventType) => {
 			if (!eventsByType[eventType]) return;
-
 			const youngerEvent = eventsByType[eventType][eventsByType[eventType].length - 1];
-			results[youngerEvent.id];
+			results[youngerEvent.id] = youngerEvent;
 		});
 
-		return runEventsActions(results);
+		runEventsActions(results);
 
 	};
 
 	const runEventsActions = (events) => {
 		const tmpStates = [];
 		const eventsIds = Object.keys(events) || [];
-		let newState = {};
 
 		eventsIds.forEach((eventId) => {
+			const event = events[eventId];
 			const tmpState = runActions(events[eventId]);
 			tmpStates.push(tmpState);
 		});
 
-		newState = mergeTmpState(newState, tmpStates);
-		return newState;
+		return mergeTmpState(newState, tmpStates);
 	};
 
 	const runActions = (event) => {
 		const tmpStates = [];
-		let newState = {};
 		const actions = getActions(event) || [];
 		
 		// We run every action and save the temp state;
@@ -89,8 +96,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			tmpStates.push(tmpState);
 		});
 
-		newState = mergeTmpState(newState, tmpStates);
-		return newState;
+		return mergeTmpState(newState, tmpStates);
 	}
 
 	const runAction = (actionName, event) => {
@@ -105,12 +111,10 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 	const runCalculation = (actionName, event) => {
 		const [op, functionName] = [...(actionName.split('.'))];
-		let newState = stateFactory(event);
 		if (typeof calculations[functionName] !== 'function')
 			return newState;
 		
-		newState = calculations[functionName](event);
-		return newState;
+		return calculations[functionName](event);
 	}
 
 	const runCrud = (actionName, event) => {
@@ -129,6 +133,18 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		return newValue;
 	};
 
+	const getResource = (reducer, resourceId) => {
+		if (!newState[reducer].byIds[resourceId])
+			newState[reducer].byIds[resourceId] = {};
+
+		return newState[reducer].byIds[resourceId];		
+	};
+
+	const setResource = (reducer, resourceId, resource) => {
+		newState[reducer].byIds[resourceId]	= resource;
+		return;
+	}
+
 	const mergeTmpState = (newState = {}, tmpStates) => {
 		// we process the tmpStates to build the newState
 		tmpStates.forEach((tmpState) => {
@@ -143,14 +159,10 @@ const MatrixReducer = (state = initialState, action = {}) => {
 					if (Object.keys(resource).length < 1)
 						return;
 
-					if(!newState[reducerName])
-						newState[reducerName] = {};
-
-					newState[reducerName][resourceId] = resource;
+					setResource(reducerName, resourceId, resource);
 				});
 			});
 		});
-
 		return newState;
 	}
 
@@ -158,16 +170,6 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		return array.filter((el) => {
 			return (el !== element);
 		});
-	}
-
-	const stateFactory = (event) => {
-		const newState = {
-			[event.reducer]: {
-				[event.ownerId]: ({...state[event.reducer][event.ownerId]} || {})
-			}
-		}
-		
-		return newState;
 	}
 
 	const getActions = (event) => {
@@ -187,11 +189,14 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		return events;
 	}
 
-	const superPush = (array, value) => {
+	const superPush = (array, value, uniq = false) => {
 		if (!Array.isArray(array))
 			array = [];
 
 		array.push(value);
+		if(uniq)
+			array = Array.from(new Set(array));
+
 		return array;
 	}
 
@@ -200,32 +205,29 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			// Pass "attr" as providerName because for add ops its always
 			// an attribute
 			const newValue = getNewValue(event, "attr", attrName);
-			const newState = stateFactory(event);
-			const resource = newState[event.reducer][event.ownerId];
-			resource[attrName] = superPush(resource[attrName], newValue);
+			const resource = getResource(event.reducer, event.ownerId);
+			resource[attrName] = superPush(resource[attrName], newValue, 'uniq');
 
-			newState[event.reducer][event.ownerId] = resource;
+			setResource(event.reducer, event.ownerId, resource);
 			return newState;
 		},
 		"update": (event, providerName, attrName) => {
-			const newState = stateFactory(event);
-			const resource = newState[event.reducer][event.ownerId];
+			const resource = getResource(event.reducer, event.ownerId);
 			const newValue = getNewValue(event, providerName, attrName);
 			if (!newValue || newValue === null)
 				return newState;
 
 			resource[attrName] = newValue;
 
-			newState[event.reducer][event.ownerId] = resource;
+			setResource(event.reducer, event.ownerId, resource);
 			return newState;
 		},
 	}
 
 	const calculations = {
 		"updateMembers": (event) => {
-			const newState = stateFactory(event);
-			const resource = newState[event.reducer][event.ownerId];
-			const memberId = event.sender;
+			const resource = getResource(event.reducer, event.ownerId);
+			const memberId = event.state_key;
 
 			if (!resource.membersIds)
 				resource.membersIds = [];
@@ -233,11 +235,11 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			const membership = event.membership || event.content.membership;
 			const attrKey = membership + 'MembersIds';
 
-			resource[attrKey] = superPush(resource[attrKey], memberId);
+			resource[attrKey] = superPush(resource[attrKey], memberId, 'uniq');
 			
 			// We add the member to room and remove from in invited list
 			if (membership === 'join') {
-				resource.membersIds.push(memberId);
+				resource.membersIds = superPush(resource.membersIds, memberId, 'uniq');
 				
 				if (resource.inviteMembersIds)
 					resource.inviteMembersIds = removeFromArray(resource.inviteMembersIds, memberId);
@@ -248,16 +250,14 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			if (/(ban|leave)/.test(membership))
 				resource.membersIds = removeFromArray(resource.membersIds, memberId);
 
-			newState[event.reducer][event.ownerId] = resource;
+			setResource(event.reducer, event.ownerId, resource);
 			return newState;
 		},
 		"eventRead": (event) => {
 			const targetEventsIds = Object.keys(event.content);
-			const newState = { 'events': {} };
 
 			targetEventsIds.forEach((eventId) => {
-				const tmpState = stateFactory({'reducer': 'events', 'ownerId': eventId});
-				const resource = tmpState.events[eventId];
+				const resource = getResource('events', eventId);
 				const readData = event.content[eventId]['m.read'];
 				if (!readData)
 					return;
@@ -267,18 +267,26 @@ const MatrixReducer = (state = initialState, action = {}) => {
 					resource.readedBy = [];
 
 				resource.readedBy = _.union(resource.readedBy, userIds);
-				newState.events[eventId] = resource;
+				resource.readedBy = Array.from(new Set(resource.readedBy));
+
+				setResource('events', eventId, resource);
 			});
 
 			return newState;
 		}
 	}
 
-	state._testing.runCrud = runCrud;
-	state._testing.runCalculation = runCalculation;
-	state._testing.runActions = runActions;
-	state._testing.runEventsActions = runEventsActions ;
-	return state;
+	if (action.payload && action.payload.events)
+		newState = eventsToState(action.payload.events);
+
+	newState._testing.runCrud = runCrud;
+	newState._testing.runCalculation = runCalculation;
+	newState._testing.runActions = runActions;
+	newState._testing.runEventsActions = runEventsActions;
+	newState._testing.eventsToState = eventsToState;
+	
+	return newState;
+
 };
 
 

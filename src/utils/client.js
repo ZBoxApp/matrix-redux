@@ -169,7 +169,8 @@ export default class MatrixClient {
     static newEvents() {
         const json = JSON.parse(this.client._reduxRawResponse)
         const userId = this.client._http.opts.userId;
-        return MatrixJsonParser.processJson(json, userId);
+        const homeServer = this.client._http.opts.homeServer;
+        return MatrixJsonParser.processMatrixJson(json, userId, homeServer);
     };
 
     static stopClient() {

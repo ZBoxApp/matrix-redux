@@ -18,6 +18,7 @@ const groupByType = (events) => {
 		eventsArray = objectToArray(eventsArray);
 
 	eventsArray.forEach((event) => {
+		if (!event) return;
 		if (!EVENTS[event.type]) return;
 		const ephemeral = EVENTS[event.type].ephemeral;
 		const sorted = EVENTS[event.type].ageSorted;

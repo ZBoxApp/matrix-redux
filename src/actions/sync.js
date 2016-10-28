@@ -3,7 +3,6 @@
  **/
 
 import MatrixClient from "../utils/client";
-import {setError} from "./error";
 
 export const SYNC_REQUEST = 'SYNC_REQUEST';
 export const SYNC_FAILURE = 'SYNC_FAILURE';
@@ -66,25 +65,22 @@ export const start = (opts) => {
             break;
 
           case SYNC_STATE_RUNNING:
-            dispatch(requestSync(SYNC_SUCCESS, { isRunning: true }));
             newEvents = MatrixClient.newEvents();
-            newEvents.events.forEach((event) => {
-              dispatchRouter(event, dispatch);
-            });
+
+            payload = {
+              events: newEvents
+            }
+
+            dispatch(requestSync(SYNC_SUCCESS, payload));
             break;
           case SYNC_INITIAL_SUCCESS:
             newEvents = MatrixClient.newEvents();
-            newEvents.events.forEach((event) => {
-              dispatchRouter(event, dispatch);
-            });
-            payload = {
-              isRunning: true, initialSyncComplete: true,
-              syncToken: MatrixClient.client.store.syncToken,
-              filters: MatrixClient.client.store.filters,
-            };
-            dispatch(requestSync(SYNC_SUCCESS, payload));
-            dispatch(requestSync(SYNC_INITIAL, payload));
 
+            payload = {
+              events: newEvents
+            }
+
+            dispatch(requestSync(SYNC_SUCCESS, payload));
             break;
 
           case SYNC_STATE_STOPPED:

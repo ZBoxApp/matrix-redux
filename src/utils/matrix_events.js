@@ -198,7 +198,7 @@ const EVENTS = {
 			"rooms": { 
 				"ownerId": "attr.roomId",
 				"actions": [ 
-					"add.messages", "add.events", 
+					"add.messages", "add.timeline", 
 					"calculate.updateEventsByType",
 					"calculate.updateMessagesByType"
 				]
@@ -221,7 +221,7 @@ const EVENTS = {
 		"actionsValues": {
 			"attr": { 
 				"userId": "sender", "roomId": "roomId", 
-				"messages": "event_id", "events": "event_id"
+				"messages": "event_id", "timeline": "event_id"
 			}
 		}
 	},
