@@ -51,26 +51,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 	const processEventsByType = (idsArray, resource, eventType) => {
 		const events = getEventsFromIds(idsArray, resource.events);
-		// if (eventType === 'state')
-		// 	return runStateEventsActions(events);
-
-		// else
 		return runEventsActions(events);
-	};
-
-	const runStateEventsActions = (events) => {
-		const results = {};
-		const eventsByType = ReducerHelper.groupByType(events);
-		const eventsTypes = Object.keys(EVENTS);
-
-		eventsTypes.forEach((eventType) => {
-			if (!eventsByType[eventType]) return;
-			const youngerEvent = eventsByType[eventType][eventsByType[eventType].length - 1];
-			results[youngerEvent.id] = youngerEvent;
-		});
-
-		runEventsActions(results);
-
 	};
 
 	const runEventsActions = (events) => {
@@ -83,12 +64,12 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			tmpStates.push(tmpState);
 		});
 
-		return mergeTmpState(newState, tmpStates);
+		return ReducerHelper.mergeTmpState(newState, tmpStates);
 	};
 
 	const runActions = (event) => {
 		const tmpStates = [];
-		const actions = getActions(event) || [];
+		const actions = ReducerHelper.getActions(event) || [];
 		
 		// We run every action and save the temp state;
 		actions.forEach((action) => {
@@ -96,7 +77,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			tmpStates.push(tmpState);
 		});
 
-		return mergeTmpState(newState, tmpStates);
+		return ReducerHelper.mergeTmpState(newState, tmpStates);
 	}
 
 	const runAction = (actionName, event) => {
@@ -124,109 +105,33 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		return newState;
 	}
 
-	const getNewValue = (event, providerName, attrName) => {
-		// Provider is from where we get the value we want to store
-		const provider = (providerName === 'attr') ? event : event.content;
-		
-		const attrKey = EVENTS[event.type].actionsValues[providerName][attrName];
-		const newValue = provider[attrKey];
-		return newValue;
-	};
-
-	const getResource = (reducer, resourceId) => {
-		if (!newState[reducer].byIds[resourceId])
-			newState[reducer].byIds[resourceId] = {};
-
-		return newState[reducer].byIds[resourceId];		
-	};
-
-	const setResource = (reducer, resourceId, resource) => {
-		newState[reducer].byIds[resourceId]	= resource;
-		return;
-	}
-
-	const mergeTmpState = (newState = {}, tmpStates) => {
-		// we process the tmpStates to build the newState
-		tmpStates.forEach((tmpState) => {
-			const reducerNames = Object.keys(tmpState);
-			reducerNames.forEach((reducerName) => {
-				const reducer = tmpState[reducerName];
-				const resourceIds = Object.keys(reducer);
-
-				resourceIds.forEach((resourceId) => {
-					const resource = reducer[resourceId];
-					// Dont care empty results
-					if (Object.keys(resource).length < 1)
-						return;
-
-					setResource(reducerName, resourceId, resource);
-				});
-			});
-		});
-		return newState;
-	}
-
-	const removeFromArray = (array = [], element) => {
-		return array.filter((el) => {
-			return (el !== element);
-		});
-	}
-
-	const getActions = (event) => {
-		let actions = [];
-		if (!EVENTS[event.type]) return actions;
-		
-		actions = EVENTS[event.type].reducers[event.reducer].actions;
-		return actions;
-	}
-
-	const getEventsFromIds = (eventsIds = [], eventObject) => {
-		const events = {};
-		eventsIds.forEach((eventId) => {
-			events[eventId] = eventObject[eventId];
-		});
-
-		return events;
-	}
-
-	const superPush = (array, value, uniq = false) => {
-		if (!Array.isArray(array))
-			array = [];
-
-		array.push(value);
-		if(uniq)
-			array = Array.from(new Set(array));
-
-		return array;
-	}
-
 	const operations = {
 		"add": (event, attrName) => {
 			// Pass "attr" as providerName because for add ops its always
 			// an attribute
-			const newValue = getNewValue(event, "attr", attrName);
-			const resource = getResource(event.reducer, event.ownerId);
-			resource[attrName] = superPush(resource[attrName], newValue, 'uniq');
+			const newValue = ReducerHelper.getNewValue(event, "attr", attrName);
+			const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
+			resource[attrName] = ReducerHelper.superPush(resource[attrName], newValue, 'uniq');
 
-			setResource(event.reducer, event.ownerId, resource);
+			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
 			return newState;
 		},
 		"update": (event, providerName, attrName) => {
-			const resource = getResource(event.reducer, event.ownerId);
-			const newValue = getNewValue(event, providerName, attrName);
+			const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
+			const newValue = ReducerHelper.getNewValue(event, providerName, attrName);
 			if (!newValue || newValue === null)
 				return newState;
 
 			resource[attrName] = newValue;
 
-			setResource(event.reducer, event.ownerId, resource);
+			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
 			return newState;
 		},
 	}
 
 	const calculations = {
 		"updateMembers": (event) => {
-			const resource = getResource(event.reducer, event.ownerId);
+			const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
 			const memberId = event.state_key;
 
 			if (!resource.membersIds)
@@ -235,29 +140,29 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			const membership = event.membership || event.content.membership;
 			const attrKey = membership + 'MembersIds';
 
-			resource[attrKey] = superPush(resource[attrKey], memberId, 'uniq');
+			resource[attrKey] = ReducerHelper.superPush(resource[attrKey], memberId, 'uniq');
 			
 			// We add the member to room and remove from in invited list
 			if (membership === 'join') {
-				resource.membersIds = superPush(resource.membersIds, memberId, 'uniq');
+				resource.membersIds = ReducerHelper.superPush(resource.membersIds, memberId, 'uniq');
 				
 				if (resource.inviteMembersIds)
-					resource.inviteMembersIds = removeFromArray(resource.inviteMembersIds, memberId);
+					resource.inviteMembersIds = ReducerHelper.removeFromArray(resource.inviteMembersIds, memberId);
 			}
 
 			// We remove the member from room if 
 			// membership is ban or leave
 			if (/(ban|leave)/.test(membership))
-				resource.membersIds = removeFromArray(resource.membersIds, memberId);
+				resource.membersIds = ReducerHelper.removeFromArray(resource.membersIds, memberId);
 
-			setResource(event.reducer, event.ownerId, resource);
+			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
 			return newState;
 		},
 		"eventRead": (event) => {
 			const targetEventsIds = Object.keys(event.content);
 
 			targetEventsIds.forEach((eventId) => {
-				const resource = getResource('events', eventId);
+				const resource = ReducerHelper.getResource('events', eventId, newState);
 				const readData = event.content[eventId]['m.read'];
 				if (!readData)
 					return;
@@ -269,7 +174,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 				resource.readedBy = _.union(resource.readedBy, userIds);
 				resource.readedBy = Array.from(new Set(resource.readedBy));
 
-				setResource('events', eventId, resource);
+				ReducerHelper.setResource('events', eventId, resource, newState);
 			});
 
 			return newState;

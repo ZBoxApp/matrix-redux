@@ -209,7 +209,7 @@ describe("Reducer Tests", function() {
 
 	/**
 	 * This test and calculations are missing
-	 * "calculate.new"
+	 * "calculate.new" <- parece que no es necesario
 	 * "calculate.powerLevels"
 	 * "calculate.tags"
 	 * "calculate.updateByType"
@@ -249,35 +249,23 @@ describe("Reducer Tests", function() {
 		expect(randomUser).to.not.be.undefined;
 	});
 
-	// it('7. runEventsActions calls runActions for every Event', function() {
-	// 	testState = {"users": {}, "rooms": {}, "events": {}};
+	it('8. runEventsActions calls runActions for every Event', function() {
+		testState = {"users": {}, "rooms": {}, "events": {}};
 
-	// 	const testAction = (events) => {
-	// 		const newState = state._testing.runEventsActions(events);
-	// 		testState = _.merge({}, testState, newState);
-	// 		delete testState.users[undefined];
-	// 	};
+		const testAction = (events) => {
+			const newState = state._testing.runEventsActions(events);
+			testState = _.merge({}, testState, newState);
+			delete testState.users[undefined];
+		};
 
-	// 	for (var i = 0; i <= 50; i++) {
-	// 		const randomReducer = _.sample(['users', 'rooms']);
-	// 		const randomId =  _.sample(Object.keys(jsonStore[randomReducer].byIds));
-	// 		const randomResource = jsonStore[randomReducer].byIds[randomId];
-	// 		const events = randomResource.events;
-	// 		return testAction(events);
-	// 	};
-	// });
-
-	// it('8. eventsToState', function() {
-	// 	// const newState = state._testing.eventsToState(jsonStore);
-	// 	// console.log(JSON.stringify(newState, 2, 2));
-	// });
-
-
-
-
-
-
-
+		for (var i = 0; i <= 50; i++) {
+			const randomReducer = _.sample(['users', 'rooms']);
+			const randomId =  _.sample(Object.keys(jsonStore[randomReducer].byIds));
+			const randomResource = jsonStore[randomReducer].byIds[randomId];
+			const events = randomResource.events;
+			return testAction(events);
+		};
+	});
 });
 
 // 1. Paso JSON como Payload al reducer. El type es SYNC

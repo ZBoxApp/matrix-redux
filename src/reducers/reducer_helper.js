@@ -82,9 +82,95 @@ const objectToArray = (object) => {
 	return events;
 }
 
+const getNewValue = (event, providerName, attrName) => {
+	// Provider is from where we get the value we want to store
+	const provider = (providerName === 'attr') ? event : event.content;
+		
+	const attrKey = EVENTS[event.type].actionsValues[providerName][attrName];
+	const newValue = provider[attrKey];
+	return newValue;
+};
+
+const getResource = (reducer, resourceId, newState) => {
+	if (!newState[reducer].byIds[resourceId])
+		newState[reducer].byIds[resourceId] = {};
+
+	return newState[reducer].byIds[resourceId];		
+};
+
+const setResource = (reducer, resourceId, resource, newState) => {
+	newState[reducer].byIds[resourceId]	= resource;
+	return newState;
+};
+
+const mergeTmpState = (newState = {}, tmpStates) => {
+	// we process the tmpStates to build the newState
+	tmpStates.forEach((tmpState) => {
+		const reducerNames = Object.keys(tmpState);
+		reducerNames.forEach((reducerName) => {
+			const reducer = tmpState[reducerName];
+			const resourceIds = Object.keys(reducer);
+
+			resourceIds.forEach((resourceId) => {
+				const resource = reducer[resourceId];
+				// Dont care empty results
+				if (Object.keys(resource).length < 1)
+					return;
+
+				setResource(reducerName, resourceId, resource, newState);
+			});
+		});
+	});
+	return newState;
+};
+
+const removeFromArray = (array = [], element) => {
+	return array.filter((el) => {
+		return (el !== element);
+	});
+}
+
+const getActions = (event) => {
+	let actions = [];
+	if (!EVENTS[event.type]) return actions;
+	
+	actions = EVENTS[event.type].reducers[event.reducer].actions;
+	return actions;
+};
+
+const getEventsFromIds = (eventsIds = [], eventObject) => {
+	const events = {};
+	eventsIds.forEach((eventId) => {
+		events[eventId] = eventObject[eventId];
+	});
+
+	return events;
+};
+
+const superPush = (array, value, uniq = false) => {
+	if (!Array.isArray(array))
+		array = [];
+
+	array.push(value);
+	if(uniq)
+		array = Array.from(new Set(array));
+
+	return array;
+};
+
 const ReducerHelper = {
-	"groupByType": groupByType,
-	"sortByAge": sortByAge
+	groupByType,
+	sortByAge,
+	superPush,
+	getEventsFromIds,
+	getActions,
+	removeFromArray,
+	mergeTmpState,
+	setResource,
+	getResource,
+	getNewValue,
+	objectToArray,
+	isEphemeral
 };
 
 export default ReducerHelper;
