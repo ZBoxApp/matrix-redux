@@ -5,6 +5,7 @@
 
 import _ from 'lodash';
 import EVENTS from '../utils/matrix_events';
+import ReducerHelper './reducer_helper';
 
 "use strict";
 
@@ -17,6 +18,51 @@ const initialState = {
 };
 
 const MatrixReducer = (state = initialState, action = {}) => {
+
+	const eventsToState = (events) => {
+		let result = {};
+		const rooms = processByReducer('rooms', events);
+		const users = processByReducer('users', events);
+		// const events = processByReducer('events', events.events);
+	};
+
+	const processByReducer = (reducerName, events) => {
+		const reducerObject = events[reducerName];
+		const reducerNames = Object.keys(reducerObject) || [];
+		reducerNames.forEach((reducerName) => {
+			const resource = reducerObject[reducerName];
+			const eventsByType = ReducerHelper.groupByType(resource.events);
+
+			let newState = processEventsByType(eventsByType.state, resource, 'state');
+			newState = processEventsByType(eventsByType.timeline, resource);
+			newState = processEventsByType(eventsByType.ephemeral, resource);
+		});
+	};
+
+	const processEventsByType = (idsArray, resource, state) => {
+		const events = getEventsFromIds(idsArray, resource);
+		if (state)
+			return runStateEventsActions(events);
+
+		else
+			return runEventsActions(events);
+	};
+
+	const runStateEventsActions = (events) => {
+		const results = {};
+		const eventsByType = ReducerHelper.groupByType(events);
+		const eventsTypes = Object.keys(EVENTS);
+
+		eventsTypes.forEach((evenType) => {
+			if (!eventsByType[eventType]) return;
+
+			const youngerEvent = eventsByType[eventType][eventsByType[eventType].length - 1];
+			results[youngerEvent.id];
+		});
+
+		return runEventsActions(results);
+
+	};
 
 	const runEventsActions = (events) => {
 		const tmpStates = [];
@@ -130,6 +176,15 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		
 		actions = EVENTS[event.type].reducers[event.reducer].actions;
 		return actions;
+	}
+
+	const getEventsFromIds = (eventsIds = [], eventObject) => {
+		const events = {};
+		eventsIds.forEach((eventId) => {
+			events[eventId] = eventObject[eventId];
+		});
+
+		return events;
 	}
 
 	const superPush = (array, value) => {
