@@ -4,6 +4,10 @@
     "description": "The Rooms state",
     "type": "object",
     "properties": {
+        "initialSyncComplete": {
+            "description": "Status of the intialSync",
+            "type": "boolean"
+        },
         "isLoading": {
             "description": "Status of the server requests",
             "type": "boolean"
@@ -28,7 +32,11 @@
             "description": "Object with all the rooms",
             "type": "object",
             "oneOf": [{ "$ref": "file:./room.json" }]
+        },
+        "ids": {
+            "description": "Ids of all the rooms",
+            "type": "array"
         }
     },
-    "required": [ "isLoading"]
+    "required": [ "isLoading", "byIds", "initialSyncComplete", "ids" ]
 }

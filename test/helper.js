@@ -10,7 +10,7 @@ import * as UserActions from "../src/actions/user";
 import {leaveRoom} from "../src/actions/rooms";
 import createStore from "../src/store/store";
 import fetch from "isomorphic-fetch";
-import rootReducer from "../src/reducer";
+import rootReducer from "../src/reducers";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
@@ -46,11 +46,27 @@ export const randomElement = function(object) {
     return object[key];
 };
 
-export const validateSchema = function(instance, schema) {
+
+export const validSchema = function(instance, schema) {
     const Validator = jsonschema.Validator;
     const v = new Validator();
-    const schemaFile = require('../docs/schemas/' + schema + '.json');
-    return v.validate(instance, schemaFile);
+    const schemaFile = require('./schemas/' + schema + '.json');
+    const validationResult = v.validate(instance, schemaFile);
+
+    warnValidateSchema(validationResult);
+    return (validationResult.errors.length < 1);
+};
+
+export const validateSchema = validSchema;
+
+const warnValidateSchema = (validationResult) => {
+    if (validationResult.errors.length < 1)
+        return;
+
+    validationResult.errors.forEach((error) => {
+        console.log("SCHEMA ERROR:", error.message);
+    });
+
 };
 
 export const endTest = function (err) {

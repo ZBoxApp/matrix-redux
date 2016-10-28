@@ -65,31 +65,30 @@
             "type": "string",
             "pattern": "^mxc:\/\/.*"
         },
-        "members": {
-            "description": "A list of users ids group by membership state",
-            "type": "object",
-            "properties": {
-                "join": {
-                    "description": "Array of users ids that are members",
-                    "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
-                },
-                "leave": {
-                    "description": "Array of users that leave the rooms",
-                    "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
-                },
-                "invite": {
-                    "description": "Array of invited users ids, who are not joined the room",
-                    "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
-                },
-                "banned": {
-                    "description": "Array of banned users ids, who are not joined the room",
-                    "type": "array",
-                    "items": { "type": "string", "pattern": "^@.*:" }
-                }
-            }
+        "membersIds": {
+            "description": "A list of users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "inviteMembersIds": {
+            "description": "A list of invited users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "banMembersIds": {
+            "description": "A list of banned users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "leaveMembersIds": {
+            "description": "A list of banned users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "joinMembersIds": {
+            "description": "A list of new joined users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
         },
         "timeline": {
             "description": "A list of this room events",

@@ -768,7 +768,7 @@
             },
             {
               "origin_server_ts": 1475682140506,
-              "sender": "@_neb_github_=40pbruna=3azboxapp.com:matrix.org",
+              "sender": "@_neb_github:matrix.org",
               "event_id": "$14756821402434555tkrSf:matrix.org",
               "unsigned": {
                 "prev_content": {
@@ -780,7 +780,7 @@
                 "replaces_state": "$1475682131709mVpdP:zboxapp.dev",
                 "age": 20936941
               },
-              "state_key": "@_neb_github_=40pbruna=3azboxapp.com:matrix.org",
+              "state_key": "@_neb_github:matrix.org",
               "content": {
                 "membership": "join",
                 "avatar_url": null,
@@ -1310,7 +1310,7 @@
             },
             {
               "origin_server_ts": 1475428035143,
-              "sender": "@_neb_github_=40pbruna=3azboxapp.com:matrix.org",
+              "sender": "@_neb_github:matrix.org",
               "event_id": "$14754280351667355pMpdy:matrix.org",
               "unsigned": {
                 "prev_content": {
@@ -1320,7 +1320,7 @@
                 "replaces_state": "$14754279701579XljZM:zboxapp.dev",
                 "age": 275042304
               },
-              "state_key": "@_neb_github_=40pbruna=3azboxapp.com:matrix.org",
+              "state_key": "@_neb_github:matrix.org",
               "content": {
                 "membership": "join",
                 "avatar_url": null,

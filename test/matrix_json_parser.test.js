@@ -4,7 +4,7 @@
 "use strict";
 
 import _ from 'lodash';
-import jsonschema from 'jsonschema';
+
 import {
 	createStoreHelper, expect, clearMatrixClient,
 	logTestUser, userFixture, randomElement, validateSchema

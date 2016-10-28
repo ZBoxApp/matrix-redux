@@ -9,14 +9,14 @@ import jsonschema from 'jsonschema';
 import {
 	createStoreHelper, expect, clearMatrixClient,
 	logTestUser, userFixture, randomElement, validateSchema
-} from "../helper";
-import { CONSTANTS } from '../../src/utils/constants';
-import MatrixClient from "../../src/utils/client";
-import EVENTS from "../../src/utils/matrix_events";
-import * as MatrixJsonParser from "../../src/utils/matrix_json_parser";
-import ReducerHelper from "../../src/reducer/reducer_helper";
+} from "./helper";
+import { CONSTANTS } from '../src/utils/constants';
+import MatrixClient from "../src/utils/client";
+import EVENTS from "../src/utils/matrix_events";
+import * as MatrixJsonParser from "../src/utils/matrix_json_parser";
+import ReducerHelper from "../src/reducers/reducer_helper";
 
-const jsonFixture = require('../model_schemas/initialSync.original.json');
+const jsonFixture = require('./model_schemas/initialSync.original.json');
 const machosRoomId = "!YbkEIQjnehrBrvscpm:zboxapp.dev";
 
 let apiFixture;
@@ -78,18 +78,37 @@ describe("Reducer Helper Functions", () => {
 			const sortedIds = ReducerHelper.sortByAge(groupByType[type], randomRoom.events)
 			const lastEvent = randomRoom.events[sortedIds[sortedIds.length - 1]];
 			const firstEvent = randomRoom.events[sortedIds[0]];
-			
-			expect(firstEvent.unsigned.age).to.be.at.least(lastEvent.unsigned.age);
+			expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
 		}
 	});
 
 	it('3. groupByType should return sorted Arrays if it must', function() {
 		const groupByType = ReducerHelper.groupByType(jsonStore.events.byIds);
 		const m_room_message = groupByType["m.room.message"];
-		expect(jsonStore.events.byIds[m_room_message[0]].unsigned.age).to.be.at.least(jsonStore.events.byIds[m_room_message[m_room_message.length - 1]].unsigned.age);
-
+		const lastEvent = jsonStore.events.byIds[m_room_message[m_room_message.length - 1]];
+		const firstEvent = jsonStore.events.byIds[m_room_message[0]];
+		expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
 	});
 
-	
+	it('4. groupByType should sorted timeline Arrays for room events', function() {
+		const groupByType = ReducerHelper.groupByType(randomRoom.events);
+		const timelineEvents = groupByType.timeline;
+		const lastEvent = randomRoom.events[timelineEvents[timelineEvents.length - 1]];
+		const firstEvent = randomRoom.events[timelineEvents[0]];
+		if (!lastEvent.unsigned || !firstEvent.unsigned) {
+			console.log(firstEvent);
+			console.log(lastEvent);
+		}
+		expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
+	});	
+
+	it('4. groupByType should sorted state Arrays for room events', function() {
+		const groupByType = ReducerHelper.groupByType(randomRoom.events);
+		const timelineEvents = groupByType.state;
+		const lastEvent = randomRoom.events[timelineEvents[timelineEvents.length - 1]];
+		const firstEvent = randomRoom.events[timelineEvents[0]];
+		expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
+	});	
 
 });
+
