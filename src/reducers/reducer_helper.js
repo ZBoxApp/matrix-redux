@@ -92,6 +92,9 @@ const getNewValue = (event, providerName, attrName) => {
 };
 
 const getResource = (reducer, resourceId, newState) => {
+	if (!newState[reducer])
+		newState[reducer] = { 'byIds': { [resourceId]: {} }};
+
 	if (!newState[reducer].byIds[resourceId])
 		newState[reducer].byIds[resourceId] = {};
 
@@ -99,6 +102,9 @@ const getResource = (reducer, resourceId, newState) => {
 };
 
 const setResource = (reducer, resourceId, resource, newState) => {
+	if (!newState[reducer])
+		newState[reducer] = { 'byIds': { [resourceId]: {} }};
+	
 	newState[reducer].byIds[resourceId]	= resource;
 	return newState;
 };

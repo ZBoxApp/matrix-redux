@@ -20,7 +20,6 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 	let newState = {...state};
 	
-
 	const eventsToState = (events) => {
 		processByReducer('rooms', events);
 		processByReducer('users', events);
@@ -83,48 +82,43 @@ const MatrixReducer = (state = initialState, action = {}) => {
 	const runAction = (actionName, event) => {
 		const [op, providerName, attrName] = [...(actionName.split('.'))];
 		if (op === 'calculate')
-			return runCalculation(actionName, event);
+			return runCalculation(providerName, event);
 
 		else {
-			return runCrud(actionName, event);			
+			return runCrud(op, providerName, attrName, event);
 		}
 	};
 
-	const runCalculation = (actionName, event) => {
-		const [op, functionName] = [...(actionName.split('.'))];
-		if (typeof calculations[functionName] !== 'function')
+	const runCalculation = (calculationName, event) => {
+		if (typeof calculations[calculationName] !== 'function')
 			return newState;
 		
-		return calculations[functionName](event);
+		return calculations[calculationName](event);
 	}
 
-	const runCrud = (actionName, event) => {
-		const [op, providerName, attrName] = [...(actionName.split('.'))];
-		let newState = operations[op](event, providerName, attrName);
+	const runCrud = (op, providerName, attrName, event) => {
+		if (typeof operations[op] !== 'function')
+			return;
 
-		return newState;
-	}
+		const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
+		const newValue = ReducerHelper.getNewValue(event, providerName, attrName);
+		return operations[op](event, newValue, attrName, resource);
+	};
 
 	const operations = {
-		"add": (event, attrName) => {
-			// Pass "attr" as providerName because for add ops its always
-			// an attribute
-			const newValue = ReducerHelper.getNewValue(event, "attr", attrName);
-			const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
+		"add": (event, newValue, attrName, resource) => {
 			resource[attrName] = ReducerHelper.superPush(resource[attrName], newValue, 'uniq');
-
 			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
+			
 			return newState;
 		},
-		"update": (event, providerName, attrName) => {
-			const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
-			const newValue = ReducerHelper.getNewValue(event, providerName, attrName);
+		"update": (event, newValue, attrName, resource) => {
 			if (!newValue || newValue === null)
 				return newState;
 
 			resource[attrName] = newValue;
-
 			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
+			
 			return newState;
 		},
 	}

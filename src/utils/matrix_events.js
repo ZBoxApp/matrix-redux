@@ -198,7 +198,7 @@ const EVENTS = {
 			"rooms": { 
 				"ownerId": "attr.roomId",
 				"actions": [ 
-					"add.messages", "add.timeline", 
+					"add.attr.messages", "add.attr.timeline", 
 					"calculate.updateEventsByType",
 					"calculate.updateMessagesByType"
 				]
@@ -215,7 +215,7 @@ const EVENTS = {
 			},
 			"users": {
 				"ownerId": "attr.sender",
-				"actions": ["add.messages"]
+				"actions": ["add.attr.messages"]
 			}
 		},
 		"actionsValues": {
@@ -268,12 +268,12 @@ const EVENTS = {
 			},
 			"users": {
 				"ownerId": "attr.sender",
-				"actions": ["add.messages"]
+				"actions": ["add.attr.messages"]
 			},
 			"rooms": { 
 				"ownerId": "attr.roomId",
 				"actions": [ 
-					"add.messages", "add.events", 
+					"add.attr.messages", "add.attr.events", 
 					"calculate.updateEventsByType"
 				]
 			},
@@ -293,7 +293,7 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": [ "add.events", "calculate.updateEventsByType" ]
+				"actions": [ "add.attr.events", "calculate.updateEventsByType" ]
 			},
 			"events": {
 				"ownerId": "attr.id",

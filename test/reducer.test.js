@@ -38,6 +38,14 @@ let store;
 let state;
 let testState;
 
+const initialState = {
+    "sync": {},
+    "rooms": { 'byIds': {} },
+    "users": {'byIds': {}},
+    "events": {'byIds': {}},
+    "_testing": {}
+};
+
 const rgxp = {
 	"eventId": /^\$[0-9]{10,}\w{5}/,
     "roomId": /^![-_0-9a-zA-Z]*:[-_0-9a-zA-Z]*/,
@@ -115,10 +123,11 @@ describe("Reducer Tests", function() {
 
 	it('2. runCrud add should add the value to the array', function() {
 		const testAction = (action, event) => {
-			const [op, attrName] = [...(action.split('.'))];
+			const [op, providerName, attrName] = [...(action.split('.'))];
 			if (op !== 'add') return;
-			const newValue = getNewValue(event, 'attr', attrName);
-			const newState = state._testing.runCrud(action, event);
+			
+			const newValue = ReducerHelper.getNewValue(event, providerName, attrName);
+			const newState = state._testing.runCrud(op, providerName, attrName, event);
 
 			const attr = newState[event.reducer].byIds[event.ownerId][attrName];
 			expect(Array.isArray(attr), 'not an array').to.be.true;
@@ -134,8 +143,9 @@ describe("Reducer Tests", function() {
 		const testAction = (action, event) => {
 			const [op, providerName, attrName] = [...(action.split('.'))];
 			if (op !== 'update') return;
+			
 			const newValue = getNewValue(event, providerName, attrName);
-			const newState = state._testing.runCrud(action, event);
+			const newState = state._testing.runCrud(op, providerName, attrName, event);
 			
 			const attr = newState[event.reducer].byIds[event.ownerId][attrName];
 			if (!newValue || newValue === null) {
@@ -153,11 +163,11 @@ describe("Reducer Tests", function() {
 
 	it('4. runCalculate updateMembers should update room members info', function() {
 		const testAction = (action, event) => {
-			const [op, attrName] = [...(action.split('.'))];
-			if (attrName !== 'updateMembers') return;
+			const [op, calculationName] = [...(action.split('.'))];
+			if (calculationName !== 'updateMembers') return;
 
 			const membership = event.membership || event.content.membership;
-			const newState = state._testing.runCalculation(action, event);
+			const newState = state._testing.runCalculation(calculationName, event);
 			const resource = newState[event.reducer].byIds[event.ownerId];
 
 			expect(Array.isArray(resource.membersIds)).to.be.true;
@@ -183,10 +193,10 @@ describe("Reducer Tests", function() {
 
 	it('5. runCalculate eventRead should update the event in question', function() {
 		const testAction = (action, event) => {
-			const [op, attrName] = [...(action.split('.'))];
-			if (attrName !== 'eventRead') return;
+			const [op, calculationName] = [...(action.split('.'))];
+			if (calculationName !== 'eventRead') return;
 
-			const newState = state._testing.runCalculation(action, event);
+			const newState = state._testing.runCalculation(calculationName, event);
 			expect(newState.events).to.not.be.undefined;
 			
 			const randomEvent = newState.events.byIds[_.sample(Object.keys(newState.events.byIds))];
