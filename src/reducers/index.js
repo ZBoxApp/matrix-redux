@@ -69,9 +69,18 @@ const MatrixReducer = (state = initialState, action = {}) => {
 					const room = newState.rooms.byIds[id];
 					let resource = newState.rooms[room.membership];
 					resource = ReducerHelper.superPush(resource, id, 'uniq');
-
+					
 					newState.rooms[room.membership] = resource;
 				});
+
+				// TODO: Fix this fucker and make test
+				['undefined', 'join', 'ban', 'invite', 'leave'].forEach((key) => {
+					if (newState.rooms.byIds[key])
+						delete newState.rooms.byIds[key];
+				});
+
+				if (newState.rooms[undefined])
+					delete(newState.rooms[undefined]);
 			},
 		};
 

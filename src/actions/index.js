@@ -133,3 +133,37 @@ export const logout = (callback) => {
     };
 };
 
+/**
+ * Initialize MatrixClient with the given session information
+ * @param  {Object} opts
+ * @return {[type]}      [description]
+ */
+export const restoreSession = (opts) => {
+    return dispatch => {
+        MatrixClient.restoreSession(opts);
+        const data = formatUserData(opts._http.opts);
+        dispatch(syncAction(USER_SUCCESS, data));
+    };
+};
+
+const formatUserData = function(data) {
+  data.isLogged = true;
+  data.credentials = {userId: data.userId};
+  data.matrixClientData = {
+    baseUrl: data.baseUrl,
+    deviceId: data.deviceId,
+    credentials: data.credentials,
+    _http: {
+      opts: {
+        userId: data.userId,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+        deviceId: data.deviceId,
+        homeServer: data.homeServer
+      }
+    },
+    store: { syncToken: null}
+  };
+  return data;
+};
+

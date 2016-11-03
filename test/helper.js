@@ -7,7 +7,7 @@ import {createStore, applyMiddleware, compose} from "redux";
 import thunk from "redux-thunk";
 import MatrixClient from "../src/utils/client";
 import {fetchRequest} from "../src/utils/utils";
-import * as UserActions from "../src/actions/user";
+import * as Actions from "../src/actions/";
 import fetch from "isomorphic-fetch";
 import ReducerHelper from "../src/reducers/reducer_helper";
 import MatrixReducer from "../src/reducers";
@@ -107,7 +107,7 @@ export const loginStore = (opts, callback) => {
         callback = opts;
         opts = clientOptions;
     }
-    store.dispatch(UserActions.login(testUserName, testUserPassword, opts, function(err, data){
+    store.dispatch(Actions.login(testUserName, testUserPassword, opts, function(err, data){
         if (err) return callback(err);
         return callback(null, store);
     }));
