@@ -9,7 +9,7 @@ import EVENTS from '../utils/matrix_events';
 import ReducerHelper from './reducer_helper';
 
 const initialState = {
-    "sync": {},
+    "sync": { },
     "rooms": { 'byIds': {} },
     "users": {'byIds': {}},
     "events": {'byIds': {}},
@@ -29,6 +29,12 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			if (newState[reducerName].byIds && newState[reducerName].byIds.byIds)
 				delete newState[reducerName].byIds.byIds;
 		});
+
+		newState.sync.syncToken = events.nextBatch;
+		newState.sync.initialSyncComplete = true;
+		newState.sync.isRunning = true;
+		newState.sync.error = false;
+
 		return newState;
 	};
 

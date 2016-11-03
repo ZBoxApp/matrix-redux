@@ -1,10 +1,6 @@
 ## 1. Pasar Esquemas
 
-- [ ] Event
 - [ ] Sync
-- [ ] Sync: debe tener initialSyncComplete
-- [ ] Sync: debe tener isLoading
-- [ ] Sync: debe tener syncToken
 - [ ] Rooms
 - [ ] Users
 - [ ] Events

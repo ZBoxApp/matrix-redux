@@ -2,5 +2,29 @@
 	"$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Rooms",
     "description": "The Rooms state",
-    "type": "object"
+    "type": "object",
+    "properties": {
+    	"syncToken": {
+    		"description": "The Token for request a new sync",
+    		"type": "string",
+    		"patter": "^s.*"
+    	},
+    	"initialSyncComplete": {
+    		"description": "Status of initial sync",
+    		"type": "boolean"
+    	},
+    	"isRunning": {
+    		"description": "If sync is Running",
+    		"type": "boolean"	
+    	},
+    	"error": {
+    		"description": "If the sync has any error",
+    		"type": "boolean"
+    	},
+    	"errorMessage": {
+    		"description": "Error Message if any",
+    		"type": "string"
+    	}
+    },
+    "required": [ "syncToken", "initialSyncComplete", "isRunning" ]
 }

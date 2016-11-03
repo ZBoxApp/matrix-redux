@@ -103,9 +103,10 @@ const getResource = (reducer, resourceId, newState) => {
 };
 
 const setResource = (reducer, resourceId, resource, newState) => {
+	// Todo: Why fails if I remove this line;
+	if (reducer === 'sync') return newState;
 	if (!newState[reducer])
 		newState[reducer] = { 'byIds': { [resourceId]: {} }};
-	
 	resource.isLoading = false;
 	newState[reducer].byIds[resourceId]	= resource;
 	return newState;

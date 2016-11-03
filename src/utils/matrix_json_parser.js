@@ -299,7 +299,7 @@ const setEventAge = (event) => {
 
 	else if (event.content || event.content.age)
 		age = event.content.age;
-	
+
 	return age;
 };
 
