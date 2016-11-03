@@ -1,0 +1,116 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Room",
+    "description": "The room Object",
+    "type": "object",
+    "properties": {
+        "aliases": {
+            "description": "The room address aliases",
+            "type": "array"
+        },
+        "canonical_alias": {
+            "description": "The room principal alias",
+            "type": "string"
+        },
+        "creatorId": {
+            "description": "The id of the user who created the room",
+            "type": "string",
+            "pattern": "^@.*:"
+        },
+        "events": {
+            "description": "Array of events ids for this room",
+            "type": "array"
+        },
+        "guestAccess": {
+            "description": "If the rooms has guest access enabled",
+            "type": "string",
+            "pattern": "(can_join|forbidden)"
+        },
+        "historyVisibilty": {
+            "description": "The ACL of the room history",
+            "type": "string",
+            "pattern": "(invited|joined|shared|world_readable)"
+        },
+        "joinRule": {
+            "description": "The type of rules used for users wishing to join this room",
+            "type": "string",
+            "pattern": "(public|knock|invite|private)"
+        },
+        "id": {
+            "description": "The room id",
+            "type": "string"
+        },
+        "isLoading": {
+            "description": "The loaded status",
+            "type": "boolean"
+        },
+        "messages": {
+            "description": "Array of messages Ids events",
+            "type": "array"
+        },
+        "name": {
+            "description": "The room name",
+            "type": "string"
+        },
+        "topic": {
+            "description": "The room topic or subject",
+            "type": "string"
+        },
+        "avatarUrl": {
+            "description": "The room avatar url",
+            "type": "string",
+            "pattern": "^mxc:\/\/.*"
+        },
+        "membersIds": {
+            "description": "A list of users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "inviteMembersIds": {
+            "description": "A list of invited users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "banMembersIds": {
+            "description": "A list of banned users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "leaveMembersIds": {
+            "description": "A list of banned users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "joinMembersIds": {
+            "description": "A list of new joined users ids",
+            "type": "Array",
+            "items": { "type": "string", "pattern": "^@.*:" }
+        },
+        "timeline": {
+            "description": "A list of this room events",
+            "type": "array",
+            "items": { "type": "string", "pattern": "^\\$.*" }
+        },
+        "unreadNotifications": {
+            "description": "Object with the notifications count",
+            "type": "object",
+            "properties": {
+                "highlightCount": {
+                    "description": "This rooms highlited notifications",
+                    "type": "integer"
+                },
+                "notificationCount": {
+                    "description": "This rooms notifications count",
+                    "type": "integer"
+                }
+            }
+        },
+        "membership": {
+            "description": "Membership status for the room",
+            "type": "string",
+            "patter": "(join|ban|leave|invite)"
+        }
+
+    },
+    "required": [ "id", "timeline", "isLoading", "membership" ]
+}

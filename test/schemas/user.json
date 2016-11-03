@@ -9,11 +9,11 @@
             "type": "string",
             "pattern": "^\\@[_\\-0-9a-zA-Z].*:.*"
         },
-        "name": {
-            "description": "User displayName",
-            "type": "string"
+        "isLoading": {
+            "description": "The loaded status",
+            "type": "boolean"
         },
-        "displayName": {
+        "name": {
             "description": "User displayName",
             "type": "string"
         },
@@ -34,7 +34,15 @@
         "currentlyActive": {
             "description": "If the user is currently active",
             "type": "boolean"
+        },
+        "messages": {
+            "description": "Array of Ids of messages sent by this user",
+            "type": "array"
+        },
+        "tags": {
+            "description": "Array of Ids of tags events",
+            "type": "array"
         }
     },
-    "required": [ "id", "presence", "displayName"]
+    "required": [ "id", "presence", "name", "isLoading" ]
 }

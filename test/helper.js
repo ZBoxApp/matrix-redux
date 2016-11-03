@@ -3,14 +3,14 @@
 import chai from "chai";
 import jsonschema from 'jsonschema';
 import _ from 'lodash';
-import {combineReducers} from "redux";
+import {createStore, applyMiddleware, compose} from "redux";
+import thunk from "redux-thunk";
 import MatrixClient from "../src/utils/client";
 import {fetchRequest} from "../src/utils/utils";
 import * as UserActions from "../src/actions/user";
-import {leaveRoom} from "../src/actions/rooms";
-import createStore from "../src/store/store";
 import fetch from "isomorphic-fetch";
-import rootReducer from "../src/reducer";
+import ReducerHelper from "../src/reducers/reducer_helper";
+import MatrixReducer from "../src/reducers";
 
 export const expect = chai.expect;
 export const sdk = MatrixClient;
@@ -20,12 +20,7 @@ const testUserPassword = process.env.USER_PASS || "123456";
 const testUserName = process.env.USER_NAME || "test";
 const testHomeServerName = process.env.HOMESERVER_NAME || "zboxapp.dev";
 
-export const createStoreHelper = function(preloadedState, persistOps) {
-  const combinedReducers = combineReducers(rootReducer);
-  return createStore(combinedReducers, preloadedState, persistOps)
-}
-
-const store = createStoreHelper({user: null, sync: null});
+const store = createStore(MatrixReducer, applyMiddleware(thunk));
 
 /**
  * Just a function to clean some values of the
@@ -46,11 +41,27 @@ export const randomElement = function(object) {
     return object[key];
 };
 
-export const validateSchema = function(instance, schema) {
+
+export const validSchema = function(instance, schema) {
     const Validator = jsonschema.Validator;
     const v = new Validator();
-    const schemaFile = require('../docs/schemas/' + schema + '.json');
-    return v.validate(instance, schemaFile);
+    const schemaFile = require('./schemas/' + schema + '.json');
+    const validationResult = v.validate(instance, schemaFile);
+
+    warnValidateSchema(validationResult);
+    return (validationResult.errors.length < 1);
+};
+
+export const validateSchema = validSchema;
+
+const warnValidateSchema = (validationResult) => {
+    if (validationResult.errors.length < 1)
+        return;
+
+    validationResult.errors.forEach((error) => {
+        console.log("SCHEMA ERROR:", 'instance: ' + error.property + '. Msg: ' + error.message);
+    });
+
 };
 
 export const endTest = function (err) {

@@ -75,6 +75,28 @@ UserActions.login(userName, userPassword, opts);
 
 ```
 
+## The Store Schema
+
+**Important!**: You should show a `Loading` screen until `sync.initialSyncComplete === true;`.
+
+```json
+{
+  "sync": { },
+  "rooms": { 'byIds': {} },
+  "users": {'byIds': {}},
+  "events": {'byIds': {}},
+}
+```
+
+You can find the doc for every schema:
+
+* [sync](./test/schemas/sync.json)
+* [rooms](./test/schemas/rooms.json)
+* [rooms.byIds.room](./test/schemas/room.json)
+* [users](./test/schemas/users.json)
+* [users.byIds.user](./test/schemas/user.json)
+* [events.byIds.event](./test/schemas/event.json)
+
 ## How to use this
 
 ### First time

@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Users",
+    "description": "The Users state",
+    "type": "object",
+    "properties": {
+        "currentUserId": {
+            "description": "The Id of the currentUser",
+            "type": "string",
+            "patter": "^@.*:.*"
+        },
+        "byIds": {
+            "description": "Object with all the rooms",
+            "type": "object"
+        }
+    },
+    "required": [ "byIds", "currentUserId" ]
+}

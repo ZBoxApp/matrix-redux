@@ -1,0 +1,56 @@
+[
+
+	{
+	  "next_batch": "s82215_1153685_5554_71814_129_22_30",
+	  "rooms": {
+	    "leave": {},
+	    "join": {},
+	    "invite": {}
+	  },
+	  "account_data": {
+	    "events": []
+	  },
+	  "to_device": {
+	    "events": []
+	  },
+	  "presence": {
+	    "events": [
+	      {
+	        "content": {
+	          "presence": "online",
+	          "last_active_ago": 1637,
+	          "currently_active": true
+	        },
+	        "type": "m.presence",
+	        "sender": "@shell:57north.org.uk"
+	      }
+	    ]
+	  }
+	},
+	{
+	  "next_batch": "s82215_1153720_5554_71814_129_22_30",
+	  "rooms": {
+	    "leave": {},
+	    "join": {},
+	    "invite": {}
+	  },
+	  "account_data": {
+	    "events": []
+	  },
+	  "to_device": {
+	    "events": []
+	  },
+	  "presence": {
+	    "events": [
+	      {
+	        "content": {
+	          "last_active_ago": 1047,
+	          "presence": "offline"
+	        },
+	        "type": "m.presence",
+	        "sender": "@geosmin:matrix.org"
+	      }
+	    ]
+	  }
+	}
+]

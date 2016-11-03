@@ -1,5 +1,15 @@
 "use strict";
 import {CONSTANTS} from "./constants";
+import _ from 'lodash';
+
+
+export const checkArguments = (args = []) => {
+  args.forEach((variable, index) => {
+    if (typeof variable === 'undefined') {
+      throw new Error('Argument ' + (index + 1) + ' undefined');
+    }
+  });
+};
 
 /**
  * @param {Object} options - The options for the request to Matrix
@@ -26,6 +36,11 @@ export const fetchRequest = (options, callback) => {
         }).catch((error) => {
             callback(error);
         });
+};
+
+export const randomString = (size = 5) => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  return _.sampleSize(chars, size).join('');
 };
 
 /**
@@ -101,3 +116,4 @@ const buildParams = function (prefix, obj, add) {
     add(prefix, obj);
   }
 };
+

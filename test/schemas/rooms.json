@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Rooms",
+    "description": "The Rooms state",
+    "type": "object",
+    "properties": {
+        "banned": {
+            "description": "The banned from rooms",
+            "type": "array"
+        },
+        "join": {
+            "description": "The joined rooms",
+            "type": "array",
+            "items": { "type": "string", "pattern": "^!.*:" }
+        },
+        "invite": {
+            "description": "The invited rooms",
+            "type": "array"
+        },
+        "leave": {
+            "description": "The leaved rooms",
+            "type": "array"
+        },
+        "ban": {
+            "description": "The banned rooms",
+            "type": "array"
+        },
+        "byIds": {
+            "description": "Object with all the rooms",
+            "type": "object"
+        }
+    },
+    "required": [ "byIds", "join" ]
+}

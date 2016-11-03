@@ -7,7 +7,7 @@
 
 import matrixSDK from "matrix-js-sdk";
 import {Logger} from "./utils";
-import * as MatrixJsonParser from "./matrixJsonParser";
+import * as MatrixJsonParser from "./matrix_json_parser";
 import SyncApi from "matrix-js-sdk";
 import _ from "lodash";
 
@@ -169,7 +169,8 @@ export default class MatrixClient {
     static newEvents() {
         const json = JSON.parse(this.client._reduxRawResponse)
         const userId = this.client._http.opts.userId;
-        return MatrixJsonParser.processJson(json, userId);
+        const homeServer = this.client._http.opts.homeServer;
+        return MatrixJsonParser.processMatrixJson(json, userId, homeServer);
     };
 
     static stopClient() {

@@ -3,7 +3,6 @@
  **/
 
 import MatrixClient from "../utils/client";
-import {setError} from "./error";
 
 export const USER_REQUEST = 'USER_REQUEST';
 export const USER_FAILURE = 'USER_FAILURE';
