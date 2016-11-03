@@ -87,7 +87,7 @@ describe("Reducer Helper Functions", () => {
 		const m_room_message = groupByType["m.room.message"];
 		const lastEvent = jsonStore.events.byIds[m_room_message[m_room_message.length - 1]];
 		const firstEvent = jsonStore.events.byIds[m_room_message[0]];
-		expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
+		expect(lastEvent.age).to.be.at.least(firstEvent.age);
 	});
 
 	it('4. groupByType should sorted timeline Arrays for room events', function() {
@@ -104,7 +104,7 @@ describe("Reducer Helper Functions", () => {
 		const timelineEvents = groupByType.state;
 		const lastEvent = randomRoom.events[timelineEvents[timelineEvents.length - 1]];
 		const firstEvent = randomRoom.events[timelineEvents[0]];
-		expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
+		expect(lastEvent.age).to.be.at.least(firstEvent.age);
 	});	
 
 });
