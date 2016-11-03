@@ -17,10 +17,6 @@
             "description": "User displayName",
             "type": "string"
         },
-        "displayName": {
-            "description": "User displayName",
-            "type": "string"
-        },
         "avatarUrl": {
             "description": "The user avatar url",
             "type": "string",
@@ -39,28 +35,6 @@
             "description": "If the user is currently active",
             "type": "boolean"
         },
-        "memberShips": {
-          "description": "The users rooms by memberShips",
-            "type": "object",
-            "properties": {
-                "joined": {
-                    "description": "Array of joined rooms",
-                    "type": "array"
-                },
-                "banned": {
-                    "description": "Array of banned rooms",
-                    "type": "array"
-                },
-                "leaved": {
-                    "description": "Array of leaved rooms",
-                    "type": "array"
-                },
-                "invited": {
-                    "description": "Array of invited rooms",
-                    "type": "array"
-                },
-            }
-        },
         "messages": {
             "description": "Array of Ids of messages sent by this user",
             "type": "array"
@@ -70,5 +44,5 @@
             "type": "array"
         }
     },
-    "required": [ "id", "presence", "displayName"]
+    "required": [ "id", "presence", "name", "isLoading" ]
 }

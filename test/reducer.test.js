@@ -298,6 +298,18 @@ describe("Schemas Tests", function(){
 		expect(isValidSchema, 'room').to.be.true;
 	});
 
+	it('1. should pass User Schema', function() {
+		const randomReducer = 'users';
+		const randomId = "@pbruna:zboxapp.dev";
+		const randomResource = jsonStore[randomReducer].byIds[randomId];
+		const events = randomResource.events;
+		const newState = state._testing.runEventsActions(events);
+		testState = _.merge({}, testState, newState);
+		const resource = testState[randomReducer].byIds[randomId];
+		const isValidSchema = validSchema(resource, 'user');
+		expect(isValidSchema, 'user').to.be.true;
+	});
+
 });
 
 // 1. Paso JSON como Payload al reducer. El type es SYNC

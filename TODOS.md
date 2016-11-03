@@ -1,7 +1,5 @@
 ## 1. Pasar Esquemas
 
-- [ ] Room
-- [ ] User
 - [ ] Event
 - [ ] Sync
 - [ ] Sync: debe tener initialSyncComplete

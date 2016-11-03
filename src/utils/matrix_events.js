@@ -181,13 +181,15 @@ const EVENTS = {
 				"actions": [
 					"calculate.new",
 					"update.content.name",
+					"update.attr.id",
 					"update.content.avatarUrl",
 					"calculate.updateMemberships" 
 				]
 			}
 		},
 		"actionsValues": { 
-			"content": { "avatarUrl": "avatar_url", "name": "displayname" }
+			"content": { "avatarUrl": "avatar_url", "name": "displayname" },
+			"attr": { "id": "state_key" }
 		}
 	},
 	"m.room.message": {
