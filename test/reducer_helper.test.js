@@ -75,10 +75,10 @@ describe("Reducer Helper Functions", () => {
 		const groupByType = ReducerHelper.groupByType(randomRoom.events);
 		for (var i = 0; i <= 50; i++) {
 			const type = "state";		
-			const sortedIds = ReducerHelper.sortByAge(groupByType[type], randomRoom.events)
+			const sortedIds = ReducerHelper.sortByAge(groupByType[type], randomRoom.events);
 			const lastEvent = randomRoom.events[sortedIds[sortedIds.length - 1]];
 			const firstEvent = randomRoom.events[sortedIds[0]];
-			expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
+			expect(lastEvent.age).to.be.at.least(firstEvent.age);
 		}
 	});
 
@@ -95,11 +95,8 @@ describe("Reducer Helper Functions", () => {
 		const timelineEvents = groupByType.timeline;
 		const lastEvent = randomRoom.events[timelineEvents[timelineEvents.length - 1]];
 		const firstEvent = randomRoom.events[timelineEvents[0]];
-		if (!lastEvent.unsigned || !firstEvent.unsigned) {
-			console.log(firstEvent);
-			console.log(lastEvent);
-		}
-		expect(lastEvent.unsigned.age).to.be.at.least(firstEvent.unsigned.age);
+		
+		expect(lastEvent.age).to.be.at.least(firstEvent.age);
 	});	
 
 	it('4. groupByType should sorted state Arrays for room events', function() {
