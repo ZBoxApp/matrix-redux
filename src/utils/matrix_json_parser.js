@@ -22,8 +22,12 @@ export const processMatrixJson = (matrixJson, currentUserId, homeServer) => {
 	const jsonStore = newJsonStore();
 	const events = concatEvents(matrixJson);
 	jsonStore.nextBatch = matrixJson.next_batch;
+
 	processEvents(events, jsonStore, currentUserId, homeServer);
 	processEvents(matrixJson.rooms, jsonStore, currentUserId, homeServer, "rooms");
+
+	jsonStore.currentUserId = currentUserId;
+	jsonStore.homeServer = homeServer;
 	return jsonStore;
 };
 

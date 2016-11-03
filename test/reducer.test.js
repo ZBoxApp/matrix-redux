@@ -346,30 +346,14 @@ describe("Schemas Tests", function(){
 		expect(isValidSchema, 'rooms').to.be.true;
 	});
 
-});
+	it('6. should pass Users Schema', function() {
+		testState = state._testing.eventsToState(jsonStore);
+		const resource = testState.users;
+		expect(resource).to.not.be.undefined;
+		
+		const isValidSchema = validSchema(resource, 'users');
+		expect(isValidSchema, 'users').to.be.true;
+	});
 
-// 1. Paso JSON como Payload al reducer. El type es SYNC
-// 2. El reducer toma el JSON y hace un newState = eventsToState(json, state)
-// 2. eventsToState llama proccessByReducer(reducerName, JSON, state), en el siguiente orden:
-//  1. rooms
-//  2. users
-//  3. events
-// 
-// 3. processByReducer llama processByResource por cada resource del reducer
-// 4. processByResource llama a groupByType con los eventos del resource
-// 5. processByResource llama processEventsByType(typeName, groupByType[typeName], JSON, state) en el siguiente orden:
-// 	1. state
-// 	2. timeline
-// 	3. ephemeral
-// 	
-// 4. processEventsByType:
-//  1. copia el arreglo de IDS a nuevo objeto
-//  2. Si el typo es "state" llama a runStateEventsActions con IDS
-//  3. De lo contrario llama a runEventsActions con IDS
-// 
-// 5. runStateEventsActions recorre el array, toma todos los eventos del mismo tipo y los 
-// guarda ordenado por fecha en nuevo arreglo. Con este arreglo llama a executeEventsActions.
-// ----
-// 
-// 6. runEventsActions procesa todos los IDS llamando a runActions con el event, type, JSON, etc.
+});
 

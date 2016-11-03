@@ -35,6 +35,8 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		newState.sync.isRunning = true;
 		newState.sync.error = false;
 
+		newState.users.currentUserId = events.currentUserId;
+
 		return newState;
 	};
 
