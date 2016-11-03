@@ -278,6 +278,28 @@ describe("Reducer Tests", function() {
 	});
 });
 
+describe("Schemas Tests", function(){
+
+	beforeEach(() => {
+		store = createStore(MatrixReducer);
+		state = store.getState();
+		testState = {"users": {}, "rooms": {}, "events": {}, "sync": {}};
+	});
+
+	it('1. should pass Room Schema', function() {
+		const randomReducer = 'rooms';
+		const randomId = machosRoomId;
+		const randomResource = jsonStore[randomReducer].byIds[randomId];
+		const events = randomResource.events;
+		const newState = state._testing.runEventsActions(events);
+		testState = _.merge({}, testState, newState);
+		const resource = testState[randomReducer].byIds[randomId];
+		const isValidSchema = validSchema(resource, 'room');
+		expect(isValidSchema, 'room').to.be.true;
+	});
+
+});
+
 // 1. Paso JSON como Payload al reducer. El type es SYNC
 // 2. El reducer toma el JSON y hace un newState = eventsToState(json, state)
 // 2. eventsToState llama proccessByReducer(reducerName, JSON, state), en el siguiente orden:

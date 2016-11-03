@@ -98,13 +98,15 @@ const getResource = (reducer, resourceId, newState) => {
 	if (!newState[reducer].byIds[resourceId])
 		newState[reducer].byIds[resourceId] = {};
 
-	return newState[reducer].byIds[resourceId];		
+	newState[reducer].byIds[resourceId].isLoading = true;
+	return newState[reducer].byIds[resourceId];
 };
 
 const setResource = (reducer, resourceId, resource, newState) => {
 	if (!newState[reducer])
 		newState[reducer] = { 'byIds': { [resourceId]: {} }};
 	
+	resource.isLoading = false;
 	newState[reducer].byIds[resourceId]	= resource;
 	return newState;
 };

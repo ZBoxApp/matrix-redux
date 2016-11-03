@@ -19,11 +19,12 @@
         },
         "events": {
             "description": "Array of events ids for this room",
-            "type": "array",
+            "type": "array"
         },
         "guestAccess": {
             "description": "If the rooms has guest access enabled",
-            "type": "boolean"
+            "type": "string",
+            "pattern": "(can_join|forbidden)"
         },
         "historyVisibilty": {
             "description": "The ACL of the room history",
@@ -46,11 +47,6 @@
         "messages": {
             "description": "Array of messages Ids events",
             "type": "array"
-        },
-        "membershipState": {
-            "description": "The current user membership state",
-            "type": "string",
-            "pattern": "(join|leave|invite)"
         },
         "name": {
             "description": "The room name",
@@ -92,22 +88,8 @@
         },
         "timeline": {
             "description": "A list of this room events",
-            "type": "object",
-            "properties": {
-                "limited": {
-                    "description": "If is a limited sync",
-                    "type": "boolean"
-                },
-                "prevBatch": {
-                    "description": "The syncToken to use on the next sync",
-                    "type": "string"
-                },
-                "events": {
-                    "description": "Array of events ids, sorted by date",
-                    "type": "array",
-                    "items": { "type": "string" }
-                }
-            }
+            "type": "array",
+            "items": { "type": "string", "pattern": "^\\$.*" }
         },
         "unreadNotifications": {
             "description": "Object with the notifications count",
@@ -122,11 +104,7 @@
                     "type": "integer"
                 }
             }
-        },
-        "currentUserPreferences": {
-            "description": "The user preferences for this Room",
-            "type": "object"
         }
     },
-    "required": [ "id", "timeline", "currentUserPreferences", "membershipState" ]
+    "required": [ "id", "timeline", "isLoading" ]
 }

@@ -59,7 +59,7 @@ const warnValidateSchema = (validationResult) => {
         return;
 
     validationResult.errors.forEach((error) => {
-        console.log("SCHEMA ERROR:", error.message);
+        console.log("SCHEMA ERROR:", 'instance: ' + error.property + '. Msg: ' + error.message);
     });
 
 };

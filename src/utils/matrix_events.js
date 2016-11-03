@@ -110,11 +110,12 @@ const EVENTS = {
 		"reducers": {
 			"rooms": {
 				"ownerId": "attr.roomId",
-				"actions": [ "calculate.new", "update.content.creatorId" ],
+				"actions": [ "calculate.new", "update.content.creatorId", "update.attr.id" ],
 			}
 		},
 		"actionsValues": { 
-			"content": { "creatorId": "creator" }
+			"content": { "creatorId": "creator" },
+			"attr": { "id": "roomId" }
 		}
 	},
 	"m.room.guest_access": {

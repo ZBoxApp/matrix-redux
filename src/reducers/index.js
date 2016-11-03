@@ -77,7 +77,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 		});
 
 		return ReducerHelper.mergeTmpState(newState, tmpStates);
-	}
+	};
 
 	const runAction = (actionName, event) => {
 		const [op, providerName, attrName] = [...(actionName.split('.'))];
@@ -94,7 +94,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			return newState;
 		
 		return calculations[calculationName](event);
-	}
+	};
 
 	const runCrud = (op, providerName, attrName, event) => {
 		if (typeof operations[op] !== 'function')
@@ -102,6 +102,10 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 		const resource = ReducerHelper.getResource(event.reducer, event.ownerId, newState);
 		const newValue = ReducerHelper.getNewValue(event, providerName, attrName);
+
+		if (!newValue || newValue === null)
+				return newState;
+			
 		return operations[op](event, newValue, attrName, resource);
 	};
 
@@ -113,15 +117,12 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			return newState;
 		},
 		"update": (event, newValue, attrName, resource) => {
-			if (!newValue || newValue === null)
-				return newState;
-
 			resource[attrName] = newValue;
 			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
 			
 			return newState;
 		},
-	}
+	};
 
 	const calculations = {
 		"updateMembers": (event) => {
@@ -173,7 +174,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 			return newState;
 		}
-	}
+	};
 
 	if (action.payload && action.payload.events)
 		newState = eventsToState(action.payload.events);
