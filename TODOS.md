@@ -1,6 +1,5 @@
 ## 1. Pasar Esquemas
 
-- [ ] Rooms
 - [ ] Users
 - [ ] Events
 
@@ -23,3 +22,4 @@ Todas estas funciones primero ven si el dato existe en el recurso, si no lo pide
 
 ## 4. Más adelante
 - [ ] Reducer User debe tener `currentUserPreferences`. Agregar a Schema
+- [ ] Rooms debería tener `direct` que serían las salas de Chat uno a uno

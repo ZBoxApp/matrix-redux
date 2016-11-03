@@ -104,7 +104,13 @@
                     "type": "integer"
                 }
             }
+        },
+        "membership": {
+            "description": "Membership status for the room",
+            "type": "string",
+            "patter": "(join|ban|leave|invite)"
         }
+
     },
-    "required": [ "id", "timeline", "isLoading" ]
+    "required": [ "id", "timeline", "isLoading", "membership" ]
 }

@@ -4,39 +4,31 @@
     "description": "The Rooms state",
     "type": "object",
     "properties": {
-        "initialSyncComplete": {
-            "description": "Status of the intialSync",
-            "type": "boolean"
-        },
-        "isLoading": {
-            "description": "Status of the server requests",
-            "type": "boolean"
-        },
         "banned": {
             "description": "The banned from rooms",
             "type": "array"
         },
-        "joined": {
+        "join": {
             "description": "The joined rooms",
-            "type": "array"
+            "type": "array",
+            "items": { "type": "string", "pattern": "^!.*:" }
         },
-        "invited": {
+        "invite": {
             "description": "The invited rooms",
             "type": "array"
         },
-        "leaved": {
+        "leave": {
             "description": "The leaved rooms",
+            "type": "array"
+        },
+        "ban": {
+            "description": "The banned rooms",
             "type": "array"
         },
         "byIds": {
             "description": "Object with all the rooms",
-            "type": "object",
-            "oneOf": [{ "$ref": "file:./room.json" }]
-        },
-        "ids": {
-            "description": "Ids of all the rooms",
-            "type": "array"
+            "type": "object"
         }
     },
-    "required": [ "isLoading", "byIds", "initialSyncComplete", "ids" ]
+    "required": [ "byIds", "join" ]
 }

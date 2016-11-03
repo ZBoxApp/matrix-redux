@@ -174,7 +174,7 @@ const EVENTS = {
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["calculate.updateMembers"]
+				"actions": ["calculate.updateMembers", "update.attr.membership"]
 			},
 			"users": {
 				"ownerId": "attr.state_key",
@@ -189,7 +189,7 @@ const EVENTS = {
 		},
 		"actionsValues": { 
 			"content": { "avatarUrl": "avatar_url", "name": "displayname" },
-			"attr": { "id": "state_key" }
+			"attr": { "id": "state_key", "membership": "roomType" }
 		}
 	},
 	"m.room.message": {

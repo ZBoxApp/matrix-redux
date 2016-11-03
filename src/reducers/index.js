@@ -52,7 +52,31 @@ const MatrixReducer = (state = initialState, action = {}) => {
 				});
 			});
 		});
+
+		updateReducer(reducerName);
+
 		return newState;
+	};
+
+	const updateReducer = (reducerName) => {
+		const reducerUpdate = {
+			'rooms': () => {
+				const roomsIds = Object.keys(newState.rooms.byIds);
+				roomsIds.forEach((id) => {
+					if (!id) return;
+					const room = newState.rooms.byIds[id];
+					let resource = newState.rooms[room.membership];
+					resource = ReducerHelper.superPush(resource, id, 'uniq');
+
+					newState.rooms[room.membership] = resource;
+				});
+			},
+		};
+
+		if (typeof reducerUpdate[reducerName] === 'function')
+			return reducerUpdate[reducerName]();
+
+		return;
 	};
 
 	const processEventsByType = (idsArray, resource, eventType) => {

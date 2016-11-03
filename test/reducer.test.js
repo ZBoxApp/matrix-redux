@@ -337,6 +337,15 @@ describe("Schemas Tests", function(){
 		expect(isValidSchema, 'sync').to.be.true;
 	});
 
+	it('5. should pass Rooms Schema', function() {
+		testState = state._testing.eventsToState(jsonStore);
+		const resource = testState.rooms;
+		expect(resource).to.not.be.undefined;
+		
+		const isValidSchema = validSchema(resource, 'rooms');
+		expect(isValidSchema, 'rooms').to.be.true;
+	});
+
 });
 
 // 1. Paso JSON como Payload al reducer. El type es SYNC
