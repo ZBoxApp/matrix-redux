@@ -1,6 +1,5 @@
 ## 1. Pasar Esquemas
 
-- [ ] Sync
 - [ ] Rooms
 - [ ] Users
 - [ ] Events
