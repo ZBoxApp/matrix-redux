@@ -212,6 +212,7 @@ const EVENTS = {
 					"calculate.new", 
 					"update.attr.userId",
 					"update.attr.roomId",
+					"update.attr.id",
 					"calculate.updateByType",
 					"calculate.updateMessagesByType"
 				]
@@ -224,7 +225,8 @@ const EVENTS = {
 		"actionsValues": {
 			"attr": { 
 				"userId": "sender", "roomId": "roomId", 
-				"messages": "event_id", "timeline": "event_id"
+				"messages": "event_id", "timeline": "event_id",
+				"id": "event_id"
 			}
 		}
 	},
@@ -266,6 +268,7 @@ const EVENTS = {
 				"actions": [ 
 					"new", "update.attr.targetEventId",
 					"update.attr.userId", "update.attr.roomId",
+					"update.attr.id",
 					"calculate.updateRedactedEvent"
 					],
 			},
@@ -284,7 +287,8 @@ const EVENTS = {
 		"actionsValues": { 
 			"attr": { 
 				"userId": "sender", "targetEventId": "event_id", 
-				"messages": "event_id", "events": "event_id"
+				"messages": "event_id", "events": "event_id",
+				"id": "event_id"
 			},
 		}
 	},
@@ -303,12 +307,13 @@ const EVENTS = {
 				"actions": [
 					"calculate.new",
 					"update.attr.roomId",
+					"update.attr.id",
 					"calculate.updateByType"
 				],
 			},
 		},
 		"actionsValues": {
-			"attr": { "roomId": "roomId", "events": "event_id" }
+			"attr": { "roomId": "roomId", "events": "event_id", "id": "event_id" }
 		}
 	},
 	"m.room.topic": {

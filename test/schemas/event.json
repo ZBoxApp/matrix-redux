@@ -13,11 +13,6 @@
             "description": "Timestamp in seconds",
             "type": "integer"
         },
-        "userId": {
-            "description": "The user id who send the event",
-            "type": "string",
-            "pattern": "^@[a-zA-Z].*:.*"
-        },
         "age": {
             "description": "Age in seconds",
             "type": "integer"
@@ -57,5 +52,5 @@
             "type": "string"    
         }
     },
-    "required": [ "roomId", "userId", "age", "type", "id" ]
+    "required": [ "roomId", "age", "type", "id" ]
 }

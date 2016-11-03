@@ -293,21 +293,38 @@ describe("Schemas Tests", function(){
 		const events = randomResource.events;
 		const newState = state._testing.runEventsActions(events);
 		testState = _.merge({}, testState, newState);
+		
 		const resource = testState[randomReducer].byIds[randomId];
+		expect(resource).to.not.be.undefined;
+
 		const isValidSchema = validSchema(resource, 'room');
 		expect(isValidSchema, 'room').to.be.true;
 	});
 
-	it('1. should pass User Schema', function() {
+	it('2. should pass User Schema', function() {
 		const randomReducer = 'users';
 		const randomId = "@pbruna:zboxapp.dev";
 		const randomResource = jsonStore[randomReducer].byIds[randomId];
 		const events = randomResource.events;
 		const newState = state._testing.runEventsActions(events);
 		testState = _.merge({}, testState, newState);
+		
 		const resource = testState[randomReducer].byIds[randomId];
+		expect(resource).to.not.be.undefined;
+		
 		const isValidSchema = validSchema(resource, 'user');
 		expect(isValidSchema, 'user').to.be.true;
+	});
+
+	it('3. should pass Event Schema', function() {
+		testState = state._testing.eventsToState(jsonStore);
+		const randomId = _.sample(Object.keys(testState.events.byIds));
+		
+		const resource = testState.events.byIds[randomId];
+		expect(resource).to.not.be.undefined;
+		
+		const isValidSchema = validSchema(resource, 'event');
+		expect(isValidSchema, 'event').to.be.true;
 	});
 
 });

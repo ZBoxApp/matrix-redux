@@ -21,6 +21,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 	let newState = {...state};
 	
 	const eventsToState = (events) => {
+		newState.events.byIds = _.merge({}, newState.events.byIds, events.events.byIds);
 		processByReducer('rooms', events);
 		processByReducer('users', events);
 		
@@ -49,7 +50,7 @@ const MatrixReducer = (state = initialState, action = {}) => {
 	};
 
 	const processEventsByType = (idsArray, resource, eventType) => {
-		const events = getEventsFromIds(idsArray, resource.events);
+		const events = ReducerHelper.getEventsFromIds(idsArray, resource.events);
 		return runEventsActions(events);
 	};
 

@@ -287,8 +287,20 @@ const setEventId = (event) => {
 const setMetadata = (event, currentUserId, homeServer) => {
 	event.currentUserId = currentUserId || throwUndef("currentUserId");
 	event.homeServer = homeServer || throwUndef("homeServer");
+	event.age = setEventAge(event);
 
 	return event;
+};
+
+const setEventAge = (event) => {
+	let age = event.age || -1;
+	if (event.unsigned && event.unsigned.age)
+		age = event.unsigned.age;
+
+	else if (event.content || event.content.age)
+		age = event.content.age;
+	
+	return age;
 };
 
 /**
