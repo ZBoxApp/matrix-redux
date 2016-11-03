@@ -1,9 +1,3 @@
-## 1. Pasar Esquemas
-
-- [ ] Users
-- [ ] Events
-
-
 
 ## 2. Actions, API, Distpatch
 
