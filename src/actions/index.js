@@ -190,7 +190,6 @@ export const restoreSession = (opts) => {
     return dispatch => {
         MatrixClient.restoreSession(opts);
         const data = formatUserData(opts._http.opts);
-        dispatch(syncAction(USER_SUCCESS, data));
     };
 };
 
