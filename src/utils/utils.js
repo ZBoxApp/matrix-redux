@@ -12,6 +12,14 @@ export const checkArguments = (args = []) => {
 };
 
 /**
+ * Make up a new transaction id
+ * @return {string} a new, unique, transaction id
+ */
+export const makeTxnId = () => {
+    return "m" + new Date().getTime() + "." + 1;
+};
+
+/**
  * @param {Object} options - The options for the request to Matrix
  * this is returned by the MatrixClient constructor
  * @param {Function} callback - Callback to return the data

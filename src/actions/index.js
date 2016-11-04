@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import MatrixClient from "../utils/client";
+import {makeTxnId} from "../utils/utils";
 
 export const SYNC_REQUEST = 'SYNC_REQUEST';
 export const SYNC_FAILURE = 'SYNC_FAILURE';
@@ -23,6 +24,53 @@ export const SYNC_STATE_STOPPED = 'STOPPED';
 
 const syncAction = (type, payload) => {
   return { type, payload };
+};
+/**
+ * @param {String} roomId
+ * @param {String} body
+ * @param {Function} callback.
+ */
+export const sendTextMessage = (roomId, body, callback) => {
+  const txnId = makeTxnId();
+  return dispatch => {
+    MatrixClient.callApi("sendTextMessage", roomId, body, txnId, callback);
+  };
+};
+
+/**
+ * @param {String} roomId
+ * @param {String} name
+ * @param {Function} callback
+ */
+export const setRoomName = (roomId, name, callback) => {
+  return dispatch => {
+    MatrixClient.callApi("setRoomName", roomId, name, callback);
+  };
+};
+
+/**
+ * @param {string} roomId
+ * @param {string} topic
+ * @param {module:client.callback} callback Optional.
+ * @return {module:client.Promise} Resolves: TODO
+ * @return {module:http-api.MatrixError} Rejects: with an error response.
+ */
+export const setRoomTopic = (roomId, topic, callback) => {
+  return dispatch => {
+    MatrixClient.callApi("setRoomTopic", roomId, topic, callback);
+  };
+};
+
+/**
+ * @param {string} roomId
+ * @param {string} body
+ * @param {string} htmlBody
+ * @param {Function} callback
+ */
+export const sendHtmlMessage = (roomId, body, htmlBody, callback) => {
+  return dispatch => {
+    MatrixClient.callApi("sendHtmlMessage", roomId, body, htmlBody, callback);
+  };
 };
 
 /**

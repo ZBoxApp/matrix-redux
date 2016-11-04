@@ -35,8 +35,21 @@ export default class MatrixClient {
     static callApi() {
         const args = [].slice.call(arguments);
         const name = args.shift();
-        if (args.length > 0) return this.client[name](...args);
-        return this.client[name];
+        const callback = args.pop();
+        if (typeof callback !== 'function')
+            throw new Error("A Callback Function is missing!!");
+
+        if (args.length < 1)
+            throw new Error("Parameters can't be empty");
+
+        this.client[name](...args)
+        .then((res) => {
+            callback(null, res);
+        })
+        .catch((err) => {
+            callback(err);
+        });
+        
     }
 
     /**
