@@ -203,7 +203,8 @@ const EVENTS = {
 				"actions": [ 
 					"add.attr.messages", "add.attr.timeline", 
 					"calculate.updateEventsByType",
-					"calculate.updateMessagesByType"
+					"calculate.updateMessagesByType",
+					"calculate.synced"
 				]
 			},
 			"events": {
@@ -215,7 +216,6 @@ const EVENTS = {
 					"update.attr.id",
 					"calculate.updateByType",
 					"calculate.updateMessagesByType",
-					"calculate.synced"
 				]
 			},
 			"users": {

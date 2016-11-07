@@ -34,6 +34,7 @@ export default class MatrixClient {
 
     static callApi() {
         const args = [].slice.call(arguments);
+        console.log(args);
         const name = args.shift();
         const callback = args.pop();
         if (typeof callback !== 'function')

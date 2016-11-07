@@ -25,76 +25,14 @@ export const SYNC_STATE_STOPPED = 'STOPPED';
 const syncAction = (type, payload) => {
   return { type, payload };
 };
-/**
- * @param {String} roomId
- * @param {String} body
- * @param {Function} callback.
- */
-export const sendTextMessage = (roomId, body, callback) => {
-  const txnId = makeTxnId();
+
+export const callApi = (methodName, ...args) => {
   return dispatch => {
-    MatrixClient.callApi("sendTextMessage", roomId, body, txnId, callback);
+    MatrixClient.callApi(methodName, ...args);
   };
 };
 
-/**
- * @param {String} roomId
- * @param {String} name
- * @param {Function} callback
- */
-export const setRoomName = (roomId, name, callback) => {
-  return dispatch => {
-    MatrixClient.callApi("setRoomName", roomId, name, callback);
-  };
-};
 
-/**
- * @param {string} roomId
- * @param {string} topic
- * @param {module:client.callback} callback Optional.
- * @return {module:client.Promise} Resolves: TODO
- * @return {module:http-api.MatrixError} Rejects: with an error response.
- */
-export const setRoomTopic = (roomId, topic, callback) => {
-  return dispatch => {
-    MatrixClient.callApi("setRoomTopic", roomId, topic, callback);
-  };
-};
-
-/**
- * @param {string} roomId
- * @param {string} body
- * @param {string} htmlBody
- * @param {Function} callback
- */
-export const sendHtmlMessage = (roomId, body, htmlBody, callback) => {
-  return dispatch => {
-    MatrixClient.callApi("sendHtmlMessage", roomId, body, htmlBody, callback);
-  };
-};
-
-/**
-  * @param {Object=} opts Options to apply when syncing.
-  * @param {Number=} opts.initialSyncLimit The event <code>limit=</code> to apply
-  * to initial sync. Default: 8.
-  * @param {Boolean=} opts.includeArchivedRooms True to put <code>archived=true</code>
-  * on the <code>/initialSync</code> request. Default: false.
-  * @param {Boolean=} opts.resolveInvitesToProfiles True to do /profile requests
-  * on every invite event if the displayname/avatar_url is not known for this user ID.
-  * Default: false.
-  *
-  * @param {String=} opts.pendingEventOrdering Controls where pending messages
-  * appear in a room's timeline. If "<b>chronological</b>", messages will appear
-  * in the timeline when the call to <code>sendEvent</code> was made. If
-  * "<b>detached</b>", pending messages will appear in a separate list,
-  * accessbile via {@link module:models/room#getPendingEvents}. Default:
-  * "chronological".
-  *
-  * @param {Number=} opts.pollTimeout The number of milliseconds to wait on /events.
-  * Default: 30000 (30 seconds).
-  *
-  * @param {String} opts.syncToken - The sync token to use
- */
 export const clientStart = (opts) => {
     return dispatch => {
     	if (opts && opts.syncToken) {
@@ -135,16 +73,24 @@ const matrixServerEventsListener = (dispatch) => {
 };
 
 const matrixLocalEchoEvents = (dispatch) => {
-  MatrixClient.on("Room.localEchoUpdated", (event) => {
+  MatrixClient.client.on("Room.localEchoUpdated", (event) => {
     const eventData = event.event;
-    eventData.txnId = eventData.txnId;
-    eventData.synced = false;
+    if (!isValidEvent(eventData)) return;
+
+    eventData.txnId = event._txnId;
     eventData.local = true;
     MatrixClient.client._reduxRawResponse = buildDummyMatrixJson(eventData);
     
     const payload = {"events": (MatrixClient.newEvents()) };
     dispatch(syncAction(SYNC_SUCCESS, payload));
   });
+};
+
+const isValidEvent = (event) => {
+  const isValidId = (/^\$\d+\w+:.*/).test(event.event_id);
+  const hasUnsignedObject = (typeof event.unsigned !== 'undefined');
+
+  return (isValidId && hasUnsignedObject);
 };
 
 const buildDummyMatrixJson = (event) => {
@@ -155,9 +101,8 @@ const buildDummyMatrixJson = (event) => {
     "presence": { "events":[] },
     "rooms":{ "leave": {}, "join": {}, "invite": {}}
   };
-
-  json.rooms.join[event.room_id].timeline.events = [event];
-  return json;
+  json.rooms.join[event.room_id] = { "timeline": { "events": [event]} };
+  return JSON.stringify(json);
 };
 
 /**

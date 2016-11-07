@@ -220,9 +220,11 @@ const MatrixReducer = (state = initialState, action = {}) => {
 			const resource = ReducerHelper.getResource("events", event.id, newState);
 			resource.synced = (!event.local) ? true : false;
 
-			if(event.content && event.content.transaction_id) {
-				const transaction_id = event.content.transaction_id;
+			if(event.unsigned && event.unsigned.transaction_id) {
+				const transaction_id = event.unsigned.transaction_id;
 				resource.synced = (transaction_id === resource.txnId);
+				delete resource.local;
+				delete resource.txnId;
 			}
 
 			ReducerHelper.setResource('events', event.id, resource, newState);

@@ -44,19 +44,21 @@ describe('Sync Actions', function () {
         MatrixClient.client.on("sync", (syncState, prevState, data) => {
             state = store.getState();
             if(syncState === 'SYNCING' && state.sync.initialSyncComplete) {
-                MatrixClient.client.on("Room.localEchoUpdated", (event, self) => {
-                    console.log("---- START ----");
-                    console.log(event);
-                    console.log("---- END ----");
-                });
+                console.log("---- START ----");
+                state = store.getState();
+                const size = state.rooms.byIds[machosRoomId].timeline.length;
+                const eventId = state.rooms.byIds[machosRoomId].timeline[size - 1];
+                console.log(state.events.byIds[eventId]);
+                console.log("---- END ----");
             }
         });
         setTimeout(function(){
-            store.dispatch(Actions.sendTextMessage(machosRoomId, message, (err, data) => {
+            store.dispatch(Actions.callApi("sendTextMessage", machosRoomId, message, (err, data) => {
                 if (err) console.error(err);
                 
-                console.log("SUCESS");
-                console.log(data);
+                // console.log("SUCESS: " + data.event_id);
+                // // state = store.getState();
+                // console.log(state.events.byIds[data.event_id].synced)
             }));
         }, 3000);
     });
