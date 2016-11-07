@@ -103,7 +103,7 @@ const addToEventsReducer = (event, jsonStore) => {
 	jsonStore.events.byType[event.type].push(event.id);
 
 	return jsonStore;
-}
+};
 
 /**
  * Process rooms event of the original server response

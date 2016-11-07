@@ -102,16 +102,16 @@ export const clientStart = (opts) => {
     		delete opts.syncToken;
     	}
 
-    	matrixEventsListener(dispatch);
+    	matrixServerEventsListener(dispatch);
+      matrixLocalEchoEvents(dispatch);
 	    MatrixClient.startClient(opts);
 	};
 };
 
-const matrixEventsListener = (dispatch) => {
+const matrixServerEventsListener = (dispatch) => {
 	// Now we listen for Sync Events and Dispatch some Actions
 	MatrixClient.client.on("sync", (syncState, prevState, data) => {
 		const payload = {};
-		let newEvents;
         switch (syncState) {
           case SYNC_STATE_FAILURE:
             // TODO
@@ -132,6 +132,32 @@ const matrixEventsListener = (dispatch) => {
             break;
         }
     });
+};
+
+const matrixLocalEchoEvents = (dispatch) => {
+  MatrixClient.on("Room.localEchoUpdated", (event) => {
+    const eventData = event.event;
+    eventData.txnId = eventData.txnId;
+    eventData.synced = false;
+    eventData.local = true;
+    MatrixClient.client._reduxRawResponse = buildDummyMatrixJson(eventData);
+    
+    const payload = {"events": (MatrixClient.newEvents()) };
+    dispatch(syncAction(SYNC_SUCCESS, payload));
+  });
+};
+
+const buildDummyMatrixJson = (event) => {
+  const json = {
+    "next_batch": MatrixClient.client.store.syncToken,
+    "account_data": { "events":[] },
+    "to_device": { "events":[] },
+    "presence": { "events":[] },
+    "rooms":{ "leave": {}, "join": {}, "invite": {}}
+  };
+
+  json.rooms.join[event.room_id].timeline.events = [event];
+  return json;
 };
 
 /**

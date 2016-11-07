@@ -67,11 +67,11 @@ const getActions = (event, crudOnly = false) => {
 	if (!crudOnly) return actions;
 	
 	crudActions = actions.filter((action) => { 
-		return action.split('.')[0] !== 'calculate'
+		return action.split('.')[0] !== 'calculate';
 	});
 
 	return crudActions;
-}
+};
 
 const getNewValue = (event, providerName, attrName) => {
 	// Provider is from where we get the value we want to store
@@ -274,7 +274,54 @@ describe("Reducer Tests", function() {
 			const randomResource = jsonStore[randomReducer].byIds[randomId];
 			const events = randomResource.events;
 			return testAction(events);
+		}
+	});
+
+	it('9. runCalculate synced should update the event has being synced', function() {
+		const testAction = (action, event) => {
+			const [op, calculationName] = [...(action.split('.'))];
+			if (calculationName !== 'synced' || event.type !== 'm.room.message') return;
+
+			const newState = state._testing.runCalculation(calculationName, event);
+			expect(newState.events).to.not.be.undefined;
+			
+			const randomEvent = newState.events.byIds[event.event_id];
+			expect(randomEvent.synced, 'synced').to.be.true;
 		};
+
+		runActionTests('events', testAction);
+	});
+
+	it('10. runCalculate synced should return false if local event', function() {
+		const testAction = (action, event) => {
+			const [op, calculationName] = [...(action.split('.'))];
+			if (calculationName !== 'synced' || event.type !== 'm.room.message') return;
+			event.local = true;
+
+			const newState = state._testing.runCalculation(calculationName, event);
+			expect(newState.events).to.not.be.undefined;
+			
+			const randomEvent = newState.events.byIds[event.event_id];
+			expect(randomEvent.synced, 'synced').to.be.false;
+		};
+
+		runActionTests('events', testAction);
+	});
+
+	it('11. runCalculate synced should return false if transaction_id does not match', function() {
+		const testAction = (action, event) => {
+			const [op, calculationName] = [...(action.split('.'))];
+			if (calculationName !== 'synced' || event.type !== 'm.room.message') return;
+			event.content.transaction_id = 'ndandka';
+
+			const newState = state._testing.runCalculation(calculationName, event);
+			expect(newState.events).to.not.be.undefined;
+			
+			const randomEvent = newState.events.byIds[event.event_id];
+			expect(randomEvent.synced, 'synced').to.be.false;
+		};
+
+		runActionTests('events', testAction);
 	});
 });
 

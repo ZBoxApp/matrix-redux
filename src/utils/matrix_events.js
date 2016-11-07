@@ -214,7 +214,8 @@ const EVENTS = {
 					"update.attr.roomId",
 					"update.attr.id",
 					"calculate.updateByType",
-					"calculate.updateMessagesByType"
+					"calculate.updateMessagesByType",
+					"calculate.synced"
 				]
 			},
 			"users": {

@@ -47,6 +47,10 @@
             "description": "Id of the redaction event",
             "type": "string"  
         },
+        "synced": {
+            "description": "If the m.room.message event has being synced with the server",
+            "type": "boolean"
+        },
         "targetEventId": {
             "description": "Id of the affected event",
             "type": "string"    

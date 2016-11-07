@@ -110,6 +110,8 @@ const setResource = (reducer, resourceId, resource, newState) => {
 	
 	resource.isLoading = false;
 	newState[reducer].byIds[resourceId]	= resource;
+	delete newState[reducer].byIds.byIds;
+	delete newState[reducer].byIds.isLoading;
 	
 	return newState;
 };
