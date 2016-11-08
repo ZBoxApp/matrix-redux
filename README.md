@@ -6,16 +6,10 @@ No, is not the Movie, so go on and read this: [Matrix.org](http://matrix.org)
 
 ## Table of Contents
 - [Installation](#installation)
-- [Docker](#docker)
-- [Logs](#logs)
-- [How to use this](#how-to-use-this)
-- [Persistence](#persistence)
+- [Development](#development)
+- [Reducers And Schemas](#reducers-and-schemas)
+- [Tutorial](#Tutorial)
 - [Network Request Function](#network-request-function)
-- [Login](#login)
-- [Matrix Client](#matrix-client)
-- [Store and reducers](#store-and-reducers)
-- [ETC](#etc)
-
 
 
 ## Installation
@@ -50,7 +44,7 @@ $ npm i --save lodash matrix-js-sdk redux redux-thunk humps uuid
 ### For Nodejs and Browsers
 This library uses the new [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), so you will also need a module tha implements this, like [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch).
 
-## Docker
+## Development
 This repo includes the `start_docker.sh` file which starts a docker container of a **Matrix Server** for development.
 
 To use this you **must** had installed [Docker Toolbox](https://www.docker.com/products/docker-toolbox).
@@ -59,219 +53,176 @@ To use this you **must** had installed [Docker Toolbox](https://www.docker.com/p
 $ sh start_docker.sh
 ```
 
-## LOGS
-You can enable `DEBUG` Logs level when initializing the MatrixClient at login time, like:
+## Reducers And Schemas
+This is only a **Sync** Store, this means that it's only Job is to process the responses from the Matrix Server, nothing more than that.
 
-```javascript
-const userName = 'testuser';
-const userPassword = 'YouSup3rP4ssw0rd';
-const opts = {
-  'request': fetchRequest,
-  'baseUrl': 'https://matrixserver.com:8448',
-  'logLevel': 'DEBUG'
-};
+The **Process** operation is:
 
-UserActions.login(userName, userPassword, opts);
+1. Convert the Server `JSON` data to an Object with the reducers names as keys and every reducer with an Array of Events. This is done by following the rules defined in [matrix_events.js](./src/utils/matrix_events.js).
 
-```
+2. Process all the events from the step 1 and update the `state` also following the rules defined in [matrix_events.js](./src/utils/matrix_events.js).
 
-## The Store Schema
-
-**Important!**: You should show a `Loading` screen until `sync.initialSyncComplete === true;`.
+The final State look like this:
 
 ```json
 {
-  "sync": { },
-  "rooms": { 'byIds': {} },
-  "users": {'byIds': {}},
-  "events": {'byIds': {}},
+  "sync": "Object",
+  "rooms": "Object",
+  "users": "Object",
+  "events":  "Object"
 }
 ```
 
-You can find the doc for every schema:
+Every schema of this reducers is documented in the followings links:
 
-* [sync](./test/schemas/sync.json)
-* [rooms](./test/schemas/rooms.json)
-* [rooms.byIds.room](./test/schemas/room.json)
-* [users](./test/schemas/users.json)
-* [users.byIds.user](./test/schemas/user.json)
-* [events.byIds.event](./test/schemas/event.json)
+* `sync`: [./test/schemas/sync.json](./test/schemas/sync.json),
+* `rooms`: [./test/schemas/rooms.json](./test/schemas/rooms.json),
+* `room`: [./test/schemas/room.json](./test/schemas/room.json),
+* `users`: [./test/schemas/users.json](./test/schemas/users.json),
+* `user`: [./test/schemas/user.json](./test/schemas/user.json),
+* `events`: [./test/schemas/events.json](./test/schemas/events.json),
+* `event`: [./test/schemas/event.json](./test/schemas/event.json)
 
-## How to use this
 
-### First time
+## Tutorial
 
-1. [Login the user](#login), your platform must have a valid [fetch function](#fetch-function)
-2. [Start the client](#matrix-client), this runs the **Initial Sync** and keeps running and `emitting` events that are captured by this library.
-3. Save a local copy of the Session Data, available at `state.user.matrixClientData`
-4. Make your App `React` to the change state.
+### 1. Import and create the Store
 
-### After the First time
+```javascript
+import MatrixRedux from "__PATH_TO_Module/src/reducers";
+import YourAppReducers from "../reducers/";
 
-1. [Restore the Session](#login), with the data saved on the previous `3rd step`.
-2. Same as before
-3. Same as before
-4. Same as before
+// You combine the reducers with MatrixRedux
+const combineReducers = ....;
 
-### Reacting to changes
-The `Store`, `State`, `Actions` will be documented at: [Store and reducers](#store-and-reducers).
+// Also you can apply any other middleware here, like offline store.
+const store = createStore(combineReducers, applyMiddleware(thunk));
+```
+
+### 2. Login
+
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+// callback(err, response);
+store.dispatch(MatrixReduxActions.login(userId, password, opts, callback);
+```
+
+#### 2.1. Restore Session
+If you have saved the token after login, you don't need to login again. You just can restore 
+the session like:
+
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+const matrixClientData = {
+  "baseUrl": "https://matrix.example.com:8448",
+  "credentials": { "userId": "@test:zboxapp.dev" },
+  "deviceId": "FFKDBPLROE",
+  "_http": {
+    "opts": {
+      "userId": "@test:zboxapp.dev",
+      "refreshToken": "MDAxOWxvY2F0aW9uIHp...",
+      "accessToken": "MDAxOWxvY2F0aW9uIHpib3hhcHAuZGV2CjAwMTNpZGVudGlmaWVy....",
+      "deviceId": "FFKDBPLROE",
+      "homeServer": "zboxapp.dev"
+    }
+  }
+};
+
+store.dispatch(MatrixReduxActions.restoreSession(matrixClientData));
+```
+
+### 3. Start the Sync Client
+Once the Client has started, the reducers will start to mutate the state as the events from the server arrives.
+
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+store.dispatch(MatrixReduxActions.clientStart());
+```
+
+#### 3.1 Start with syncToken
+You can also start the client using a stored `syncToken`, this way only new events since the `syncToken` would be asked to the server for the **InitialSync** process. In other words: **FASTER**.
+
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+const opts = {syncToken: 's85330_1452578_11378_81510_139_24_33'};
+
+store.dispatch(MatrixReduxActions.clientStart(opts));
+```
+
+More information on what `opts` could contains in [MatrixClien Class Doc](http://matrix-org.github.io/matrix-js-sdk/0.6.1/module-client-MatrixClient.html#startClient).
+
+### 4. Post messages and play
+This library pass all the operations to the [Matrix JS SDK Library](https://github.com/matrix-org/matrix-js-sdk). In particular you should check:
+
+* **Messages and User Operations**, like send messages and join rooms: [MatrixClient Class](http://matrix-org.github.io/matrix-js-sdk/0.6.1/module-client-MatrixClient.html),
+* **Preferences and State Operations**, like creating a room or request an user profile: [MatrixBaseApis](http://matrix-org.github.io/matrix-js-sdk/0.6.1/module-base-apis-MatrixBaseApis.html),
+
+The operations are passed using the `callApi()` Action Creator. This function takes as the **first param** the name of the function you want to call from `matrix-js-sdk`, and the reste of the params are the params that the real function expect.
+
+#### Examples
+
+**1. Create a Room**
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+const newRoomOpts = {
+  "visibility": "public",
+  "invite": ["@john:example.com", "@petete:zboxapp.com", "@el_negro:whatsapp.com"],
+  "name": "Envy Room",
+  "topic": "Your guess"
+};
+
+store.dispatch(MatrixReduxActions.callApi("createRoom", newRoomOpts, callback));
+```
+
+**2. Post a Message**
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+const randomMessage = 'Test from MatrixRedux: ' + new Date().getTime();
+
+store.dispatch(MatrixReduxActions.callApi("sendTextMessage", envyRoomId, randomMessage, callback);
+```
+
+### 5. Stop the Sync Client
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+store.dispatch(MatrixReduxActions.clientStop());
+```
+
+### 6. Logout
+```javascript
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
+
+store.dispatch(MatrixReduxActions.logout(callback));
+```
 
 
 ## Network Request Function
-This is the function that will make all the network requests, you can implement your own but with ship one: `utils.fetchRequest()`.
+This is the function that will make all the network requests, you can implement your own but this library includes one: `utils.fetchRequest()`.
 
 When you initialize the client in the `loginWithPassword()` or `restoreSession()` methods you can pass the function as shown below:
 
 
 ```javascript
-import {fetchRequest} from '../src/utils/utils';
+import {fetchRequest} from '__PATH_TO_Module/src/utils/utils';
+import * as MatrixReduxActions from '__PATH_TO_Module/src/actions';
 
-const userName = 'testuser';
-const userPassword = 'YouSup3rP4ssw0rd';
+const userId = '@testuser:example.com';
+const password = 'YouSup3rP4ssw0rd';
+
 const opts = {
   'request': fetchRequest,
-  'baseUrl': 'https://matrixserver.com:8448'
+  'baseUrl': 'https://example.com:8448'
 };
-const callback = function(){};
-UserActions.login(userName, userPassword, opts, callback);
-```
-
-## Login
-- Return `accessToken` from server.
-- Reducers: `user`.
-
-### 1. Login With Password
-
-```javascript
-import createStore from "../src/store/store";
-import * as UserActions from "../src/actions/user";
-import MatrixClient from "../src/utils/client";
-
-let store = createStore({});
-const userName = 'testuser';
-const userPassword = 'YouSup3rP4ssw0rd';
-const opts = { 'baseUrl': 'https://matrixserver.com:8448' };
 
 const callback = function(){};
 
-store.dispatch(UserActions.login(userName, userPassword, opts, callback));
+store.dispatch(MatrixReduxActions.login(userId, password, opts, callback);
 ```
 
-### 2. Restore Session
-Ideally you will save in a Local Storage the information for `matrixClientData`, which you
-can get from `store.getState().login.matrixClientData`;
-
-```javascript
-const matrixClientData = {
-  baseUrl: 'https://matrix.example.com:8448',
-  credentials: { userId: '@test:zboxapp.dev' },
-  deviceId: 'FFKDBPLROE',
-  _http: {
-    opts: {
-      userId: '@test:zboxapp.dev',
-      refreshToken: 'MDAxOWxvY2F0aW9uIHp...',
-      accessToken: 'MDAxOWxvY2F0aW9uIHpib3hhcHAuZGV2CjAwMTNpZGVudGlmaWVy....',
-      deviceId: 'FFKDBPLROE',
-      homeServer: 'zboxapp.dev'
-    }
-  }
-};
-
-store.dispatch(UserActions.restoreSession(matrixClientData));
-```
-
-### 3. Logout
-
-```javascript
-store.dispatch(UserActions.logout(callback));
-```
-
-## Matrix Client
-The MatrixClient runs until the App closes and `emits` events that are catched by this library. The MatrixClient has this transition:
-
-                                            +---->STOPPED
-                                            |
-                +----->PREPARED -------> SYNCING <--+
-                |        ^                  |       |
-     null ------+        |  +---------------+       |
-                |        |  V                       |
-                +------->ERROR ---------------------+
-
-
-#### 1. Starting the Client
-
-```javascript
-store.dispatch(SyncActions.start(opts))
-```
-
-This starts the syncing process, after a susccesfully initial sync, `PREPARED` state, a `syncToken` is received and saved in the reducers.
-
-* `user.matrixClientData.store.syncToken`,
-* `sync.syncToken`.
-
-You should save this token locally for later use if the App is closed.
-
-The `opts` object take the following paramaters:
-
-* `opts.initialSyncLimit`: The event `limit=` to apply to initial sync. Default: 8.
-* `opts.includeArchivedRooms`: True to put `archived=true` on the `/initialSync/` request. Default: `false`.
-* `opts.pollTimeout`, The number of milliseconds to wait on `/events`. Default: 30000 (30 seconds).
-
-
-#### 2. Stop the Client
-This stop the client and close all listerners:
-
-```javascript
-store.dispatch(SyncActions.stop())
-```
-
-## Store and reducers
-
-### Errors
-
-### Events
-
-### Members
-
-### Notifications
-
-### Rooms
-
-#### Actions Creators
-
-* `getPublicRooms()`: `<Promise>`
-* `createRoom(opts)`: `<Promise>`
-* `leaveRoom(roomId)`: `<Promise>`
-
-#### State
-
-* items `{Room}`, the rooms by `roomId`,
-* isLoading `{Boolean}`,
-* ids: `{Array}`, list of `roomId`,
-* publicIds: `{Array}`, list of `roomId` for public rooms.
-
-#### `Room` Properties
-
-|Name|Type|Description|
-|----|----|-----------|
-|roomId|String|The ID of this room.|
-|name|String|The human-readable display name for this room.|
-|timeline|Array<[MatrixEvent](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#MatrixEvent)>|The live event timeline for this room, with the oldest event at index 0. Present for backwards compatibility - prefer getLiveTimeline().getEvents().
-|tags|Object|Dict of room tags; the keys are the tag name and the values are any metadata associated with the tag - e.g. { "fav" : { order: 1 } }|
-|accountData|Object|Dict of per-room account_data events; the keys are the event type and the values are the events.|
-|oldState|[RoomState](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#RoomState)|The state of the room at the time of the oldest event in the live timeline. Present for backwards compatibility - prefer getLiveTimeline().getState(true).|
-|currentState|[RoomState](http://matrix-org.github.io/matrix-js-sdk/0.6.1/global.html#RoomState)|The state of the room at the time of the oldest event in the live timeline. Present for backwards compatibility - prefer getLiveTimeline().getState(false).|
-|summary|RoomSumary|The room summary.|
-|storageToken|*|A token which a data store can use to remember the state of the room.|
-
-### Sync
-
-### User
-
-## ETC
-
-### getAvatarUrl
-
-```javascript
-MatrixClient.getAvatarUrl(baseUrl, mxc, width, height, resizeMethod, allowDirectLinks);
-```
