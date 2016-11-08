@@ -399,6 +399,8 @@ describe("Schemas Tests", function(){
 		
 		const isValidSchema = validSchema(resource, 'users');
 		expect(isValidSchema, 'users').to.be.true;
+
+		console.log(store.getState().rooms);
 	});
 
 });
