@@ -168,13 +168,16 @@ const EVENTS = {
 	"m.room.member": {
 		"rootType": "rooms",
 		"idAttr": "attr.event_id",
-		"ephemeral": true,
 		"state": true,
 		"timeline": true,
 		"reducers": {
 			"rooms": { 
 				"ownerId": "attr.roomId",
-				"actions": ["calculate.updateMembers", "update.attr.membership"]
+				"actions": [
+					"calculate.updateMembers",
+					"update.attr.membership",
+					"add.attr.timeline"
+				]
 			},
 			"users": {
 				"ownerId": "attr.state_key",
@@ -185,11 +188,18 @@ const EVENTS = {
 					"update.content.avatarUrl",
 					"calculate.updateMemberships" 
 				]
+			},
+			"events": {
+				"ownerId": "attr.event_id"
 			}
 		},
 		"actionsValues": { 
 			"content": { "avatarUrl": "avatar_url", "name": "displayname" },
-			"attr": { "id": "state_key", "membership": "roomType" }
+			"attr": { 
+				"id": "state_key", 
+				"membership": "roomType",
+				"timeline": "event_id"
+			}
 		}
 	},
 	"m.room.message": {

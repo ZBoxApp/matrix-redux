@@ -19,50 +19,50 @@ const testUserPassword = userFixture.testUserPassword;
 const clientOptions = userFixture.clientOptions;
 const homeServerName = userFixture.homeServerName;
 
-describe('Sync Actions', function () {
-  this.timeout(10000);
-    beforeEach(function(done){
-        loginStore(function(err, data){
-            if (err) console.error(err);
-            store = data;
-            done();
-        });
-    });
+// describe('Sync Actions', function () {
+//   this.timeout(10000);
+//     beforeEach(function(done){
+//         loginStore(function(err, data){
+//             if (err) console.error(err);
+//             store = data;
+//             done();
+//         });
+//     });
 
-    afterEach(function(done) {
-      MatrixClient.client.stopClient();
-      MatrixClient.client.store.setSyncToken(null);
-      MatrixClient.client.store.rooms = {};
-      done();
-    });
+//     afterEach(function(done) {
+//       MatrixClient.client.stopClient();
+//       MatrixClient.client.store.setSyncToken(null);
+//       MatrixClient.client.store.rooms = {};
+//       done();
+//     });
 
-    it('1. Sync Start Should Update Sync State', function (done) {
-        this.timeout(40000);
-        const opts = {syncToken: 's85330_1452578_11378_81510_139_24_33'};
-        store.dispatch(Actions.clientStart());
-        const message = 'Prueba desde Redux: ' + makeTxnId();
-        MatrixClient.client.on("sync", (syncState, prevState, data) => {
-            state = store.getState();
-            if(syncState === 'SYNCING' && state.sync.initialSyncComplete) {
-                console.log("---- START ----");
-                state = store.getState();
-                const size = state.rooms.byIds[machosRoomId].timeline.length;
-                const eventId = state.rooms.byIds[machosRoomId].timeline[size - 1];
-                console.log(state.events.byIds[eventId]);
-                console.log("---- END ----");
-            }
-        });
-        setTimeout(function(){
-            store.dispatch(Actions.callApi("sendTextMessage", machosRoomId, message, (err, data) => {
-                if (err) console.error(err);
+//     it('1. Sync Start Should Update Sync State', function (done) {
+//         this.timeout(40000);
+//         const opts = {syncToken: 's85330_1452578_11378_81510_139_24_33'};
+//         store.dispatch(Actions.clientStart());
+//         const message = 'Prueba desde Redux: ' + makeTxnId();
+//         MatrixClient.client.on("sync", (syncState, prevState, data) => {
+//             state = store.getState();
+//             if(syncState === 'SYNCING' && state.sync.initialSyncComplete) {
+//                 console.log("---- START ----");
+//                 state = store.getState();
+//                 const size = state.rooms.byIds[machosRoomId].timeline.length;
+//                 const eventId = state.rooms.byIds[machosRoomId].timeline[size - 1];
+//                 console.log(state.events.byIds[eventId]);
+//                 console.log("---- END ----");
+//             }
+//         });
+//         setTimeout(function(){
+//             store.dispatch(Actions.callApi("sendTextMessage", machosRoomId, message, (err, data) => {
+//                 if (err) console.error(err);
                 
-                // console.log("SUCESS: " + data.event_id);
-                // // state = store.getState();
-                // console.log(state.events.byIds[data.event_id].synced)
-            }));
-        }, 3000);
-    });
-});
+//                 // console.log("SUCESS: " + data.event_id);
+//                 // // state = store.getState();
+//                 // console.log(state.events.byIds[data.event_id].synced)
+//             }));
+//         }, 3000);
+//     });
+// });
 
 //     // it('2. Stop Should set isRunning to False', function (done) {
 //     //     this.timeout(10000);

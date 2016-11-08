@@ -369,7 +369,6 @@ describe("Schemas Tests", function(){
 		
 		const resource = testState.events.byIds[randomId];
 		expect(resource).to.not.be.undefined;
-		
 		const isValidSchema = validSchema(resource, 'event');
 		expect(isValidSchema, 'event').to.be.true;
 	});
