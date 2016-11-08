@@ -189,8 +189,9 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 			// We remove the member from room if 
 			// membership is ban or leave
-			if (/(ban|leave)/.test(membership))
+			if (/(ban|leave)/.test(membership)){
 				resource.membersIds = ReducerHelper.removeFromArray(resource.membersIds, memberId);
+			}
 
 			ReducerHelper.setResource(event.reducer, event.ownerId, resource, newState);
 			return newState;
