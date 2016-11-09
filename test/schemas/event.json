@@ -3,7 +3,11 @@
     "title": "Event",
     "description": "A Matrix Event",
     "type": "object",
-    "properties": { 
+    "properties": {
+        "changedAttr": {
+            "description": "The last changed attribute",
+            "type": "string"
+        }, 
         "id": {
             "description": "The room id",
             "type": "string",

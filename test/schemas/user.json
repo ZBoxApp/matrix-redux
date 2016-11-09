@@ -3,7 +3,11 @@
     "title": "User",
     "description": "A Matrix User",
     "type": "object",
-    "properties": { 
+    "properties": {
+        "changedAttr": {
+            "description": "The last changed attribute",
+            "type": "string"
+        },
         "id": {
             "description": "The user id",
             "type": "string",

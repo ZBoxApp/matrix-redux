@@ -17,6 +17,10 @@
             "type": "string",
             "pattern": "^@.*:"
         },
+        "changedAttr": {
+            "description": "The last changed attribute",
+            "type": "string"
+        },
         "events": {
             "description": "Array of events ids for this room",
             "type": "array"

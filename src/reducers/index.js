@@ -152,7 +152,8 @@ const MatrixReducer = (state = initialState, action = {}) => {
 
 		if (!newValue || newValue === null)
 				return newState;
-			
+
+		resource.changedAttr = attrName;			
 		return operations[op](event, newValue, attrName, resource);
 	};
 
