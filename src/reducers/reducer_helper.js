@@ -99,6 +99,7 @@ const getResource = (reducer, resourceId, newState) => {
 		newState[reducer].byIds[resourceId] = {};
 
 	newState[reducer].byIds[resourceId].isLoading = true;
+	newState[reducer].byIds[resourceId].changedAttr = false;
 	return newState[reducer].byIds[resourceId];
 };
 

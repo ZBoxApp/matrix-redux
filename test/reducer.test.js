@@ -323,6 +323,28 @@ describe("Reducer Tests", function() {
 
 		runActionTests('events', testAction);
 	});
+
+	it('12. update should set what has changed', function() {
+		const testAction = (action, event) => {
+			const [op, providerName, attrName] = [...(action.split('.'))];
+			if (op !== 'update') return;
+			
+			const newValue = getNewValue(event, providerName, attrName);
+			const newState = state._testing.runCrud(op, providerName, attrName, event);
+			const resource = newState[event.reducer].byIds[event.ownerId];
+			const attr = resource[attrName];
+			if (!newValue || newValue === null) {
+				if(attr)
+					expect(attr, attrName + ' undefined' + event.type).to.not.be.undefined;
+			} else {
+				expect(resource.changedAttr, "changedAttr undefined").to.not.be.undefined;
+				expect(resource.changedAttr, "attr not included").to.equal(attrName);
+			}
+		};
+
+		runActionTests('rooms', testAction);
+		runActionTests('users', testAction);
+	});
 });
 
 describe("Schemas Tests", function(){
