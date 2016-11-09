@@ -6,7 +6,7 @@
     "properties": {
         "changedAttr": {
             "description": "The last changed attribute",
-            "type": "string",
+            "type": "string"
         },
         "id": {
             "description": "The user id",

@@ -19,7 +19,7 @@
         },
         "changedAttr": {
             "description": "The last changed attribute",
-            "type": "string",
+            "type": "string"
         },
         "events": {
             "description": "Array of events ids for this room",
